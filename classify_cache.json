@@ -1,0 +1,1480 @@
+{
+  "86bcf8e89cfc1f64f022f097": [
+    "not_now_busy"
+  ],
+  "a50c0145ff52a623e4b543a8": [
+    "referred_to_colleague"
+  ],
+  "cd7948843df6980aa7129884": [
+    "person_unavailable"
+  ],
+  "015c53903ef65dfcd7bd09d6": [
+    "interested_future"
+  ],
+  "59e2043f4b799701edf8e391": [
+    "meeting_requested",
+    "interested_future"
+  ],
+  "ba030de00335c5e3c9d9c513": [
+    "already_handled"
+  ],
+  "ca2e28efa1e9cfb0e3c9d1af": [
+    "meeting_requested"
+  ],
+  "730def3a780fb91ccea744ae": [
+    "person_unavailable",
+    "polite_acknowledgement"
+  ],
+  "8463097dc5e8f00380b8fbbd": [
+    "polite_decline"
+  ],
+  "ab6ce2ca19d0f08d7948ec8a": [
+    "interested_future"
+  ],
+  "ddebaec5186029859e110d9c": [
+    "not_now_busy"
+  ],
+  "8f8dd43f91d8db082be80ba5": [
+    "interested_future"
+  ],
+  "2e64f90f196e55e8c3ec08a2": [
+    "interested_future"
+  ],
+  "fa25f2d66338649872c23d20": [
+    "interested_future",
+    "not_now_busy"
+  ],
+  "e297d95faa6744ac19ff3e73": [
+    "interested_future"
+  ],
+  "019c3a0c43313d44442db7a5": [
+    "person_unavailable"
+  ],
+  "268631393cf744da4e9c0513": [
+    "interested_future",
+    "not_now_busy"
+  ],
+  "9e002e1635b6d9aad07bd0c1": [
+    "polite_acknowledgement"
+  ],
+  "7c57a949e3af27ea4e347211": [
+    "referred_to_colleague"
+  ],
+  "0ce7a569e7acb879ff4b6dd0": [
+    "meeting_requested",
+    "interested_future"
+  ],
+  "c4ccc4659cda255cb18c5c30": [
+    "interested_future"
+  ],
+  "6858124bcbf7efebe497c979": [
+    "person_unavailable"
+  ],
+  "1a665437cd65e26ffb5667a1": [
+    "polite_decline"
+  ],
+  "703558448a519b1ef1b7dcff": [
+    "interested_future",
+    "not_now_busy"
+  ],
+  "29bb3e943157cf32ef688572": [
+    "referred_to_colleague"
+  ],
+  "65b38ccec857b8e3ed36dd5a": [
+    "already_handled"
+  ],
+  "b0e3369a8ab77a34f8fca7b6": [
+    "referred_to_colleague"
+  ],
+  "746521eb8d89b0d4e312c86c": [
+    "referred_to_colleague"
+  ],
+  "1328923720cbdded5cb7b76a": [
+    "referred_to_colleague"
+  ],
+  "b45ec1ae2a514f7931a9a25c": [
+    "polite_decline",
+    "already_handled"
+  ],
+  "ada4949cbcbb81b53358ca32": [
+    "referred_to_colleague"
+  ],
+  "1034e673e18607a14ac67ba6": [
+    "meeting_requested"
+  ],
+  "3ff227027cbd95da9e36579b": [
+    "interested_future",
+    "not_now_busy"
+  ],
+  "cd825d8c40489812002b1646": [
+    "person_unavailable"
+  ],
+  "68b96131efbbc30a407a9dcd": [
+    "person_unavailable"
+  ],
+  "55900d7ad1877a64d0b2fe21": [
+    "polite_decline"
+  ],
+  "1827dbebe3e82877655fc382": [
+    "referred_to_colleague"
+  ],
+  "1a87b92780f1b5c2a4f66a16": [
+    "curious_question"
+  ],
+  "489ff59f25b15460e24f229f": [
+    "not_now_busy"
+  ],
+  "b1d3ab7edde04e54ad39369d": [
+    "curious_question"
+  ],
+  "e1f9bf9823cf5da435834b22": [
+    "polite_decline"
+  ],
+  "befd5957a5de178c3cfda69f": [
+    "person_unavailable"
+  ],
+  "04e743831856464038dc3b3e": [
+    "referred_to_colleague"
+  ],
+  "c0e03f9ab9f819aad0556313": [
+    "not_now_busy"
+  ],
+  "36709b587dc3e44fdfbba571": [
+    "interested_future"
+  ],
+  "03628b694391f5b24778ff9b": [
+    "polite_decline"
+  ],
+  "d086f086e3ff3825f67e3452": [
+    "already_handled"
+  ],
+  "9297b9826abc0e9c559240fd": [
+    "not_now_busy"
+  ],
+  "60e897a3830938500813fa3f": [
+    "already_handled",
+    "not_now_busy"
+  ],
+  "deeacf1daa2a9666091a2240": [
+    "curious_question"
+  ],
+  "376442c8dcd8c6dbf337aae5": [
+    "interested_future"
+  ],
+  "42572a6cbbb2c3549e08c2e1": [
+    "unclear"
+  ],
+  "9268fa7d87f16994444cce3b": [
+    "polite_decline"
+  ],
+  "2b91ea24e1d79fd3a9982193": [
+    "person_unavailable"
+  ],
+  "046db1dbc238f7bed9928930": [
+    "referred_to_colleague"
+  ],
+  "b2ee3e516c6c06bae3498d48": [
+    "already_handled"
+  ],
+  "62f98c04021d1dc3d1b60857": [
+    "interested_future"
+  ],
+  "9c30a6b0027b64f6766eb290": [
+    "already_handled"
+  ],
+  "f2e9a43b894fbac0f56a05d5": [
+    "polite_decline"
+  ],
+  "c64bf400e26666fe30f996af": [
+    "interested_future"
+  ],
+  "665bbc58f7afec1083ad020d": [
+    "referred_to_colleague"
+  ],
+  "801280301bf676d0e30f6964": [
+    "meeting_requested",
+    "already_handled"
+  ],
+  "bf2cb096fbc36d2726b89c33": [
+    "curious_question"
+  ],
+  "be2355ac246ff4418cb1e06b": [
+    "person_unavailable"
+  ],
+  "8d3dd945aef1d4a26e2eb014": [
+    "referred_to_colleague"
+  ],
+  "5ff03441aef37f54ee979189": [
+    "curious_question",
+    "interested_future"
+  ],
+  "27e1f0c2fe30d016b07497f3": [
+    "polite_decline"
+  ],
+  "6a9ddf8d11244d01b0c05582": [
+    "person_unavailable"
+  ],
+  "dfd827cdb2358dee0c6e3362": [
+    "referred_to_colleague"
+  ],
+  "137cf1286cb2349864dc981f": [
+    "unclear"
+  ],
+  "874fb31ef0eeaab65541a5cc": [
+    "not_now_busy"
+  ],
+  "b690fa78b00de81f0788e92c": [
+    "referred_to_colleague"
+  ],
+  "020dca2e5b69392331115aa9": [
+    "referred_to_colleague"
+  ],
+  "f39448aa4c69cbc2531227ee": [
+    "already_handled",
+    "referred_to_colleague"
+  ],
+  "3ed5d4a121bc3b35b0a60395": [
+    "interested_future"
+  ],
+  "61449e96fdb897a045be31f0": [
+    "not_now_busy"
+  ],
+  "3c71b20d4dffefbae372bddc": [
+    "interested_future"
+  ],
+  "1caaee4630e28f47a169f7c6": [
+    "polite_decline"
+  ],
+  "63b881e503b49f02fbec78d4": [
+    "not_now_busy",
+    "referred_to_colleague"
+  ],
+  "7574e33a3906c17c54a7832e": [
+    "not_now_busy"
+  ],
+  "4f00b1814640be67d25802e4": [
+    "meeting_requested"
+  ],
+  "d59df5cbb20b517bb6b8e9af": [
+    "not_now_busy"
+  ],
+  "9f37e57d54b616a33306c106": [
+    "unclear"
+  ],
+  "7e3754140b34a86eb6dde5df": [
+    "polite_decline"
+  ],
+  "f3b8ce186c9bf15563ddea19": [
+    "polite_decline"
+  ],
+  "58531ad2866e78f8989c5cb8": [
+    "polite_acknowledgement"
+  ],
+  "6aa9b0020d92081daa8ab3f2": [
+    "already_handled"
+  ],
+  "6fb28a94e93128a6b81b38b6": [
+    "person_unavailable"
+  ],
+  "e9691c54963db1ccfee23418": [
+    "already_handled"
+  ],
+  "00fd134e3d60d26234458552": [
+    "not_now_busy"
+  ],
+  "7434a65f2152d9ec9c77fb5b": [
+    "curious_question"
+  ],
+  "5207f05b0f7679a60f207715": [
+    "polite_decline",
+    "referred_to_colleague"
+  ],
+  "af2c4a5d39b469c3f7f4d006": [
+    "curious_question"
+  ],
+  "e0aa5bddd82a73e2b0d01a7c": [
+    "referred_to_colleague"
+  ],
+  "790d3e7a8e60c562822e6538": [
+    "already_handled"
+  ],
+  "c1a27067a6fa0c36a8d1f920": [
+    "polite_acknowledgement"
+  ],
+  "1c137297020b1a0a0db40871": [
+    "polite_decline"
+  ],
+  "8da0a6a5d9fcc5a80b39a4a0": [
+    "meeting_requested"
+  ],
+  "647da40725b790305f7c25c4": [
+    "referred_to_colleague"
+  ],
+  "fbf9dc1f10cc86e9be030ca7": [
+    "curious_question"
+  ],
+  "a7277491577e8326328bcfa6": [
+    "meeting_requested"
+  ],
+  "799c21e578abe3c1acaa9fc5": [
+    "meeting_requested"
+  ],
+  "09b83e7c7ce91ebf012a673f": [
+    "curious_question"
+  ],
+  "d33039f6cebc7b8a46a66c5d": [
+    "referred_to_colleague"
+  ],
+  "9a69e26a9a16d06499fec5a6": [
+    "already_handled",
+    "not_now_busy"
+  ],
+  "42e1107060fc53c44300858c": [
+    "polite_decline"
+  ],
+  "8734e19a352820dd3e14942e": [
+    "unclear"
+  ],
+  "74816f39b460507b520b85a4": [
+    "interested_future"
+  ],
+  "7d2b3a679fd2083bee0eb1e4": [
+    "referred_to_colleague"
+  ],
+  "f638a7605d841f614c72a50e": [
+    "referred_to_colleague"
+  ],
+  "70619718b3d37b6a2b9a5bd9": [
+    "not_now_busy"
+  ],
+  "5d57d39e6b7d8ea050980e66": [
+    "polite_acknowledgement"
+  ],
+  "68750069310a6a5cdd2b0c14": [
+    "polite_decline"
+  ],
+  "772f3ceaa70da1ca66a09dba": [
+    "hard_decline"
+  ],
+  "26fad7c1e9d9c66ee4e61974": [
+    "polite_decline"
+  ],
+  "d56ba7404a51476891d7ae4a": [
+    "curious_question"
+  ],
+  "77d6178383d1d9cd6c1a6e7d": [
+    "curious_question"
+  ],
+  "d1bc2eebe9e2e13ca4ab4d2c": [
+    "polite_decline"
+  ],
+  "b0bd54c521520c58962d0e0a": [
+    "curious_question"
+  ],
+  "2ced5fd528aa85f74ec13b93": [
+    "not_now_busy"
+  ],
+  "c017ebeff0e1abce3f7759a8": [
+    "polite_acknowledgement"
+  ],
+  "17839f5bb331007daaeea77f": [
+    "meeting_requested"
+  ],
+  "37f9961bb8ef6a96fd0a19c4": [
+    "meeting_requested"
+  ],
+  "64a4d7adac30ad4f77fb56ce": [
+    "not_now_busy"
+  ],
+  "a9048817285306ad8e42e4cc": [
+    "curious_question"
+  ],
+  "a169f414d0b7b2b8b6343d3e": [
+    "interested_future",
+    "person_unavailable"
+  ],
+  "52a9d5b24424a71130c11579": [
+    "person_unavailable"
+  ],
+  "f6304c9ba77d028fb89f9bb4": [
+    "polite_acknowledgement"
+  ],
+  "b209002320f00cc57a341ee4": [
+    "person_unavailable"
+  ],
+  "a329210de5f779ef22f50a6c": [
+    "not_now_busy"
+  ],
+  "37d1e3fc79ab46ab2c79c584": [
+    "curious_question"
+  ],
+  "9a510d247930dc2d6a72045e": [
+    "meeting_requested",
+    "not_now_busy",
+    "referred_to_colleague"
+  ],
+  "57d671d62629830ae5401457": [
+    "not_now_busy"
+  ],
+  "01ee5fa387fbe6648a91ba98": [
+    "referred_to_colleague"
+  ],
+  "ab6ba4348a61bafaebd5b114": [
+    "interested_future",
+    "person_unavailable"
+  ],
+  "1bfd275fb42ab5a3703a4cf6": [
+    "curious_question"
+  ],
+  "6391db9cccc22224562ada39": [
+    "referred_to_colleague"
+  ],
+  "0b15d7255ecf7271a45bacbd": [
+    "meeting_requested"
+  ],
+  "1938d989cc5f32ee1b2eacc2": [
+    "meeting_requested"
+  ],
+  "9422655b92667c570afe9b34": [
+    "polite_decline"
+  ],
+  "6fd30f20650a10a3dba1d465": [
+    "curious_question",
+    "person_unavailable"
+  ],
+  "5c88bd8fcb7dd1b2cb7fe1c4": [
+    "interested_future",
+    "not_now_busy"
+  ],
+  "41863a67f6974f4a47be83ca": [
+    "person_unavailable"
+  ],
+  "56fb503e4c229bb226af89a9": [
+    "curious_question"
+  ],
+  "f645ce5c68afb079a9a5762c": [
+    "polite_acknowledgement"
+  ],
+  "e62d1b97adbfe848219409b3": [
+    "unclear"
+  ],
+  "fec768c0fefeefd568fccb28": [
+    "polite_decline"
+  ],
+  "29b2649dc247a453cd01d277": [
+    "referred_to_colleague"
+  ],
+  "58963ad5c8c67e74b28ac649": [
+    "curious_question",
+    "interested_future"
+  ],
+  "666e59240302775661ec0198": [
+    "unclear"
+  ],
+  "4421e61d36f04d1c51d5af17": [
+    "interested_future",
+    "person_unavailable"
+  ],
+  "3a91e6cde5dfed185b25759e": [
+    "meeting_requested"
+  ],
+  "3cb2a25c04235bd426da7e63": [
+    "polite_decline"
+  ],
+  "fcaed74b25dd9153933eedb4": [
+    "meeting_requested"
+  ],
+  "986eff14bdb997207a9eed9b": [
+    "referred_to_colleague"
+  ],
+  "0b040b2a66ee853939b95c63": [
+    "curious_question"
+  ],
+  "826ab1527b957b9a67dae69d": [
+    "unclear"
+  ],
+  "035098c1a2e8bcdb79e05ed7": [
+    "polite_acknowledgement"
+  ],
+  "9daa057fa5d611f629e29dbb": [
+    "already_handled"
+  ],
+  "5540e8604314791326e8e209": [
+    "not_now_busy"
+  ],
+  "251848137a4a0b75d03f4f12": [
+    "already_handled"
+  ],
+  "03caa95c3032cccfa57ff9d7": [
+    "referred_to_colleague"
+  ],
+  "359560917435dbd4bfe9fd01": [
+    "unclear"
+  ],
+  "e3c52c693d9ac2f5db99885e": [
+    "interested_future"
+  ],
+  "e0e6081ee0fa8e58e5578270": [
+    "polite_decline"
+  ],
+  "304a7699ae3b09eab1efb188": [
+    "already_handled"
+  ],
+  "911b878d86626c5201299c19": [
+    "curious_question"
+  ],
+  "fd2c6598105374d3a19a952a": [
+    "referred_to_colleague"
+  ],
+  "a5400229c4dcccf53b4d7d54": [
+    "person_unavailable"
+  ],
+  "d24ed51eb1ec063ddf2587a0": [
+    "already_handled"
+  ],
+  "ff5a3391f1a4ce002b8b9f7b": [
+    "polite_acknowledgement"
+  ],
+  "b00752816e5cd6cd237e3163": [
+    "already_handled"
+  ],
+  "1dc55766ebb88a83afb4bb40": [
+    "interested_future",
+    "person_unavailable"
+  ],
+  "1cb30adef58aa7791b31c113": [
+    "unclear"
+  ],
+  "855bc8d2b85e35470178c0bc": [
+    "meeting_requested"
+  ],
+  "0fb6025623775003039265bc": [
+    "polite_decline"
+  ],
+  "012b2ad7de932ac7e7b01c07": [
+    "meeting_requested",
+    "already_handled"
+  ],
+  "4eb549d10f8204b15cce6449": [
+    "meeting_requested",
+    "not_now_busy"
+  ],
+  "e48b17d6c6b4ffa1d9b705cd": [
+    "polite_decline"
+  ],
+  "eb5dfb150dbbc5b4c58e0e04": [
+    "hard_decline"
+  ],
+  "26a6a521e79872d9cdeedab0": [
+    "referred_to_colleague"
+  ],
+  "2fc21cdea361e9bc9e932f97": [
+    "polite_decline"
+  ],
+  "a0544b1a627fcf693fff3dcd": [
+    "curious_question",
+    "not_now_busy"
+  ],
+  "93e003ed7cc61bdafad085ca": [
+    "referred_to_colleague"
+  ],
+  "229b216d99e78fa9d8319bd0": [
+    "unclear"
+  ],
+  "a6de23145758541155adc8c7": [
+    "person_unavailable"
+  ],
+  "7b90a5059c43ef43fd1359da": [
+    "polite_decline"
+  ],
+  "80553279a92170f0a4e1e632": [
+    "polite_decline"
+  ],
+  "3671d8cb35f0e7ef9018bc28": [
+    "referred_to_colleague"
+  ],
+  "6ded574398d2683db1702887": [
+    "interested_future"
+  ],
+  "1dbe4590d220a924f1509801": [
+    "polite_acknowledgement"
+  ],
+  "30d16a46e86304dee87a6fb9": [
+    "not_now_busy"
+  ],
+  "53c350e6d85e3d871a297bfa": [
+    "person_unavailable"
+  ],
+  "b41354540d9186d76ef15be1": [
+    "interested_future",
+    "polite_decline"
+  ],
+  "9c25aa72606852d146de8e72": [
+    "not_now_busy"
+  ],
+  "acaf268284d64a272a471cef": [
+    "polite_decline"
+  ],
+  "d7d489ef4cb252752efd54dc": [
+    "curious_question",
+    "already_handled"
+  ],
+  "9764399a46b6b74d92951502": [
+    "person_unavailable"
+  ],
+  "7ec36878c29f4318e0694699": [
+    "polite_decline"
+  ],
+  "6c7c185f9512db8dcf1c3e1e": [
+    "polite_decline"
+  ],
+  "325d7d8755150722262cd300": [
+    "not_now_busy"
+  ],
+  "b6fa245bd387fd286c78145d": [
+    "polite_decline"
+  ],
+  "52e4c449b683d50eb8976c8a": [
+    "person_unavailable"
+  ],
+  "4addc894fa83f0dbb9cc9d26": [
+    "polite_decline"
+  ],
+  "31405c8a16b3c021d6fc42d8": [
+    "polite_decline"
+  ],
+  "04553d96d67e6eab1514d16d": [
+    "not_now_busy"
+  ],
+  "ca48dc230d3d60926158b781": [
+    "referred_to_colleague"
+  ],
+  "6b4e7a46956f23f4b2b04b71": [
+    "polite_decline"
+  ],
+  "6c5c415349181b0de35ab3d5": [
+    "person_unavailable"
+  ],
+  "f0bd4a15ad2abd61e524b55e": [
+    "person_unavailable"
+  ],
+  "48dc1336ec171d11439e8ae8": [
+    "referred_to_colleague"
+  ],
+  "493d7b824be64954291ff062": [
+    "not_now_busy"
+  ],
+  "1c793f97036ec06b2b2275b5": [
+    "polite_decline",
+    "already_handled"
+  ],
+  "8927106c598ef7391e13a9eb": [
+    "polite_acknowledgement"
+  ],
+  "de744878d34ec814409ad769": [
+    "meeting_requested",
+    "interested_future"
+  ],
+  "cc7895f5d234acd28a5df9c2": [
+    "polite_decline"
+  ],
+  "acad8610d08d862da8f55bbf": [
+    "referred_to_colleague"
+  ],
+  "a16254914bb7cdf069c2898b": [
+    "polite_decline"
+  ],
+  "1dec53fa63bbdb15f0db0003": [
+    "not_now_busy"
+  ],
+  "94481b9dfa523aafc7a0d55f": [
+    "already_handled"
+  ],
+  "a84af1f5d8fcc560c8217c9a": [
+    "interested_future"
+  ],
+  "897f85e7420326b336455f69": [
+    "not_now_busy"
+  ],
+  "3bda6e3ecaf25de1278485db": [
+    "polite_decline"
+  ],
+  "251f555604b8f73910b48a36": [
+    "interested_future",
+    "already_handled"
+  ],
+  "432f91e550d76e6aab868946": [
+    "unclear"
+  ],
+  "53f1e95df49e23f075e2960e": [
+    "meeting_requested"
+  ],
+  "e1da42e078255fe202235590": [
+    "referred_to_colleague"
+  ],
+  "1f11282a1a5961c4b3f175e3": [
+    "interested_future"
+  ],
+  "d3fe7122020252218a5627dc": [
+    "not_now_busy"
+  ],
+  "ba4bc7d9f74ad08134063bd8": [
+    "person_unavailable"
+  ],
+  "e29c127e4a91dea3242a636d": [
+    "polite_decline"
+  ],
+  "651702fb20b4546d916a8f4c": [
+    "not_now_busy"
+  ],
+  "b8bd8bb5bf119aee3ee00605": [
+    "polite_decline"
+  ],
+  "df985f0d110cd7f0fcae74b0": [
+    "interested_future"
+  ],
+  "c2e36affb693060172d80f19": [
+    "polite_decline"
+  ],
+  "b671a8de876647f355d53171": [
+    "not_now_busy"
+  ],
+  "9368c5fb01254eebf47b2a7a": [
+    "polite_decline"
+  ],
+  "856bc4c7cf19d360acb75498": [
+    "unclear"
+  ],
+  "b29f5750324be6d05301be11": [
+    "not_now_busy",
+    "referred_to_colleague"
+  ],
+  "3d7a759900d8a417dc427904": [
+    "not_now_busy"
+  ],
+  "809ed32b120536d949ac2cc8": [
+    "already_handled"
+  ],
+  "cc1f8fd199923a5396a4afd5": [
+    "polite_decline"
+  ],
+  "a778672dfccbe3cacc400eb7": [
+    "person_unavailable"
+  ],
+  "1e2009d73299d4bddb41fe61": [
+    "polite_decline"
+  ],
+  "d75e49a4b811fdb6981d269f": [
+    "not_now_busy",
+    "referred_to_colleague"
+  ],
+  "a872760961efcd1ede924db3": [
+    "already_handled"
+  ],
+  "2f6fdd3a4d92dbb9595b064f": [
+    "unclear"
+  ],
+  "5c51c65fbfa5fa48d0eda7d3": [
+    "not_now_busy"
+  ],
+  "3949f25332fcfb3b5e795299": [
+    "curious_question"
+  ],
+  "b71d2027664058077ed66674": [
+    "meeting_requested"
+  ],
+  "612608246345329e174f5bdd": [
+    "not_now_busy"
+  ],
+  "deab20841ff6d96a88c22fbb": [
+    "meeting_requested"
+  ],
+  "f8616ffde2e117a4e120f9b6": [
+    "already_handled"
+  ],
+  "f6ab9c7d64fbe54a3c3bf05c": [
+    "meeting_requested"
+  ],
+  "bcdfc6f5b57eda76904e073e": [
+    "already_handled"
+  ],
+  "5d02ec7ad0a3710109893a7b": [
+    "already_handled"
+  ],
+  "a8f1e32dcd1c760d959a84ee": [
+    "already_handled"
+  ],
+  "fc35c169517375833189cc50": [
+    "polite_decline"
+  ],
+  "3cebeb45f07c0366a0130040": [
+    "not_now_busy"
+  ],
+  "15adccfabd551d9d565646b2": [
+    "polite_acknowledgement"
+  ],
+  "b32f4e01e6cf83913c9db541": [
+    "already_handled"
+  ],
+  "c8bf94c6ea5de1d883c0cd0a": [
+    "referred_to_colleague",
+    "person_unavailable"
+  ],
+  "bcfc8b2b124ab66dd4020fa5": [
+    "hard_decline"
+  ],
+  "76382af9b84ca0b7caceb9c2": [
+    "already_handled"
+  ],
+  "e76fcbf2e653a33b916a8984": [
+    "not_now_busy"
+  ],
+  "b9394a0c06adb8a916b3b99c": [
+    "person_unavailable"
+  ],
+  "28b7a5336d30d420632e6fdf": [
+    "person_unavailable"
+  ],
+  "03e9316f76c2195c4cdeebd6": [
+    "meeting_requested"
+  ],
+  "e5c860941f941c89f0ff646a": [
+    "meeting_requested",
+    "already_handled"
+  ],
+  "4a629c240f0028e0db27e0fb": [
+    "referred_to_colleague"
+  ],
+  "d75a84fd51f9f575669416a4": [
+    "referred_to_colleague",
+    "person_unavailable"
+  ],
+  "c642ae8eaa1a43127eb406a7": [
+    "curious_question",
+    "polite_decline"
+  ],
+  "d62e4503704395279bfa1221": [
+    "polite_decline"
+  ],
+  "53aa9f72b4b519246cfbc53b": [
+    "not_now_busy"
+  ],
+  "1db9c5f3fbae7426a324498e": [
+    "already_handled"
+  ],
+  "f5ce27021973dcd22322c326": [
+    "polite_decline"
+  ],
+  "19a807fddd04277062921d60": [
+    "unclear"
+  ],
+  "d5dfd39d92ca02b74b1064e5": [
+    "already_handled"
+  ],
+  "3d051cd0bfef1d2a252ea250": [
+    "not_now_busy"
+  ],
+  "113f4dbbab51960f78476880": [
+    "already_handled"
+  ],
+  "df2d53ed218e9ff9ad139871": [
+    "meeting_requested"
+  ],
+  "3330d62b3c65d3d300d8c260": [
+    "hard_decline"
+  ],
+  "b0aca6a11b442fdce3ae5055": [
+    "interested_future",
+    "already_handled"
+  ],
+  "e97511b8451e39a373bd58a0": [
+    "already_handled"
+  ],
+  "d169d2105ffa15a5bab73c0f": [
+    "polite_decline"
+  ],
+  "d4050ebea920f321bdc44d1b": [
+    "interested_future",
+    "polite_decline"
+  ],
+  "fe6caf4c9c2ce689cfc09f3a": [
+    "curious_question"
+  ],
+  "ca7dd66c8bbf9565170851eb": [
+    "already_handled"
+  ],
+  "3860be9a69e68e873097745f": [
+    "already_handled"
+  ],
+  "dbfa553e24d35b2430629964": [
+    "referred_to_colleague"
+  ],
+  "de773cc96ca6399161d92fa1": [
+    "not_now_busy"
+  ],
+  "279cc21ec26fb6a9c303cda1": [
+    "polite_decline"
+  ],
+  "995a5707c0e2c65bfc0591d1": [
+    "already_handled"
+  ],
+  "d86475b260dd56d97da21d48": [
+    "interested_future",
+    "already_handled"
+  ],
+  "184bb5f472a9111474da1973": [
+    "referred_to_colleague"
+  ],
+  "bae2d4855ed391932cd772aa": [
+    "person_unavailable"
+  ],
+  "52beeb2ed0cd578445cb849e": [
+    "interested_future"
+  ],
+  "ecf9f88c861dc071bc8cdfe3": [
+    "referred_to_colleague",
+    "person_unavailable"
+  ],
+  "c9f26c699e4f153834530d68": [
+    "referred_to_colleague"
+  ],
+  "199cac88f572fd4be9a131c0": [
+    "curious_question"
+  ],
+  "a9142669911cdf5085d6fd85": [
+    "already_handled"
+  ],
+  "907f7e6ef6efe7d9e7d803c1": [
+    "polite_decline"
+  ],
+  "36e667504ef5e224be9d95dc": [
+    "interested_future",
+    "polite_decline"
+  ],
+  "230b9b8037ab87ee457cfb18": [
+    "referred_to_colleague",
+    "person_unavailable"
+  ],
+  "193c15cd79816ccba92d771d": [
+    "meeting_requested"
+  ],
+  "cf3818e4def089bf7e1630d0": [
+    "polite_decline",
+    "already_handled"
+  ],
+  "4fa8c5883bcbb8d8b843f4c8": [
+    "not_now_busy"
+  ],
+  "6958ddc4f67777e91c89882c": [
+    "interested_future",
+    "polite_decline"
+  ],
+  "ad255d359b056472de98fd08": [
+    "curious_question"
+  ],
+  "b87889efe492e72f5f06abeb": [
+    "person_unavailable"
+  ],
+  "bc9fc0a622d26f177756d0bc": [
+    "polite_decline"
+  ],
+  "2177f283964c3cb68a1e49d5": [
+    "referred_to_colleague"
+  ],
+  "463aebe6735834bef926f880": [
+    "not_now_busy"
+  ],
+  "cf49e7a4e283b85cba26df36": [
+    "referred_to_colleague",
+    "person_unavailable"
+  ],
+  "3d29e62b78e3992d90748d06": [
+    "referred_to_colleague"
+  ],
+  "dd5f2f35aa731135a8c85235": [
+    "curious_question"
+  ],
+  "e43a571fab156a48522953e9": [
+    "polite_decline"
+  ],
+  "01010b6ddaa31376d07d4961": [
+    "meeting_requested"
+  ],
+  "d45d72dbc8e9b5ab5a797c34": [
+    "not_now_busy"
+  ],
+  "d2713a9d41cdab9784bd0132": [
+    "meeting_requested"
+  ],
+  "ed1029425fa884aa3af746ad": [
+    "not_now_busy"
+  ],
+  "2dd0bc3121744d3242452077": [
+    "curious_question"
+  ],
+  "367320bea582e4c20a92ca49": [
+    "polite_decline"
+  ],
+  "e8c589a299983452c6185c72": [
+    "curious_question",
+    "already_handled"
+  ],
+  "b6dcbf444fbb1fe7ef8299c4": [
+    "polite_acknowledgement"
+  ],
+  "464bf3d7814313bf947634d0": [
+    "interested_future",
+    "not_now_busy"
+  ],
+  "e876256e2dde91dc9dcb00dc": [
+    "polite_decline",
+    "already_handled"
+  ],
+  "9b585df288d163634e46f0e6": [
+    "polite_decline"
+  ],
+  "9cafcae3cb0e30726fdfde18": [
+    "referred_to_colleague"
+  ],
+  "73ee178e9aa48c32f51630f6": [
+    "polite_decline",
+    "already_handled"
+  ],
+  "1b17761ab98f191e9fc147d4": [
+    "unclear"
+  ],
+  "bfa87103cc1da0f1479c3d0f": [
+    "interested_future",
+    "not_now_busy"
+  ],
+  "3bbd9710f2a1eb31ccf15fab": [
+    "meeting_requested"
+  ],
+  "d4b40da7f82caa6c425ab665": [
+    "curious_question"
+  ],
+  "198235cf26ae0074b22cd68e": [
+    "meeting_requested",
+    "curious_question"
+  ],
+  "915fb9f0c5a7bd2b9c38955d": [
+    "unclear"
+  ],
+  "bff3a2ad546de54bde18d599": [
+    "polite_acknowledgement"
+  ],
+  "feaca98a73b6a39ecea0b623": [
+    "polite_acknowledgement"
+  ],
+  "775ab9d721d3deb0757da234": [
+    "already_handled"
+  ],
+  "5b11d90ea66fb01416c6e6ee": [
+    "meeting_requested"
+  ],
+  "0bbea46dcca3a8ba5f419187": [
+    "curious_question"
+  ],
+  "81fd4467c915167b2c1999fc": [
+    "meeting_requested",
+    "already_handled"
+  ],
+  "986b293706c5fdeaf1a141d1": [
+    "polite_decline"
+  ],
+  "e8eccc342fd0fd48de0d4f90": [
+    "curious_question"
+  ],
+  "d8ebbdbb8e0a6cbf40d97f25": [
+    "meeting_requested",
+    "interested_future"
+  ],
+  "6836d34692071e5a57593ed1": [
+    "polite_acknowledgement"
+  ],
+  "066dfa78b5bb0bd6b32d7ffa": [
+    "already_handled"
+  ],
+  "f2807e4bb2e6f1648eb5e264": [
+    "unclear"
+  ],
+  "47152b7f91e974c01d02400c": [
+    "not_now_busy"
+  ],
+  "7037098342996db1c71b71fc": [
+    "unclear"
+  ],
+  "48902069aa01ced5b8bee50b": [
+    "polite_decline"
+  ],
+  "dd71b33989e7be816c9c8467": [
+    "polite_decline"
+  ],
+  "16f486ac6201537ee6610765": [
+    "already_handled"
+  ],
+  "2fb18ff80c45dd4bc29b1ea7": [
+    "interested_future"
+  ],
+  "d23372d592cf5db3e19b99be": [
+    "unclear"
+  ],
+  "e9b25c1b0e07ee1e6dfa6a6a": [
+    "polite_decline"
+  ],
+  "8339762544636a620d811e4f": [
+    "not_now_busy"
+  ],
+  "e0c374ac2832fd62f972784f": [
+    "person_unavailable"
+  ],
+  "4463e9f773d708a063952ee0": [
+    "interested_future"
+  ],
+  "1d424bd15d62cf675d4e5d59": [
+    "unclear"
+  ],
+  "96d9ad51e4c9ad2220c08a9b": [
+    "already_handled"
+  ],
+  "ea100fe7be71313417e7fdf1": [
+    "curious_question"
+  ],
+  "51f0c3897e4158bc820d51ff": [
+    "meeting_requested"
+  ],
+  "6af86482f406cfd5e899d138": [
+    "polite_decline"
+  ],
+  "7c8bc8e2858ed7f7daaf6931": [
+    "referred_to_colleague"
+  ],
+  "a52182c943640d62040fa1da": [
+    "polite_decline"
+  ],
+  "dca5e522094b4ef78a3ee732": [
+    "curious_question"
+  ],
+  "c2ed70f15bedf01154d50780": [
+    "polite_decline"
+  ],
+  "4184233c85af6bb2c2dd3fe8": [
+    "meeting_requested"
+  ],
+  "83cd5b776a601b2dca52cfd0": [
+    "polite_decline"
+  ],
+  "0ae8ef447bfb454d599a182c": [
+    "not_now_busy"
+  ],
+  "c42b9f489f802f10d410baca": [
+    "interested_future"
+  ],
+  "d20bc9b8ab48b976fa2b15a4": [
+    "not_now_busy"
+  ],
+  "02639cc7b82b29079a68e3d1": [
+    "not_now_busy"
+  ],
+  "c493a3f7dfcd56b3f3acff64": [
+    "curious_question"
+  ],
+  "91c316056883dbf1017cd357": [
+    "referred_to_colleague"
+  ],
+  "3315e09e43a0f0a3a673ce90": [
+    "polite_decline"
+  ],
+  "ee5054bfd879308b60744642": [
+    "referred_to_colleague",
+    "person_unavailable"
+  ],
+  "7b395bf69bd36cad58f225d4": [
+    "interested_future"
+  ],
+  "525a686381dd73948a4dfcd1": [
+    "already_handled"
+  ],
+  "99a964503b57de7e290634f4": [
+    "interested_future",
+    "person_unavailable"
+  ],
+  "3694e4ff87ab9742b3497831": [
+    "person_unavailable"
+  ],
+  "6acef627dd6a3f0583d6e493": [
+    "curious_question"
+  ],
+  "f03788f40e1d42acd289ca3c": [
+    "referred_to_colleague"
+  ],
+  "2123367ef6b0573e93d29c1c": [
+    "person_unavailable"
+  ],
+  "27cf197b200514237607f5d8": [
+    "curious_question",
+    "not_now_busy"
+  ],
+  "4ebab09cb11eb23ccb6453e1": [
+    "meeting_requested",
+    "person_unavailable"
+  ],
+  "ade4c29eeae9dd397e7bf505": [
+    "meeting_requested"
+  ],
+  "617d003c263d4144a84732bc": [
+    "meeting_requested"
+  ],
+  "0fab64bf261575773668c862": [
+    "meeting_requested",
+    "not_now_busy"
+  ],
+  "3ef8e299fd694adfcd4e7922": [
+    "polite_decline"
+  ],
+  "9aba681234885649f4e65728": [
+    "curious_question"
+  ],
+  "6d2ce18537be10fe5d86bc8f": [
+    "meeting_requested",
+    "curious_question"
+  ],
+  "f16e15c6adf31fa5b036df8a": [
+    "polite_decline"
+  ],
+  "e88c66802b0ac6fead2dfb95": [
+    "not_now_busy"
+  ],
+  "1ef2930e3168f7dd2b01d57f": [
+    "person_unavailable"
+  ],
+  "6176a4fafc3b29f0c599d6d5": [
+    "person_unavailable"
+  ],
+  "4d88179305259241b350c7be": [
+    "hard_decline"
+  ],
+  "0549beb2d998fdaaa3111226": [
+    "person_unavailable"
+  ],
+  "5df1d02c1fb98f51a4b1efc8": [
+    "polite_acknowledgement"
+  ],
+  "d0a9507a20b36942115b8e24": [
+    "polite_decline"
+  ],
+  "ddda0afb75cecbb737d133e5": [
+    "meeting_requested",
+    "curious_question"
+  ],
+  "c1d74135a1d3afcea2d1decd": [
+    "not_now_busy",
+    "polite_acknowledgement"
+  ],
+  "9958c508f49e92b23429c9b2": [
+    "meeting_requested"
+  ],
+  "cf814474e7d377c63fa6df9e": [
+    "unclear"
+  ],
+  "8f55a2a6727f401555e7bff9": [
+    "not_now_busy"
+  ],
+  "249996ef09fa97e06b9bfe92": [
+    "meeting_requested"
+  ],
+  "9d684a4d8dd5ba3012aeecca": [
+    "referred_to_colleague"
+  ],
+  "de31e69fd3b644eebfcddf0e": [
+    "already_handled"
+  ],
+  "d335544fd04cd2086cf1c211": [
+    "polite_decline"
+  ],
+  "bb723c9c4e6e66ef4791ea43": [
+    "polite_acknowledgement"
+  ],
+  "0433c9efb3923d90d304f46b": [
+    "curious_question",
+    "not_now_busy"
+  ],
+  "63337421d1f9c7cdf9b0f90c": [
+    "meeting_requested"
+  ],
+  "2a46f3cf39ee341dcc7afe2c": [
+    "already_handled"
+  ],
+  "bb9dd7208df835fb7cf6b77a": [
+    "interested_future",
+    "already_handled"
+  ],
+  "8a756bd0f4686cbe772d445c": [
+    "referred_to_colleague",
+    "person_unavailable"
+  ],
+  "408bbfc4c7bc279b9488819c": [
+    "curious_question"
+  ],
+  "a1c6ecbc4bbad6e218e2aa4a": [
+    "already_handled"
+  ],
+  "5af4451dd3ea14ad4cb6d77f": [
+    "polite_decline"
+  ],
+  "a283c356009ecba34613821e": [
+    "polite_decline"
+  ],
+  "5c6547e76c0605d0ca939d39": [
+    "polite_decline"
+  ],
+  "cfd423aa95587163c154d72b": [
+    "person_unavailable"
+  ],
+  "995b8367f8b98b9825245b87": [
+    "referred_to_colleague"
+  ],
+  "6cacde2bcba737be3723ed7b": [
+    "curious_question",
+    "not_now_busy"
+  ],
+  "3924cefbe88abba4f55df84b": [
+    "interested_future"
+  ],
+  "c604ab8e22d77e2bac667466": [
+    "polite_decline"
+  ],
+  "c23db2472c910d2924cf019b": [
+    "person_unavailable"
+  ],
+  "b83f75f603102cc6546661c2": [
+    "polite_decline"
+  ],
+  "f7d7237a4889aaf2784a6a83": [
+    "referred_to_colleague"
+  ],
+  "fb3d2a7728d9a270977b5d87": [
+    "not_now_busy"
+  ],
+  "459eef1363e0ab166e578094": [
+    "polite_decline"
+  ],
+  "dcb6771210756eb01d0d0066": [
+    "polite_decline",
+    "already_handled"
+  ],
+  "c5b56439d3a5b4e9834e67a2": [
+    "person_unavailable"
+  ],
+  "57e7001beb1aa34b671f9cd8": [
+    "person_unavailable"
+  ],
+  "0cf4032c27487998f1ac9239": [
+    "polite_decline"
+  ],
+  "f907e25d04f178c768c94ef4": [
+    "polite_decline"
+  ],
+  "942ea8afdf3e67e3f5d457f5": [
+    "already_handled"
+  ],
+  "73e7adeef1f8979bd3463866": [
+    "already_handled"
+  ],
+  "965f4ca4978f78474075e920": [
+    "interested_future",
+    "already_handled"
+  ],
+  "ca344620c6fa989cb2375af9": [
+    "interested_future",
+    "not_now_busy"
+  ],
+  "0feb77734bc189bd972ac6bc": [
+    "interested_future"
+  ],
+  "e2f66edcd8306f1cf2f928fc": [
+    "polite_decline"
+  ],
+  "ff6fb037c056cd5e66482073": [
+    "person_unavailable"
+  ],
+  "df1f3a8e9d26eff0bc84aaa0": [
+    "polite_decline",
+    "already_handled"
+  ],
+  "8e927456d2ccfd9ae0a89a82": [
+    "not_now_busy"
+  ],
+  "826dbec5fd06d581ab3fb00f": [
+    "polite_acknowledgement"
+  ],
+  "d8d1177e226a21d8139d091d": [
+    "not_now_busy"
+  ],
+  "5741e2be9a660ac35c5615a0": [
+    "unclear"
+  ],
+  "5f35fe1a9568ad8409ce4227": [
+    "curious_question"
+  ],
+  "74f8076c33ee38711336ee42": [
+    "curious_question"
+  ],
+  "fba276d238b564eade719c34": [
+    "polite_decline"
+  ],
+  "c28b33bca66db141d1b99869": [
+    "interested_future",
+    "already_handled"
+  ],
+  "02d7f0fd9d1664f53be3eb01": [
+    "polite_decline"
+  ],
+  "48813e7f21e750e73090a7e6": [
+    "referred_to_colleague"
+  ],
+  "da2cb4c19d67d111a03c477c": [
+    "curious_question"
+  ],
+  "48a0e6ea09453c1e873071e8": [
+    "already_handled"
+  ],
+  "df4c306a52f0b7abbf5f0809": [
+    "interested_future",
+    "already_handled"
+  ],
+  "0ef99e1c2ccc40f12ead5b7e": [
+    "already_handled"
+  ],
+  "711c87dc4f66bb704502bf21": [
+    "interested_future",
+    "not_now_busy"
+  ],
+  "ccbe071beec0525e0e66e496": [
+    "not_now_busy"
+  ],
+  "3a693666e68a0f6780d0ef1b": [
+    "not_now_busy"
+  ],
+  "52473d87a664d8965ef1e420": [
+    "interested_future"
+  ],
+  "055fd1f04102343ac61054b8": [
+    "meeting_requested"
+  ],
+  "f4e7265753e1a2b55c2ecc45": [
+    "already_handled"
+  ],
+  "d2a47b379d37ce2c58004495": [
+    "not_now_busy"
+  ],
+  "ef5007aa942530babd4cfa02": [
+    "meeting_requested"
+  ],
+  "0e424c919bcc242127ec3cde": [
+    "already_handled"
+  ],
+  "c26ecce194b2fd5d485f653d": [
+    "not_now_busy"
+  ]
+}

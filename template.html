@@ -1,0 +1,2423 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<title>Pina Earth · Outreach Replies</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+:root {
+  --bg:       #f4f5f7;
+  --panel:    #ffffff;
+  --panel-2:  #f0f2f5;
+  --border:   #e5e7eb;
+  --muted:    #9ca3af;
+  --muted-2:  #6b7280;
+  --text:     #111827;
+  --text-2:   #374151;
+  --accent:   #10b981;
+  --link:     #2563eb;
+  --header-h: 52px;
+  --filter-h: 44px;
+
+  --pos: #10b981;
+  --neu: #94a3b8;
+  --neg: #f87171;
+
+  --d-meeting:  #16a34a; --d-meeting-fg:  #f0fdf4;
+  --d-curious:  #0284c7; --d-curious-fg:  #eff6ff;
+  --d-future:   #0d9488; --d-future-fg:   #f0fdfa;
+  --d-ack:      #d97706; --d-ack-fg:      #fffbeb;
+  --d-referred: #7c3aed; --d-referred-fg: #faf5ff;
+  --d-notnow:   #ea580c; --d-notnow-fg:   #fff7ed;
+  --d-already:  #b45309; --d-already-fg:  #fffbeb;
+  --d-unavail:  #475569; --d-unavail-fg:  #f8fafc;
+  --d-polite:   #dc2626; --d-polite-fg:   #fef2f2;
+  --d-hard:     #7f1d1d; --d-hard-fg:     #fee2e2;
+  --d-unclear:  #6b7280; --d-unclear-fg:  #f9fafb;
+}
+
+[data-theme="dark"] {
+  --bg:      #0f1115;
+  --panel:   #171a21;
+  --panel-2: #1e2230;
+  --border:  #2a2f3a;
+  --muted:   #8b93a7;
+  --muted-2: #6b7480;
+  --text:    #e6e9ef;
+  --text-2:  #c4c9d4;
+  --accent:  #34d399;
+  --link:    #93c5fd;
+
+  --d-meeting-fg:  #052e16;
+  --d-curious-fg:  #082f49;
+  --d-future-fg:   #042f2e;
+  --d-ack-fg:      #422006;
+  --d-referred-fg: #1e1b4b;
+  --d-notnow-fg:   #431407;
+  --d-already-fg:  #431407;
+  --d-unavail-fg:  #f8fafc;
+  --d-polite-fg:   #fff;
+  --d-hard-fg:     #fff;
+  --d-unclear-fg:  #f1f5f9;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter, Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; }
+button { font-family: inherit; cursor: pointer; }
+input, select { font-family: inherit; }
+
+/* ── Header ────────────────────────────────────── */
+.header {
+  height: var(--header-h);
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 0;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+}
+
+.logo {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 20px;
+  letter-spacing: -0.2px;
+}
+.logo-leaf { font-size: 16px; }
+
+.main-tabs { display: flex; gap: 2px; }
+.main-tab {
+  padding: 5px 12px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.1s;
+}
+.main-tab:hover { background: var(--panel-2); color: var(--text); }
+.main-tab.active { background: var(--panel-2); color: var(--text); }
+
+.hsep { width: 1px; height: 20px; background: var(--border); margin: 0 14px; flex-shrink: 0; }
+
+.owner-select {
+  height: 28px;
+  padding: 0 24px 0 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+.owner-select:focus { outline: none; border-color: var(--accent); }
+
+.header-right { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+.icon-btn {
+  width: 30px; height: 30px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+.icon-btn:hover { background: var(--panel-2); color: var(--text); }
+
+/* ── App shell ─────────────────────────────────── */
+.app {
+  position: fixed;
+  top: var(--header-h);
+  bottom: 0; left: 0; right: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.view { display: none; flex: 1; overflow: hidden; flex-direction: column; }
+.view.active { display: flex; }
+
+/* ── Filter bar ────────────────────────────────── */
+.filter-bar {
+  height: var(--filter-h);
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  flex-shrink: 0;
+}
+
+.search-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+.search-wrap svg {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--muted);
+}
+.search-input {
+  width: 200px;
+  height: 28px;
+  padding: 0 8px 0 28px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 12px;
+}
+.search-input::placeholder { color: var(--muted); }
+.search-input:focus { outline: none; border-color: var(--accent); }
+
+.filter-select {
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  max-width: 160px;
+}
+.filter-select:focus { outline: none; border-color: var(--accent); }
+.filter-select.has-value { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.filter-divider { width: 1px; height: 16px; background: var(--border); margin: 0 2px; }
+
+.filter-toggle {
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.1s;
+  white-space: nowrap;
+}
+.filter-toggle:hover { border-color: var(--muted); color: var(--text); }
+.filter-toggle.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.reply-count { font-size: 12px; color: var(--muted); margin-left: auto; white-space: nowrap; }
+.extra-filter-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--accent); color: #fff;
+  font-size: 11px; font-weight: 600;
+  border-radius: 12px; padding: 3px 4px 3px 10px;
+  margin-left: 4px;
+}
+.extra-filter-chip button {
+  background: rgba(255,255,255,0.25); color: #fff;
+  border: none; cursor: pointer;
+  width: 16px; height: 16px; border-radius: 50%;
+  font-size: 12px; line-height: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.extra-filter-chip button:hover { background: rgba(255,255,255,0.4); }
+
+/* ── Inbox layout ──────────────────────────────── */
+.inbox-layout {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* ── Reply list ────────────────────────────────── */
+.inbox-list {
+  width: 360px;
+  min-width: 300px;
+  max-width: 420px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.reply-list { flex: 1; overflow-y: auto; }
+
+.reply-list-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.reply-item {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  transition: background 0.08s;
+  border-left: 2px solid transparent;
+}
+.reply-item:hover { background: var(--panel-2); }
+.reply-item.selected {
+  background: color-mix(in srgb, var(--accent) 8%, var(--panel));
+  border-left-color: var(--accent);
+}
+
+.reply-avatar {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  margin-top: 1px;
+}
+
+.reply-content { flex: 1; min-width: 0; }
+
+.reply-row1 {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 1px;
+}
+.reply-name {
+  font-weight: 600;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+}
+.reply-date {
+  font-size: 11px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.reply-company {
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 5px;
+}
+
+.reply-snippet {
+  font-size: 12px;
+  color: var(--muted-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+
+.reply-tags {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.tag-pill {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.tag-pill-more {
+  font-size: 10px;
+  color: var(--muted);
+  padding: 2px 4px;
+}
+
+.manual-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+  margin-top: 4px;
+  title: "Manually tagged";
+}
+
+.flag-icon { color: #f59e0b; flex-shrink: 0; line-height: 1; }
+.reply-item .flag-icon { font-size: 12px; margin-left: 2px; }
+.detail-flag-btn {
+  background: none; border: 1px solid var(--border);
+  border-radius: 6px; padding: 3px 8px; cursor: pointer;
+  font-size: 12px; color: var(--muted); display: inline-flex;
+  align-items: center; gap: 4px; line-height: 1;
+}
+.detail-flag-btn:hover { border-color: #f59e0b; color: #f59e0b; }
+.detail-flag-btn.on { background: #f59e0b; border-color: #f59e0b; color: #fff; }
+
+/* ── Detail panel ──────────────────────────────── */
+.inbox-detail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--panel);
+}
+
+.detail-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  gap: 10px;
+}
+.detail-empty-icon { font-size: 28px; opacity: 0.35; }
+.detail-empty p { font-size: 13px; }
+.detail-empty .hint {
+  font-size: 12px;
+  display: flex;
+  gap: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.detail-empty kbd {
+  display: inline-block;
+  padding: 1px 5px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 11px;
+  font-family: monospace;
+}
+
+.detail-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Detail header */
+.detail-head {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.detail-avatar {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: #fff;
+}
+.detail-person { flex: 1; min-width: 0; }
+.detail-name-row { display: flex; align-items: center; gap: 7px; }
+.detail-name { font-size: 15px; font-weight: 600; }
+.outcome-badge { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.detail-meta {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.detail-classification {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 6px;
+}
+.detail-links { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+.detail-link {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--muted-2);
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.detail-link:hover { color: var(--text); border-color: var(--muted); text-decoration: none; }
+
+.detail-nav {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.nav-pos { font-size: 11px; color: var(--muted); white-space: nowrap; }
+.nav-btn {
+  width: 26px; height: 26px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+}
+.nav-btn:hover:not(:disabled) { background: var(--panel-2); color: var(--text); }
+.nav-btn:disabled { opacity: 0.3; cursor: default; }
+
+/* Detail body (scrollable) */
+.detail-body {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.reply-section {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.section-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.source-badge {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.source-ai     { background: #d1fae5; color: #065f46; }
+.source-manual { background: #fef3c7; color: #92400e; }
+[data-theme="dark"] .source-ai     { background: #064e3b; color: #6ee7b7; }
+[data-theme="dark"] .source-manual { background: #451a03; color: #fcd34d; }
+
+.reply-text {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-2);
+  white-space: pre-wrap;
+}
+
+/* Chat thread */
+.chat-thread {
+  padding: 16px 16px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chat-msg {
+  display: flex;
+  flex-direction: column;
+  max-width: 82%;
+}
+.chat-msg.owner { align-self: flex-end; align-items: flex-end; }
+.chat-msg.prospect { align-self: flex-start; align-items: flex-start; }
+
+.chat-sender {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 3px;
+  padding: 0 4px;
+}
+
+.chat-bubble {
+  padding: 9px 13px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.chat-msg.owner .chat-bubble {
+  background: var(--accent);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+[data-theme="dark"] .chat-msg.owner .chat-bubble { color: #052e16; }
+
+.chat-msg.prospect .chat-bubble {
+  background: var(--panel-2);
+  color: var(--text-2);
+  border-bottom-left-radius: 4px;
+  border: 1px solid var(--border);
+}
+.chat-msg.prospect.last-reply .chat-bubble {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+.chat-date {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 3px;
+  padding: 0 4px;
+}
+
+/* Tag section — pinned at bottom */
+.tag-section {
+  flex-shrink: 0;
+  border-top: 1px solid var(--border);
+  background: var(--panel);
+  padding: 14px 18px;
+}
+.tag-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.tag-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+}
+.reset-btn {
+  font-size: 11px;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.reset-btn:hover { background: var(--panel-2); color: var(--neg); }
+
+.tag-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.tag-toggle {
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1.5px solid var(--border);
+  background: var(--panel-2);
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: border-color 0.1s, background 0.1s;
+}
+.tag-toggle:hover { border-color: var(--muted); }
+.tag-toggle.on { border-color: transparent; }
+.tag-toggle .key {
+  font-size: 10px;
+  font-family: monospace;
+  opacity: 0.45;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  padding: 0 3px;
+  line-height: 1.4;
+}
+
+/* ── Analytics view ────────────────────────────── */
+.analytics-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 24px 48px;
+}
+.analytics-owner-tabs { display: none; }
+
+.analytics-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.analytics-filter-bar label { font-size: 12px; color: var(--muted-2); }
+
+
+/* ── Funnel / sankey ──────────────────────────── */
+.funnel-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 22px 22px;
+}
+.funnel-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.funnel-sub   { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+.sankey-wrap { width: 100%; overflow-x: auto; }
+.sankey-svg  { display: block; min-width: 800px; }
+.sankey-svg .node rect { stroke: none; }
+.sankey-svg .node-label {
+  font-size: 11px; fill: var(--text); font-weight: 600;
+  dominant-baseline: middle;
+}
+.sankey-svg .node-sub {
+  font-size: 10px; fill: var(--muted);
+  dominant-baseline: middle;
+}
+.sankey-svg .link {
+  fill-opacity: 0.35;
+  transition: fill-opacity 0.15s;
+}
+.sankey-svg .link:hover { fill-opacity: 0.7; }
+.sankey-empty {
+  padding: 40px 20px; text-align: center; color: var(--muted); font-size: 13px;
+}
+.sankey-svg .node { cursor: pointer; }
+.sankey-svg .node rect { transition: filter 0.15s; }
+.sankey-svg .node:hover rect { filter: brightness(1.15); }
+
+/* ── Step funnel (vertical) ──────────────────── */
+.step-funnel { max-width: 820px; margin: 0 auto; }
+.step-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 4px 0;
+}
+.step-info {
+  width: 200px; text-align: right; flex-shrink: 0;
+  font-size: 12px; color: var(--text-2); font-weight: 600;
+}
+.step-bar-wrap {
+  flex: 1; height: 40px;
+  background: var(--panel-2); border-radius: 6px;
+  position: relative; overflow: hidden;
+}
+.step-bar {
+  height: 100%;
+  display: flex; align-items: center;
+  padding: 0 14px;
+  color: #fff; font-size: 12px; font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.15s;
+  gap: 10px;
+}
+.step-bar:hover { filter: brightness(1.12); }
+.step-bar .v   { font-size: 14px; font-weight: 700; }
+.step-bar .p   { opacity: 0.85; font-weight: 500; }
+.step-drop {
+  display: flex; align-items: center; gap: 10px;
+  margin: 4px 0 4px 214px;
+  padding: 4px 10px 4px 8px;
+  font-size: 12px; color: var(--muted-2);
+  cursor: pointer; border-radius: 6px;
+  width: fit-content; max-width: 100%;
+  transition: background 0.1s, color 0.1s;
+}
+.step-drop:hover { background: var(--panel-2); color: var(--text); }
+.step-drop .arrow { color: var(--muted); font-size: 14px; line-height: 1; }
+.step-drop .dot   { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.step-drop .lbl   { font-weight: 500; }
+.step-drop .cnt   { font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+.step-drop .pct   { color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* ── Sidesheet ───────────────────────────────── */
+.sheet-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.3);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.15s;
+  z-index: 99;
+}
+.sheet-backdrop.open { opacity: 1; pointer-events: auto; }
+.sidesheet {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: min(520px, 90vw);
+  background: var(--panel);
+  border-left: 1px solid var(--border);
+  box-shadow: -8px 0 24px rgba(0,0,0,0.12);
+  transform: translateX(100%);
+  transition: transform 0.18s ease-out;
+  z-index: 100;
+  display: flex; flex-direction: column;
+}
+.sidesheet.open { transform: translateX(0); }
+.sidesheet-head {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+}
+.sidesheet-title { font-size: 14px; font-weight: 700; color: var(--text); }
+.sidesheet-sub   { font-size: 11px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.6px; }
+.sidesheet-close {
+  background: none; border: none; cursor: pointer;
+  font-size: 20px; line-height: 1; color: var(--muted); padding: 0;
+}
+.sidesheet-close:hover { color: var(--text); }
+.sidesheet-body { flex: 1; overflow-y: auto; padding: 8px 0; }
+.contact-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.contact-row:last-child { border-bottom: none; }
+.contact-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--accent); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 600; font-size: 13px; flex-shrink: 0;
+}
+.contact-meta { flex: 1; min-width: 0; }
+.contact-name { font-size: 13px; font-weight: 600; color: var(--text); }
+.contact-sub  { font-size: 11px; color: var(--muted); margin-top: 2px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.contact-link {
+  font-size: 11px; color: var(--accent); text-decoration: none;
+  padding: 4px 8px; border: 1px solid var(--border); border-radius: 4px;
+  flex-shrink: 0;
+}
+.contact-link:hover { background: var(--panel-2); }
+
+/* ── KPI strip ─────────────────────────────────── */
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 16px;
+}
+@media (max-width: 900px) { .kpi-strip { grid-template-columns: 1fr; } }
+.kpi-item {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 20px 14px;
+  display: flex;
+  flex-direction: column;
+}
+.kpi-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.kpi-number { font-size: 30px; font-weight: 700; line-height: 1; letter-spacing: -0.5px; }
+.kpi-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.kpi-breakdown { margin-top: 16px; display: flex; flex-direction: column; }
+.kpi-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 4px;
+  margin: 0 -4px;
+  font-size: 12px;
+  border-top: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.1s ease;
+}
+.kpi-row:hover { background: var(--panel-2); }
+.kpi-row:first-child { border-top: none; }
+.kpi-row .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.kpi-row .label {
+  flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  color: var(--text);
+}
+.kpi-row .count { color: var(--muted); font-variant-numeric: tabular-nums; }
+.kpi-row .pct { color: var(--muted); font-variant-numeric: tabular-nums; min-width: 38px; text-align: right; }
+.kpi-row-empty { padding: 8px 0; font-size: 12px; color: var(--muted); }
+
+/* ── Analytics grid ────────────────────────────── */
+.analytics-grid {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 14px;
+}
+@media (max-width: 900px) { .analytics-grid { grid-template-columns: 1fr; } }
+
+.chart-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+.chart-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--muted);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.chart-title span { font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 10px; }
+
+/* ── Campaign table ────────────────────────────── */
+.camp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.camp-table th {
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--muted);
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+.camp-table th:hover { color: var(--text); }
+.camp-table th.sorted { color: var(--text); }
+.camp-table td { padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.camp-table tr:last-child td { border-bottom: none; }
+.camp-table tr.camp-row { cursor: pointer; }
+.camp-table tr.camp-row:hover td { background: var(--panel-2); }
+.camp-table .num { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted-2); }
+.camp-table .meet-num { color: var(--d-meeting); font-weight: 600; }
+
+.rate-cell { display: flex; align-items: center; gap: 8px; }
+.rate-bar-wrap { flex: 1; height: 5px; background: var(--panel-2); border-radius: 3px; overflow: hidden; min-width: 40px; }
+.rate-bar { height: 100%; border-radius: 3px; background: var(--pos); }
+.rate-label { font-size: 12px; font-weight: 600; color: var(--pos); min-width: 30px; text-align: right; }
+
+/* ── Pie chart layout ──────────────────────────── */
+.chart-title-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.pie-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.pie-table th { font-size: 11px; font-weight: 600; color: var(--muted-2); text-align: right; padding: 0 6px 5px; border-bottom: 1px solid var(--border); cursor: pointer; user-select: none; white-space: nowrap; }
+.pie-table th:hover { color: var(--text); }
+.pie-table th.sorted { color: var(--text); }
+.pie-table th:first-child { text-align: left; }
+.pie-table td { padding: 5px 6px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.pie-table tr:last-child td { border-bottom: none; }
+.pie-table .pt-label { display: flex; align-items: center; gap: 6px; color: var(--text-2); }
+.pie-table .pt-dot { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
+.pie-table .pt-n { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+.pie-table .pt-rate { text-align: right; font-weight: 600; color: var(--pos); }
+
+/* ── Stacked day chart ─────────────────────────── */
+.day-chart { display: flex; flex-direction: column; gap: 6px; }
+.day-row {
+  display: grid;
+  grid-template-columns: 28px 1fr 28px;
+  gap: 8px;
+  align-items: center;
+}
+.day-label { font-size: 11px; font-weight: 600; color: var(--muted-2); }
+.day-bar { height: 18px; border-radius: 4px; overflow: hidden; display: flex; background: var(--panel-2); }
+.day-seg { height: 100%; }
+.day-count { font-size: 11px; color: var(--muted); text-align: right; }
+.chart-legend { display: flex; gap: 14px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted-2); }
+.legend-dot { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
+
+/* ── Response breakdown list ───────────────────── */
+.resp-list { display: flex; flex-direction: column; }
+.resp-head {
+  display: grid;
+  grid-template-columns: 8px 1fr auto 40px 38px;
+  gap: 10px;
+  align-items: center;
+  padding: 0 6px 6px;
+  margin: 0 -6px 4px;
+  border-bottom: 1px solid var(--border);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--muted);
+}
+.resp-head .h {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+.resp-head .h:hover { color: var(--text); }
+.resp-head .h.sorted { color: var(--text); }
+.resp-head .h.num { text-align: right; }
+.resp-row {
+  display: grid;
+  grid-template-columns: 8px 1fr auto 40px 38px;
+  gap: 10px;
+  align-items: center;
+  padding: 7px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.1s;
+  margin: 0 -6px;
+}
+.resp-row:hover { background: var(--panel-2); }
+.resp-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.resp-label { font-size: 13px; color: var(--text-2); }
+.resp-bar-wrap { height: 4px; background: var(--panel-2); border-radius: 2px; overflow: hidden; }
+.resp-bar { height: 100%; border-radius: 2px; opacity: 0.5; }
+.resp-count { font-size: 12px; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+.resp-pct   { font-size: 12px; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+.resp-group-head {
+  display: grid;
+  grid-template-columns: 8px 1fr auto 40px 38px;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 6px 6px;
+  margin: 8px -6px 0;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.resp-group-head:first-of-type { border-top: none; padding-top: 4px; }
+.resp-group-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+.resp-group-label { color: var(--text); }
+.resp-group-count { color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+.resp-group-pct   { color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+.resp-row.in-group { padding-left: 22px; }
+
+/* ── Toast ─────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  background: var(--text);
+  color: var(--bg);
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s, transform 0.18s;
+  z-index: 999;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── Scrollbar ─────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo"><span class="logo-leaf">🌲</span> Pina Outreach</div>
+
+  <select class="owner-select" id="owner-select"></select>
+
+  <div class="hsep"></div>
+
+  <div class="main-tabs">
+    <button class="main-tab active" data-view="analytics">Analytics</button>
+    <button class="main-tab" data-view="inbox">Inbox</button>
+    <button class="main-tab" data-view="funnel">Funnel</button>
+  </div>
+
+  <div class="header-right">
+    <button class="icon-btn" id="theme-btn" title="Toggle theme">☾</button>
+  </div>
+</header>
+
+<div class="app">
+
+  <!-- ── INBOX VIEW ─────────────────────────────── -->
+  <div class="view" id="view-inbox">
+
+    <div class="filter-bar">
+      <div class="search-wrap">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input class="search-input" id="search-input" type="search" placeholder="Search…" />
+      </div>
+
+      <div class="filter-divider"></div>
+
+      <select class="filter-select" id="filter-campaign">
+        <option value="">All campaigns</option>
+      </select>
+
+      <select class="filter-select" id="filter-outcome">
+        <option value="">All outcomes</option>
+        <option value="positive">Positive</option>
+        <option value="neutral">Neutral</option>
+        <option value="declined">Declined</option>
+      </select>
+
+      <select class="filter-select" id="filter-disp">
+        <option value="">All tags</option>
+      </select>
+
+      <div class="filter-divider"></div>
+
+      <button class="filter-toggle" id="filter-followups">Follow-ups</button>
+      <button class="filter-toggle" id="filter-flagged">⚑ Flagged</button>
+
+      <span class="extra-filter-chip" id="extra-filter-chip" style="display:none"></span>
+      <span class="reply-count" id="reply-count"></span>
+    </div>
+
+    <div class="inbox-layout">
+
+      <div class="inbox-list">
+        <div class="reply-list" id="reply-list"></div>
+      </div>
+
+      <div class="inbox-detail" id="inbox-detail">
+        <div class="detail-empty" id="detail-empty">
+          <div class="detail-empty-icon">✉</div>
+          <p>Select a reply to review</p>
+          <div class="hint">
+            <span><kbd>j</kbd>/<kbd>k</kbd> navigate</span>
+            <span><kbd>1</kbd>–<kbd>9</kbd> tag</span>
+            <span><kbd>f</kbd> flag</span>
+            <span><kbd>Enter</kbd> next</span>
+          </div>
+        </div>
+        <div class="detail-inner" id="detail-inner" style="display:none"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── ANALYTICS VIEW ────────────────────────── -->
+  <div class="view active" id="view-analytics">
+    <div class="analytics-body">
+      <div class="analytics-owner-tabs" id="analytics-owner-tabs"></div>
+      <div id="analytics-content"></div>
+    </div>
+  </div>
+
+  <!-- ── FUNNEL VIEW ───────────────────────────── -->
+  <div class="view" id="view-funnel">
+    <div class="analytics-body">
+      <div class="analytics-filter-bar">
+        <label>Funnel</label>
+        <select class="filter-select" id="funnel-select"></select>
+      </div>
+      <div id="funnel-content"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="sheet-backdrop" id="sheet-backdrop"></div>
+<aside class="sidesheet" id="sidesheet" aria-hidden="true">
+  <div class="sidesheet-head">
+    <div>
+      <div class="sidesheet-sub" id="sidesheet-sub"></div>
+      <div class="sidesheet-title" id="sidesheet-title"></div>
+    </div>
+    <button class="sidesheet-close" id="sidesheet-close" title="Close (Esc)">×</button>
+  </div>
+  <div class="sidesheet-body" id="sidesheet-body"></div>
+</aside>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DATA = /*__DATA__*/null;
+
+(function () {
+  if (!DATA) {
+    document.body.innerHTML = '<div style="padding:48px;color:#999;font-family:sans-serif">No data — run <code>python3 extract.py && python3 build.py</code></div>';
+    return;
+  }
+
+  // ── Dispositions ────────────────────────────────
+  const DISPOSITIONS = [
+    { id: "meeting_requested",     label: "Meeting",      color: "var(--d-meeting)",  fg: "var(--d-meeting-fg)",  av: "#16a34a" },
+    { id: "curious_question",      label: "Curious",      color: "var(--d-curious)",  fg: "var(--d-curious-fg)",  av: "#0284c7" },
+    { id: "interested_future",     label: "Future",       color: "var(--d-future)",   fg: "var(--d-future-fg)",   av: "#0d9488" },
+    { id: "polite_acknowledgement",label: "Acknowledged", color: "var(--d-ack)",      fg: "var(--d-ack-fg)",      av: "#d97706" },
+    { id: "referred_to_colleague", label: "Referred",     color: "var(--d-referred)", fg: "var(--d-referred-fg)", av: "#7c3aed" },
+    { id: "not_now_busy",          label: "Not now",      color: "var(--d-notnow)",   fg: "var(--d-notnow-fg)",   av: "#ea580c" },
+    { id: "already_handled",       label: "Already done", color: "var(--d-already)",  fg: "var(--d-already-fg)",  av: "#b45309" },
+    { id: "person_unavailable",    label: "Unavailable",  color: "var(--d-unavail)",  fg: "var(--d-unavail-fg)",  av: "#475569" },
+    { id: "polite_decline",        label: "Declined",     color: "var(--d-polite)",   fg: "var(--d-polite-fg)",   av: "#dc2626" },
+    { id: "hard_decline",          label: "Hard no",      color: "var(--d-hard)",     fg: "var(--d-hard-fg)",     av: "#7f1d1d" },
+    { id: "unclear",               label: "Unclear",      color: "var(--d-unclear)",  fg: "var(--d-unclear-fg)",  av: "#6b7280" },
+  ];
+  const DISP_IDS = DISPOSITIONS.map(d => d.id);
+  const DISP_MAP = Object.fromEntries(DISPOSITIONS.map((d, i) => [d.id, { ...d, idx: i }]));
+
+  // Higher-level grouping for the response breakdown — the user grouped
+  // declined, not now, future, hard no as the same category. We extend that
+  // to also include already_handled (same intent: "no thanks for now").
+  const RESPONSE_GROUPS = [
+    { id: "engaged",  label: "Engaged",            color: "#16a34a",
+      members: ["meeting_requested", "curious_question"] },
+    { id: "declined", label: "Declined or deferred", color: "#dc2626",
+      members: ["polite_decline", "not_now_busy", "interested_future", "hard_decline", "already_handled"] },
+    { id: "routed",   label: "Routed or unavailable", color: "#7c3aed",
+      members: ["referred_to_colleague", "person_unavailable"] },
+    { id: "other",    label: "Acknowledged or unclear", color: "#94a3b8",
+      members: ["polite_acknowledgement", "unclear"] },
+  ];
+
+  const DECLINE_REASONS = [
+    { id: "already_handled",       label: "Already has a partner",   color: "#b45309" },
+    { id: "handled_internally",    label: "Handled in-house",        color: "#0891b2" },
+    { id: "no_budget",             label: "No budget",               color: "#9333ea" },
+    { id: "wrong_timing",          label: "Wrong timing",            color: "#ea580c" },
+    { id: "not_relevant",          label: "Not relevant",            color: "#64748b" },
+    { id: "prefers_other_approach",label: "Prefers other approach",  color: "#0d9488" },
+    { id: "no_reason_stated",      label: "No reason given",         color: "#9ca3af" },
+  ];
+  const DECLINE_MAP = Object.fromEntries(DECLINE_REASONS.map(d => [d.id, d]));
+
+  const ROLE_GROUPS = [
+    { id: "sus",  label: "Sustainability / CSR / ESG", re: /sustain|csr|esg|nachhalt|klima|umwelt|environ/i },
+    { id: "cxo",  label: "C-Level",                    re: /\bceo\b|\bcfo\b|\bcoo\b|\bcto\b|vorstand|gesch.ftsf.hr|managing director|chief/i },
+    { id: "head", label: "Head / Director / VP",        re: /\bhead\b|director|\bleiter|\bleiterin\b|\bvp\b|vice president/i },
+    { id: "mgr",  label: "Manager",                     re: /\bmanager\b|\bmanagerin\b/i },
+    { id: "spec", label: "Specialist / Analyst",        re: /specialist|analyst|expert|berater|consultant|referent/i },
+  ];
+  const DOW_LABELS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  const ROLE_COLORS = ["#10b981","#8b5cf6","#f59e0b","#3b82f6","#ef4444","#9ca3af"];
+  const GENDER_COLORS = { female:"#ec4899", male:"#3b82f6", unknown:"#9ca3af" };
+
+  const FEMALE_NAMES = new Set(["Anna","Marie","Maria","Julia","Laura","Lisa","Sarah","Sandra","Nicole","Andrea","Petra","Monika","Susanne","Katharina","Barbara","Nina","Jana","Eva","Karin","Silke","Birgit","Heike","Angelika","Anja","Christine","Elisabeth","Hannah","Lena","Melanie","Nadine","Franziska","Kathrin","Bettina","Michaela","Martina","Sonja","Renate","Ursula","Anke","Iris","Tanja","Marion","Manuela","Annette","Charlotte","Johanna","Leonie","Emma","Sophie","Sophia","Clara","Rebecca","Lea","Alina","Lara","Alexandra","Elena","Vera","Denise","Miriam","Carolin","Yvonne","Antje","Ulrike","Simone","Nora","Vanessa","Kristin","Kerstin","Ines","Corinna","Maike","Christina","Claudia","Stefanie","Sabrina","Brigitte","Sabine","Cornelia","Astrid","Beate","Dagmar","Friederike","Gabriele","Hanna","Ilona","Jutta","Katja","Linda","Margit","Nadja","Olga","Ramona","Silvia","Zoe","Amelie","Anne","Antonia","Caroline","Diana","Elke","Gerda","Helga","Ingrid","Jennifer","Luise","Maren","Tatjana","Ute","Veronika","Edith","Birte","Wiebke","Imke","Inken","Gesine","Frauke","Dorothee","Dorothea","Waltraud","Roswitha","Hannelore","Hildegard","Christa","Annegret","Annemarie","Celine","Felicitas","Isabelle","Jacqueline","Katrin","Larissa","Natalie","Patrizia","Sandra","Vanessa","Yasmin","Tina","Ricarda","Petra","Nicole","Nathalie","Magdalena","Lotte","Johanna","Greta","Franka","Edda","Dagmar","Cecilia","Brenda","Annalena","Anika","Agnes","Adelheid","Wibke","Uta","Trude","Sibylle","Rosemarie","Renata","Regine","Rebekka","Ragna","Norma","Nicola","Nancy","Mona","Mia","Meike","Megan","Lisa-Marie","Lena-Marie","Kira","Kirsten","Gabi","Frieda","Elsa","Elena","Doris","Dana"]);
+  const MALE_NAMES = new Set(["Thomas","Andreas","Michael","Stefan","Martin","Markus","Christian","Peter","Klaus","Jürgen","Frank","Wolfgang","Hans","Ralf","Bernd","Uwe","Dieter","Matthias","Tobias","Daniel","Jan","Jonas","Sebastian","Philipp","Alexander","David","Lukas","Felix","Maximilian","Florian","Tim","Tom","Simon","Kevin","Patrick","Christoph","Oliver","Stephan","Sven","Torsten","Holger","Dirk","Jochen","Armin","Karl","Georg","Werner","Gerhard","Helmut","Robert","Ulrich","Roland","Rainer","Horst","Heinz","Volker","Marcel","Benjamin","Niklas","Fabian","Leon","Erik","Henrik","Lars","Axel","Carsten","Ernst","Friedrich","Gerd","Jens","Josef","Lothar","Ludwig","Norbert","Paul","Walter","Wilhelm","Burkhard","Detlef","Egon","Franz","Heinrich","Johann","Kurt","Manfred","Rudolf","René","Kai","Richard","Otto","Max","Jakob","Johannes","Dominik","Marco","Nico","Julian","Raphael","Timo","Moritz","Luca","Finn","Elias","Jörg","Reiner","Mike","Konrad","Hannes","Joachim","Hubert","Herbert","Harald","Erich","Bernhard","Arnold","Oskar","Emil","Bruno","Alois","Günter","Günther","Rüdiger","Udo","Viktor","Reinhold","Rolf","Theodor","Nikolaus","Leonhard","Klemens","Ingmar","Gottfried","Gerold","Wolfram","Volkmar","Sigurd","Rudi","Otto","Olaf","Nico","Nils","Mads","Lars","Klaus-Peter","Klaus-Dieter","Kay","Jürgen","Josef","Johannes","Jochen","Joachim","Jens","Jan","Ingo","Igor","Heiko","Hans-Jürgen","Hans-Peter","Hanno","Gunter","Guido","Gregor","Götz","Florian","Ekkehard","Eduard","Eckhard","Dirk","Dennis","Denny","Claas","Carsten","Carl","Bodo","Björn","Benedikt","Anton","Alfons","Achim","Aaron"]);
+
+  function inferGender(r) {
+    const pos = r.position || "";
+    if (/managerin|leiterin|direktorin|beraterin|spezialistin|koordinatorin|referentin|assistentin|geschäftsführerin|vorsitzende|teamleiterin|inhaberin|partnerin|gründerin|unternehmerin|chefin|präsidentin/i.test(pos)) return "female";
+    const first = (r.full_name || "").split(/\s+/)[0];
+    if (FEMALE_NAMES.has(first)) return "female";
+    if (MALE_NAMES.has(first)) return "male";
+    return "unknown";
+  }
+
+  const OUTCOMES = {
+    meeting_requested: "positive", curious_question: "positive", interested_future: "positive",
+    polite_acknowledgement: "neutral", referred_to_colleague: "neutral", person_unavailable: "neutral", unclear: "neutral",
+    not_now_busy: "declined", already_handled: "declined", polite_decline: "declined", hard_decline: "declined",
+  };
+
+  // ── Storage ─────────────────────────────────────
+  const TAG_KEY = "dashboard.tags.v3";
+  const SETTINGS_KEY = "dashboard.settings.v2";
+  const FLAG_KEY = "dashboard.flags.v1";
+
+  const loadJSON = (k, fb) => { try { return JSON.parse(localStorage.getItem(k) || "null") ?? fb; } catch { return fb; } };
+  const saveJSON = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+
+  // Migrate v1/v2
+  if (!localStorage.getItem(TAG_KEY)) {
+    const src = localStorage.getItem("dashboard.tags.v2") || localStorage.getItem("dashboard.tags.v1");
+    if (src) try {
+      const old = JSON.parse(src);
+      const out = {};
+      for (const [k, v] of Object.entries(old)) {
+        const arr = Array.isArray(v) ? v : (DISP_IDS.includes(v) ? [v] : []);
+        const valid = arr.filter(x => DISP_IDS.includes(x));
+        if (valid.length) out[k] = valid;
+      }
+      if (Object.keys(out).length) saveJSON(TAG_KEY, out);
+    } catch {}
+  }
+
+  const tags = loadJSON(TAG_KEY, {});
+  const settings = loadJSON(SETTINGS_KEY, { theme: "light", owner: null });
+
+  function saveTags() { saveJSON(TAG_KEY, tags); showToast("Saved"); }
+  function saveSettings() { saveJSON(SETTINGS_KEY, settings); }
+
+  const flags = loadJSON(FLAG_KEY, {});
+  function saveFlags() { saveJSON(FLAG_KEY, flags); }
+  function isFlagged(r) { return !!flags[replyId(r)]; }
+  function toggleFlag(rid) {
+    if (flags[rid]) delete flags[rid]; else flags[rid] = true;
+    saveFlags();
+    showToast(flags[rid] ? "Flagged" : "Unflagged");
+    render();
+  }
+
+
+  // ── Helpers ─────────────────────────────────────
+  function replyId(r) {
+    return (r.profile_url || r.full_name || "") + "|" + (r.reply_at || "") + "|" + (r.reply_text || "").slice(0, 40);
+  }
+
+  function effDisps(r) {
+    const rid = replyId(r);
+    if (tags[rid] && tags[rid].length) return tags[rid];
+    const d = r.dispositions || r.disposition;
+    if (Array.isArray(d) && d.length) return d;
+    if (typeof d === "string") return [d];
+    return ["unclear"];
+  }
+
+  function isManual(r) { return !!tags[replyId(r)]; }
+
+  function sortByPriority(arr) {
+    return DISP_IDS.filter(id => arr.includes(id));
+  }
+
+  function outcomeOf(r) {
+    const ds = effDisps(r);
+    const set = new Set(ds.map(d => OUTCOMES[d] || "neutral"));
+    if (set.has("positive")) return "positive";
+    if (set.has("declined")) return "declined";
+    return "neutral";
+  }
+
+  function avatarColor(r) {
+    const d = DISP_MAP[effDisps(r)[0]];
+    return d ? d.av : "#6b7280";
+  }
+
+  function initial(r) { return (r.full_name || "?")[0].toUpperCase(); }
+
+  function fmtDate(iso) {
+    if (!iso) return "";
+    try { return new Date(iso).toLocaleDateString("de-DE", { day: "numeric", month: "short" }); }
+    catch { return ""; }
+  }
+
+  function esc(s) {
+    return String(s ?? "")
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  function pct(n, d) { return d ? Math.round(n / d * 100) : 0; }
+
+  function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
+
+  let _toastT;
+  function showToast(msg) {
+    const el = document.getElementById("toast");
+    el.textContent = msg;
+    el.classList.add("show");
+    clearTimeout(_toastT);
+    _toastT = setTimeout(() => el.classList.remove("show"), 1800);
+  }
+
+  // ── State ───────────────────────────────────────
+  const owners = Object.keys(DATA.people);
+  const FOLLOWUP_DISPS = new Set(["curious_question", "interested_future", "not_now_busy", "referred_to_colleague"]);
+
+  const state = {
+    owner: settings.owner || owners[0],
+    view: "analytics",
+    selectedRid: null,
+    filterCampaign: "",
+    filterOutcome: "",
+    filterDisp: "",
+    filterFollowups: false,
+    filterFlagged: false,
+    filterDeclineReason: "",
+    requireDisps: [],
+    search: "",
+    outreachOpen: false,
+    analyticsCampaign: "",
+  };
+
+  // ── Theme ───────────────────────────────────────
+  function applyTheme(t) {
+    document.documentElement.setAttribute("data-theme", t);
+    document.getElementById("theme-btn").textContent = t === "dark" ? "☀" : "☾";
+    settings.theme = t; saveSettings();
+  }
+  applyTheme(settings.theme || "light");
+  document.getElementById("theme-btn").onclick = () =>
+    applyTheme(settings.theme === "dark" ? "light" : "dark");
+
+  // ── View tabs ───────────────────────────────────
+  document.querySelectorAll(".main-tab").forEach(btn => {
+    btn.onclick = () => {
+      state.view = btn.dataset.view;
+      document.querySelectorAll(".main-tab").forEach(b => b.classList.toggle("active", b === btn));
+      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+      document.getElementById("view-" + state.view).classList.add("active");
+      if (state.view === "analytics") renderAnalytics();
+      else if (state.view === "funnel") renderFunnelView();
+    };
+  });
+
+  // ── Owner dropdown ──────────────────────────────
+  function renderOwnerSelect() {
+    const sel = document.getElementById("owner-select");
+    sel.innerHTML = owners.map(id => {
+      const p = DATA.people[id];
+      return `<option value="${id}" ${id === state.owner ? "selected" : ""}>${esc(p.name || id)} (${p.replies.length})</option>`;
+    }).join("");
+  }
+  renderOwnerSelect();
+  document.getElementById("owner-select").onchange = e => {
+    state.owner = e.target.value;
+    settings.owner = state.owner; saveSettings();
+    state.selectedRid = null;
+    state.filterCampaign = "";
+    state.filterDeclineReason = "";
+    state.requireDisps = [];
+    populateCampaignFilter();
+    if (state.view === "analytics") renderAnalytics();
+    else render();
+  };
+
+  // ── Filters ─────────────────────────────────────
+  function allReplies() { return (DATA.people[state.owner] || {}).replies || []; }
+
+  function filteredReplies() {
+    const q = state.search.toLowerCase();
+    return allReplies().filter(r => {
+      if (state.filterCampaign && r.campaign !== state.filterCampaign) return false;
+      if (state.filterDisp && !effDisps(r).includes(state.filterDisp)) return false;
+      if (state.filterOutcome && outcomeOf(r) !== state.filterOutcome) return false;
+      if (state.filterFollowups && !effDisps(r).some(d => FOLLOWUP_DISPS.has(d))) return false;
+      if (state.filterFlagged && !isFlagged(r)) return false;
+      if (state.filterDeclineReason && !(r.decline_reasons || []).includes(state.filterDeclineReason)) return false;
+      if (state.requireDisps.length && !state.requireDisps.every(d => effDisps(r).includes(d))) return false;
+      if (q && !([r.full_name, r.company, r.reply_text, r.campaign].join(" ").toLowerCase().includes(q))) return false;
+      return true;
+    });
+  }
+
+  function populateCampaignFilter() {
+    const sel = document.getElementById("filter-campaign");
+    const campaigns = [...new Set(allReplies().map(r => r.campaign))].sort();
+    sel.innerHTML = '<option value="">All campaigns</option>' +
+      campaigns.map(c => `<option value="${esc(c)}" ${c === state.filterCampaign ? "selected" : ""}>${esc(c)}</option>`).join("");
+    sel.classList.toggle("has-value", !!state.filterCampaign);
+  }
+
+  function populateDispFilter() {
+    const sel = document.getElementById("filter-disp");
+    sel.innerHTML = '<option value="">All tags</option>' +
+      DISPOSITIONS.map(d => `<option value="${d.id}" ${d.id === state.filterDisp ? "selected" : ""}>${d.label}</option>`).join("");
+    sel.classList.toggle("has-value", !!state.filterDisp);
+  }
+
+  const fCamp = document.getElementById("filter-campaign");
+  const fOut  = document.getElementById("filter-outcome");
+  const fDisp = document.getElementById("filter-disp");
+  const fSearch = document.getElementById("search-input");
+
+  fCamp.onchange  = e => { state.filterCampaign = e.target.value; fCamp.classList.toggle("has-value", !!e.target.value); state.selectedRid = null; render(); };
+  fOut.onchange   = e => { state.filterOutcome  = e.target.value; fOut.classList.toggle("has-value",  !!e.target.value); state.selectedRid = null; render(); };
+  fDisp.onchange  = e => { state.filterDisp     = e.target.value; fDisp.classList.toggle("has-value", !!e.target.value); state.selectedRid = null; render(); };
+  fSearch.oninput = debounce(e => { state.search = e.target.value; state.selectedRid = null; render(); }, 200);
+
+  const fFollowups = document.getElementById("filter-followups");
+  fFollowups.onclick = () => {
+    state.filterFollowups = !state.filterFollowups;
+    fFollowups.classList.toggle("active", state.filterFollowups);
+    state.selectedRid = null;
+    render();
+  };
+
+  const fFlagged = document.getElementById("filter-flagged");
+  fFlagged.onclick = () => {
+    state.filterFlagged = !state.filterFlagged;
+    fFlagged.classList.toggle("active", state.filterFlagged);
+    state.selectedRid = null;
+    render();
+  };
+
+  // ── Reply list ──────────────────────────────────
+  function renderList() {
+    const replies = filteredReplies();
+    const el = document.getElementById("reply-list");
+    document.getElementById("reply-count").textContent = `${replies.length} of ${allReplies().length}`;
+    renderExtraFilterChip();
+
+    if (!replies.length) {
+      el.innerHTML = `<div class="reply-list-empty">No replies match the current filters.</div>`;
+      return;
+    }
+
+    el.innerHTML = replies.map((r, idx) => {
+      const rid = replyId(r);
+      const disps = effDisps(r);
+      const manual = isManual(r);
+      const date = fmtDate(r.reply_at);
+
+      const pills = disps.slice(0, 2).map(id => {
+        const d = DISP_MAP[id]; if (!d) return "";
+        return `<span class="tag-pill" style="background:${d.color};color:${d.fg}">${d.label}</span>`;
+      }).join("") + (disps.length > 2 ? `<span class="tag-pill-more">+${disps.length - 2}</span>` : "");
+
+      const company = [r.company, r.position].filter(Boolean).join(" · ");
+
+      return `<div class="reply-item${rid === state.selectedRid ? " selected" : ""}" data-rid="${esc(rid)}" data-idx="${idx}">
+        <div class="reply-avatar" style="background:${avatarColor(r)}">${initial(r)}</div>
+        <div class="reply-content">
+          <div class="reply-row1">
+            <div class="reply-name">${esc(r.full_name || "Unknown")}</div>
+            ${isFlagged(r) ? '<span class="flag-icon" title="Flagged">⚑</span>' : ""}
+            <div class="reply-date">${date}</div>
+          </div>
+          ${company ? `<div class="reply-company">${esc(company)}</div>` : ""}
+          <div class="reply-snippet">${esc(r.reply_text || "")}</div>
+          <div class="reply-tags">
+            ${pills}
+            ${manual ? '<span class="manual-dot" title="Manually tagged"></span>' : ""}
+          </div>
+        </div>
+      </div>`;
+    }).join("");
+
+    el.querySelectorAll(".reply-item").forEach(item => {
+      item.onclick = () => { state.selectedRid = item.dataset.rid; render(); };
+    });
+  }
+
+  // ── Chat renderer ───────────────────────────────
+  function renderChat(r, sourceBadge) {
+    const conv = r.conversation || [];
+
+    // Fallback: no conversation data → show plain reply + outreach
+    if (!conv.length) {
+      return `<div class="reply-section">
+        <div class="section-label">Reply ${sourceBadge}</div>
+        <div class="reply-text">${esc(r.reply_text || "")}</div>
+      </div>
+      ${r.sent_text ? `<div class="reply-section">
+        <div class="section-label">Outreach</div>
+        <div class="reply-text" style="color:var(--muted)">${esc(r.sent_text)}</div>
+      </div>` : ""}`;
+    }
+
+    // Find the last prospect message (the reply we're classifying)
+    const lastProspectIdx = conv.reduce((acc, m, i) => (!m.is_owner ? i : acc), -1);
+
+    const bubbles = conv.map((m, i) => {
+      const side = m.is_owner ? "owner" : "prospect";
+      const isLast = !m.is_owner && i === lastProspectIdx;
+      return `<div class="chat-msg ${side}${isLast ? " last-reply" : ""}">
+        <div class="chat-sender">${esc(m.sender)}</div>
+        <div class="chat-bubble">${esc(m.text)}</div>
+        <div class="chat-date">${esc(m.date)}</div>
+      </div>`;
+    }).join("");
+
+    const badge = `<div style="text-align:center;padding:8px 0 4px;font-size:11px;color:var(--muted)">
+      classified as ${sourceBadge}
+    </div>`;
+
+    return `<div class="chat-thread">${bubbles}${badge}</div>`;
+  }
+
+  // ── Detail panel ────────────────────────────────
+  function renderDetail() {
+    const empty  = document.getElementById("detail-empty");
+    const inner  = document.getElementById("detail-inner");
+    const replies = filteredReplies();
+
+    if (!state.selectedRid) {
+      empty.style.display = "flex"; inner.style.display = "none"; return;
+    }
+
+    const r = replies.find(r => replyId(r) === state.selectedRid);
+    if (!r) { empty.style.display = "flex"; inner.style.display = "none"; return; }
+
+    empty.style.display = "none"; inner.style.display = "flex";
+
+    const rid = replyId(r);
+    const disps = effDisps(r);
+    const manual = isManual(r);
+    const idx = replies.indexOf(r);
+
+    const metaParts = [r.position, r.company, r.location].filter(Boolean);
+
+    const sourceBadge = manual
+      ? `<span class="source-badge source-manual">Manual</span>`
+      : `<span class="source-badge source-ai">AI</span>`;
+
+    const tagBtns = DISPOSITIONS.map((d, i) => {
+      const on = disps.includes(d.id);
+      const keyLabel = i < 9 ? i + 1 : (i === 9 ? "0" : "");
+      const style = on ? `background:${d.color};color:${d.fg};border-color:${d.color};` : "";
+      return `<button class="tag-toggle${on ? " on" : ""}" data-disp="${d.id}" style="${style}">
+        ${keyLabel !== "" ? `<span class="key">${keyLabel}</span>` : ""}${d.label}
+      </button>`;
+    }).join("");
+
+    const dispPills = disps.map(id => {
+      const d = DISP_MAP[id]; if (!d) return "";
+      return `<span class="tag-pill" style="background:${d.color};color:${d.fg}">${d.label}</span>`;
+    }).join("");
+
+    const outcomeDot = { positive: "#10b981", neutral: "#94a3b8", declined: "#f87171" }[outcomeOf(r)] || "#94a3b8";
+
+    inner.innerHTML = `
+      <div class="detail-head">
+        <div class="detail-avatar" style="background:${avatarColor(r)}">${initial(r)}</div>
+        <div class="detail-person">
+          <div class="detail-name-row">
+            <span class="detail-name">${esc(r.full_name || "Unknown")}</span>
+            <span class="outcome-badge" style="background:${outcomeDot}">&nbsp;</span>
+            <button class="detail-flag-btn${isFlagged(r) ? " on" : ""}" id="flag-btn" title="Flag (f)">⚑ ${isFlagged(r) ? "Flagged" : "Flag"}</button>
+          </div>
+          <div class="detail-meta">${esc(metaParts.join(" · "))}</div>
+          <div class="detail-classification">
+            ${dispPills}
+            ${sourceBadge}
+          </div>
+          <div class="detail-links">
+            ${r.profile_url ? `<a class="detail-link" href="${esc(r.profile_url)}" target="_blank">↗ LinkedIn</a>` : ""}
+            ${r.email ? `<a class="detail-link" href="mailto:${esc(r.email)}">✉ ${esc(r.email)}</a>` : ""}
+            ${r.campaign ? `<span class="detail-link">📁 ${esc(r.campaign)}</span>` : ""}
+          </div>
+        </div>
+        <div class="detail-nav">
+          <span class="nav-pos">${idx + 1} / ${replies.length}</span>
+          <button class="nav-btn" id="nav-up" ${idx === 0 ? "disabled" : ""} title="Previous (k)">↑</button>
+          <button class="nav-btn" id="nav-dn" ${idx === replies.length - 1 ? "disabled" : ""} title="Next (j)">↓</button>
+        </div>
+      </div>
+
+      <div class="detail-body">
+        ${renderChat(r, sourceBadge)}
+      </div>
+
+      <div class="tag-section">
+        <div class="tag-section-head">
+          <span class="tag-section-label">Classification</span>
+          ${manual ? `<button class="reset-btn" id="reset-tag">Reset to AI</button>` : ""}
+        </div>
+        <div class="tag-buttons" id="tag-buttons">${tagBtns}</div>
+      </div>
+    `;
+
+    inner.querySelectorAll(".tag-toggle").forEach(btn => {
+      btn.onclick = () => toggleTag(rid, btn.dataset.disp);
+    });
+
+    const up = inner.querySelector("#nav-up");
+    const dn = inner.querySelector("#nav-dn");
+    if (up) up.onclick = () => navigate(-1);
+    if (dn) dn.onclick = () => navigate(+1);
+
+    const resetBtn = inner.querySelector("#reset-tag");
+    if (resetBtn) resetBtn.onclick = () => { delete tags[rid]; saveTags(); render(); };
+
+    const flagBtn = inner.querySelector("#flag-btn");
+    if (flagBtn) flagBtn.onclick = () => toggleFlag(rid);
+
+    // Scroll chat to bottom
+    const body = inner.querySelector(".detail-body");
+    if (body) body.scrollTop = body.scrollHeight;
+  }
+
+  function toggleTag(rid, dispId) {
+    const r = allReplies().find(r => replyId(r) === rid);
+    if (!r) return;
+    const cur = new Set(effDisps(r));
+    cur.has(dispId) ? cur.delete(dispId) : cur.add(dispId);
+    const sorted = sortByPriority([...cur]);
+    if (sorted.length) tags[rid] = sorted; else delete tags[rid];
+    saveTags();
+    render();
+  }
+
+  function navigate(delta) {
+    const replies = filteredReplies();
+    const idx = replies.findIndex(r => replyId(r) === state.selectedRid);
+    const next = idx + delta;
+    if (next >= 0 && next < replies.length) {
+      state.selectedRid = replyId(replies[next]);
+      render();
+      document.querySelector(".reply-item.selected")?.scrollIntoView({ block: "nearest" });
+    }
+  }
+
+  // ── Analytics ────────────────────────────────────
+  let _analyticsSort = { col: "n", dir: -1 };
+  let _roleSort = { col: "n", dir: -1 };
+  let _genderSort = { col: "n", dir: -1 };
+  let _respSort = { col: "n", dir: -1 };
+
+  function sortRows(rows, sort) {
+    const { col, dir } = sort;
+    return [...rows].sort((a, b) => {
+      const av = a[col], bv = b[col];
+      if (typeof av === "string" && typeof bv === "string") {
+        return av.localeCompare(bv) * -dir;
+      }
+      return (av < bv ? -dir : av > bv ? dir : 0);
+    });
+  }
+  function th(label, c, sort, extraCls = "") {
+    const arrow = c === sort.col ? (sort.dir > 0 ? "↑" : "↓") : "";
+    const cls = (extraCls + " " + (c === sort.col ? "sorted" : "")).trim();
+    return `<th class="${cls}" data-col="${c}">${label} ${arrow}</th>`;
+  }
+
+  function navigateToInboxDisp(dispId, campaign) {
+    navigateToInbox({ disp: dispId, campaign });
+  }
+
+  function renderExtraFilterChip() {
+    const el = document.getElementById("extra-filter-chip");
+    if (!el) return;
+    let label = "";
+    if (state.filterDeclineReason) {
+      const dr = DECLINE_MAP[state.filterDeclineReason];
+      label = `Reason: ${dr ? dr.label : state.filterDeclineReason}`;
+    } else if (state.requireDisps.length) {
+      label = state.requireDisps.map(d => (DISP_MAP[d] || {}).label || d).join(" + ");
+    }
+    if (label) {
+      el.innerHTML = `${esc(label)} <button id="extra-filter-clear" title="Clear">×</button>`;
+      el.style.display = "inline-flex";
+      el.querySelector("#extra-filter-clear").onclick = () => {
+        state.filterDeclineReason = "";
+        state.requireDisps = [];
+        state.selectedRid = null;
+        render();
+      };
+    } else {
+      el.style.display = "none";
+      el.innerHTML = "";
+    }
+  }
+
+  function navigateToInbox({ disp = "", campaign = "", outcome = "", declineReason = "", requireDisps = [] } = {}) {
+    state.filterDisp = disp;
+    state.filterCampaign = campaign;
+    state.filterOutcome = outcome;
+    state.filterDeclineReason = declineReason;
+    state.requireDisps = requireDisps;
+    state.filterFollowups = false;
+    state.filterFlagged = false;
+    state.search = "";
+    state.view = "inbox";
+    state.selectedRid = null;
+    document.querySelectorAll(".main-tab").forEach(b => b.classList.toggle("active", b.dataset.view === "inbox"));
+    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+    document.getElementById("view-inbox").classList.add("active");
+    document.getElementById("filter-followups").classList.remove("active");
+    document.getElementById("filter-flagged").classList.remove("active");
+    document.getElementById("filter-outcome").value = outcome;
+    document.getElementById("filter-outcome").classList.toggle("has-value", !!outcome);
+    document.getElementById("search-input").value = "";
+    populateCampaignFilter();
+    populateDispFilter();
+    render();
+  }
+
+  function renderAnalytics() {
+    const allOwnerReplies = (DATA.people[state.owner] || {}).replies || [];
+    const replies = state.analyticsCampaign
+      ? allOwnerReplies.filter(r => r.campaign === state.analyticsCampaign)
+      : allOwnerReplies;
+    const allCampaigns = [...new Set(allOwnerReplies.map(r => r.campaign))].sort();
+    const total = replies.length;
+    const pos   = replies.filter(r => outcomeOf(r) === "positive").length;
+    const meets = replies.filter(r => effDisps(r).includes("meeting_requested")).length;
+    const dec   = replies.filter(r => outcomeOf(r) === "declined").length;
+    const neu   = total - pos - dec;
+
+    // ── Per-campaign stats ─────────────────────────
+    const campMap = {};
+    replies.forEach(r => {
+      if (!campMap[r.campaign]) campMap[r.campaign] = { n: 0, pos: 0, meet: 0, dec: 0 };
+      const s = campMap[r.campaign];
+      s.n++;
+      if (outcomeOf(r) === "positive") s.pos++;
+      if (effDisps(r).includes("meeting_requested")) s.meet++;
+      if (outcomeOf(r) === "declined") s.dec++;
+    });
+    let campRows = Object.entries(campMap).map(([name, s]) => ({
+      name,
+      n: s.n,
+      pos: s.pos,
+      meet: s.meet,
+      dec: s.dec,
+      pos_rate: s.n ? s.pos / s.n : 0,
+      meet_rate: s.n ? s.meet / s.n : 0,
+    }));
+    campRows = sortRows(campRows, _analyticsSort);
+
+    // ── Disposition counts ─────────────────────────
+    const dispCounts = Object.fromEntries(DISP_IDS.map(id => [id, 0]));
+    replies.forEach(r => effDisps(r).forEach(d => { if (d in dispCounts) dispCounts[d]++; }));
+    const maxDisp = Math.max(1, ...Object.values(dispCounts));
+
+    const curious = dispCounts["curious_question"] || 0;
+    const future  = dispCounts["interested_future"] || 0;
+
+    // ── Role group stats ───────────────────────────
+    const roleMap = Object.fromEntries([...ROLE_GROUPS.map(g => [g.id, {n:0,pos:0}]), ["other",{n:0,pos:0}]]);
+    replies.forEach(r => {
+      const pos = r.position || "";
+      let hit = false;
+      for (const g of ROLE_GROUPS) {
+        if (g.re.test(pos)) { roleMap[g.id].n++; if (outcomeOf(r)==="positive") roleMap[g.id].pos++; hit = true; break; }
+      }
+      if (!hit && pos) { roleMap.other.n++; if (outcomeOf(r)==="positive") roleMap.other.pos++; }
+    });
+    const roleRows = [...ROLE_GROUPS.map(g => ({ label: g.label, ...roleMap[g.id] })), { label: "Other", ...roleMap.other }]
+      .filter(r => r.n >= 3)
+      .sort((a, b) => (b.pos/b.n) - (a.pos/a.n));
+
+    // ── Day of week stats ──────────────────────────
+    const dowMap = Object.fromEntries(DOW_LABELS.map(d => [d, {n:0,pos:0,neu:0,dec:0}]));
+    replies.forEach(r => {
+      if (!r.reply_at) return;
+      const d = DOW_LABELS[(new Date(r.reply_at).getDay() + 6) % 7];
+      const o = outcomeOf(r);
+      dowMap[d].n++;
+      if (o === "positive") dowMap[d].pos++;
+      else if (o === "declined") dowMap[d].dec++;
+      else dowMap[d].neu++;
+    });
+
+    // ── Gender stats ───────────────────────────────
+    const genderMap = { female:{n:0,pos:0,dec:0}, male:{n:0,pos:0,dec:0}, unknown:{n:0,pos:0,dec:0} };
+    replies.forEach(r => {
+      const g = inferGender(r);
+      const o = outcomeOf(r);
+      genderMap[g].n++;
+      if (o === "positive") genderMap[g].pos++;
+      else if (o === "declined") genderMap[g].dec++;
+    });
+
+    document.getElementById("analytics-content").innerHTML = `
+
+      <div class="analytics-filter-bar">
+        <label>Campaign</label>
+        <select class="filter-select${state.analyticsCampaign ? " has-value" : ""}" id="analytics-camp-filter">
+          <option value="">All campaigns</option>
+          ${allCampaigns.map(c => `<option value="${esc(c)}"${c === state.analyticsCampaign ? " selected" : ""}>${esc(c)}</option>`).join("")}
+        </select>
+      </div>
+
+      ${(() => {
+        // Top 3 campaigns by reply count
+        const topCamps = [...campRows].sort((a, b) => b.n - a.n).slice(0, 3);
+
+        // Decline reasons from the second-pass classifier
+        const declineReasonCounts = {};
+        replies.forEach(r => {
+          if (outcomeOf(r) !== "declined") return;
+          (r.decline_reasons || []).forEach(id => {
+            declineReasonCounts[id] = (declineReasonCounts[id] || 0) + 1;
+          });
+        });
+        const topDeclineReasons = Object.entries(declineReasonCounts)
+          .map(([id, n]) => ({ id, n }))
+          .sort((a, b) => b.n - a.n)
+          .slice(0, 3);
+
+        // Co-tags on replies marked meeting_requested (excluding meeting_requested itself)
+        const meetingCoTags = {};
+        replies.forEach(r => {
+          const ds = effDisps(r);
+          if (!ds.includes("meeting_requested")) return;
+          ds.forEach(d => {
+            if (d !== "meeting_requested") meetingCoTags[d] = (meetingCoTags[d] || 0) + 1;
+          });
+        });
+        const topMeetingReasons = Object.entries(meetingCoTags)
+          .map(([id, n]) => ({ id, n }))
+          .sort((a, b) => b.n - a.n)
+          .slice(0, 3);
+
+        const row = (color, label, n, denom, attrs) =>
+          `<div class="kpi-row" ${attrs}>
+            <span class="dot" style="background:${color}"></span>
+            <span class="label">${esc(label)}</span>
+            <span class="count">${n}</span>
+            <span class="pct">${pct(n, denom)}%</span>
+          </div>`;
+        const emptyRow = (msg) => `<div class="kpi-row-empty">${esc(msg)}</div>`;
+
+        const campRowsHtml = topCamps.length
+          ? topCamps.map(c => row(
+              "var(--accent)", c.name, c.n, total,
+              `data-kpi-nav="campaign" data-campaign="${esc(c.name)}"`
+            )).join("")
+          : emptyRow("No replies yet");
+
+        const declineRowsHtml = topDeclineReasons.length
+          ? topDeclineReasons.map(d => row(
+              (DECLINE_MAP[d.id] || {}).color || "#9ca3af",
+              (DECLINE_MAP[d.id] || {}).label || d.id,
+              d.n, dec,
+              `data-kpi-nav="decline" data-reason="${esc(d.id)}"`
+            )).join("")
+          : emptyRow("No declines");
+
+        const meetingRowsHtml = topMeetingReasons.length
+          ? topMeetingReasons.map(d => row(
+              DISP_MAP[d.id].av, DISP_MAP[d.id].label, d.n, meets,
+              `data-kpi-nav="meeting" data-cotag="${esc(d.id)}"`
+            )).join("")
+          : emptyRow("No co-tags on meeting replies");
+
+        return `
+      <div class="kpi-strip">
+        <div class="kpi-item">
+          <div class="kpi-label">Total replies</div>
+          <div class="kpi-number">${total}</div>
+          <div class="kpi-sub">Top campaigns</div>
+          <div class="kpi-breakdown">${campRowsHtml}</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-label">Declined</div>
+          <div class="kpi-number" style="color:var(--neg)">${dec}</div>
+          <div class="kpi-sub">Top reasons</div>
+          <div class="kpi-breakdown">${declineRowsHtml}</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-label">Meetings</div>
+          <div class="kpi-number" style="color:var(--d-meeting)">${meets}</div>
+          <div class="kpi-sub">Most common co-tags</div>
+          <div class="kpi-breakdown">${meetingRowsHtml}</div>
+        </div>
+      </div>`;
+      })()}
+
+      <div class="analytics-grid">
+        <div class="chart-card" style="padding:0;overflow:hidden">
+          <div style="padding:14px 18px 0">
+            <div class="chart-title">Campaign performance <span>· click row to view in inbox · click column to sort</span></div>
+          </div>
+          <table class="camp-table">
+            <thead><tr>
+              ${th("Campaign", "name", _analyticsSort)}
+              ${th("Replies", "n", _analyticsSort, "num")}
+              ${th("Meetings", "meet", _analyticsSort, "num")}
+            </tr></thead>
+            <tbody>
+            ${campRows.map(c => `<tr class="camp-row" data-campaign="${esc(c.name)}">
+              <td>${esc(c.name)}</td>
+              <td class="num">${c.n}</td>
+              <td class="num meet-num">${c.meet}</td>
+            </tr>`).join("")}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">Response breakdown <span>· grouped · click to filter inbox</span></div>
+          ${(() => {
+            const totalResp = replies.length;
+            const arrow = c => c === _respSort.col ? (_respSort.dir > 0 ? "↑" : "↓") : "";
+            const cls = c => "h" + (c === _respSort.col ? " sorted" : "");
+
+            // Count unique replies per group (not summed across tags), so the
+            // group total reflects "how many replies fell into this category".
+            const groupReplyCount = {};
+            RESPONSE_GROUPS.forEach(g => {
+              const set = new Set(g.members);
+              groupReplyCount[g.id] = replies.filter(r => effDisps(r).some(d => set.has(d))).length;
+            });
+
+            const groupsHtml = RESPONSE_GROUPS.map(g => {
+              const items = g.members
+                .map(id => ({ id, label: (DISP_MAP[id] || {}).label || id, color: (DISP_MAP[id] || {}).color || g.color, n: dispCounts[id] || 0 }))
+                .filter(it => it.n > 0);
+              if (!items.length) return "";
+              const sortedItems = sortRows(items, _respSort);
+              const groupN = groupReplyCount[g.id];
+              return `
+                <div class="resp-group-head">
+                  <div class="resp-group-dot" style="background:${g.color}"></div>
+                  <div class="resp-group-label">${esc(g.label)}</div>
+                  <div></div>
+                  <div class="resp-group-count">${groupN}</div>
+                  <div class="resp-group-pct">${pct(groupN, totalResp)}%</div>
+                </div>
+                ${sortedItems.map(d => `<div class="resp-row in-group" data-disp="${d.id}">
+                  <div class="resp-dot" style="background:${d.color}"></div>
+                  <div class="resp-label">${d.label}</div>
+                  <div class="resp-bar-wrap"><div class="resp-bar" style="width:${(d.n/maxDisp*100).toFixed(0)}%;background:${d.color}"></div></div>
+                  <div class="resp-count">${d.n}</div>
+                  <div class="resp-pct">${pct(d.n, totalResp)}%</div>
+                </div>`).join("")}
+              `;
+            }).join("");
+
+            return `
+            <div class="resp-head">
+              <span></span>
+              <span class="${cls('label')}" data-resp-col="label">Tag ${arrow('label')}</span>
+              <span></span>
+              <span class="${cls('n')} num" data-resp-col="n">Count ${arrow('n')}</span>
+              <span class="num" style="color:var(--muted);cursor:default">%</span>
+            </div>
+            <div class="resp-list">${groupsHtml}</div>`;
+          })()}
+        </div>
+      </div>
+
+      <div class="chart-card" style="margin-top:14px">
+        <div class="chart-title">Replies by day of week <span>· each bar shows volume and outcome split</span></div>
+        <div class="day-chart">
+          ${(() => {
+            const maxN = Math.max(...DOW_LABELS.map(d => dowMap[d].n));
+            return DOW_LABELS.map(d => {
+              const v = dowMap[d]; if (!v.n) return "";
+              const bw = (v.n / maxN * 100).toFixed(0);
+              const pw = (v.pos / v.n * 100).toFixed(0);
+              const dw = (v.dec / v.n * 100).toFixed(0);
+              const nw = (100 - +pw - +dw);
+              return `<div class="day-row">
+                <div class="day-label">${d}</div>
+                <div class="day-bar" style="clip-path:inset(0 ${100-+bw}% 0 0 round 4px)">
+                  <div class="day-seg" style="width:${pw}%;background:var(--pos)"></div>
+                  <div class="day-seg" style="width:${nw}%;background:var(--neu)"></div>
+                  <div class="day-seg" style="width:${dw}%;background:var(--neg)"></div>
+                </div>
+                <div class="day-count">${v.n}</div>
+              </div>`;
+            }).join("");
+          })()}
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--pos)"></div>Positive</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--neu)"></div>Neutral</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--neg)"></div>Declined</div>
+        </div>
+      </div>
+
+      <div class="analytics-grid" style="margin-top:14px">
+        <div class="chart-card">
+          <div class="chart-title">Who responds best <span>· by job title group</span></div>
+          <table class="pie-table role-table">
+            <thead><tr>
+              ${th("Role", "label", _roleSort)}
+              ${th("Replies", "n", _roleSort)}
+            </tr></thead>
+            <tbody>
+            ${sortRows(roleRows, _roleSort).map((r,i) => `<tr>
+              <td><div class="pt-label"><div class="pt-dot" style="background:${ROLE_COLORS[i % ROLE_COLORS.length]}"></div>${esc(r.label)}</div></td>
+              <td class="pt-n">${r.n}</td>
+            </tr>`).join("")}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">By gender <span>· inferred from first name</span></div>
+          ${(() => {
+            const gRows = [
+              { key:"female", label:"Female",  ...genderMap.female },
+              { key:"male",   label:"Male",    ...genderMap.male   },
+              { key:"unknown",label:"Unknown", ...genderMap.unknown},
+            ].filter(g => g.n > 0);
+            return `<table class="pie-table gender-table"><thead><tr>`
+              + th("Gender", "label", _genderSort)
+              + th("Replies", "n", _genderSort)
+              + `</tr></thead><tbody>`
+              + sortRows(gRows, _genderSort).map(g => `<tr>
+                  <td><div class="pt-label"><div class="pt-dot" style="background:${GENDER_COLORS[g.key]}"></div>${esc(g.label)}</div></td>
+                  <td class="pt-n">${g.n}</td>
+                </tr>`).join("")
+              + `</tbody></table>`;
+          })()}
+        </div>
+      </div>
+    `;
+
+    // Campaign filter
+    document.getElementById("analytics-camp-filter").onchange = e => {
+      state.analyticsCampaign = e.target.value;
+      renderAnalytics();
+    };
+
+    // Response rows → navigate to inbox filtered by disposition
+    document.querySelectorAll(".resp-row[data-disp]").forEach(el => {
+      el.onclick = () => navigateToInboxDisp(el.dataset.disp, state.analyticsCampaign);
+    });
+
+    // Campaign rows → navigate to inbox filtered by campaign
+    document.querySelectorAll(".camp-row[data-campaign]").forEach(el => {
+      el.onclick = () => navigateToInbox({ campaign: el.dataset.campaign });
+    });
+
+    // KPI breakdown rows → navigate with appropriate filters
+    document.querySelectorAll(".kpi-row[data-kpi-nav]").forEach(el => {
+      const kind = el.dataset.kpiNav;
+      el.onclick = () => {
+        const campaign = state.analyticsCampaign;
+        if (kind === "campaign") {
+          navigateToInbox({ campaign: el.dataset.campaign });
+        } else if (kind === "decline") {
+          navigateToInbox({ campaign, outcome: "declined", declineReason: el.dataset.reason });
+        } else if (kind === "meeting") {
+          navigateToInbox({ campaign, requireDisps: ["meeting_requested", el.dataset.cotag] });
+        }
+      };
+    });
+
+    // Sort on column header click
+    const bindSort = (selector, getSort, setSort) => {
+      document.querySelectorAll(selector).forEach(th => {
+        th.onclick = () => {
+          const c = th.dataset.col;
+          const cur = getSort();
+          setSort({ col: c, dir: cur.col === c ? -cur.dir : -1 });
+          renderAnalytics();
+        };
+      });
+    };
+    bindSort(".camp-table th[data-col]",   () => _analyticsSort, s => _analyticsSort = s);
+    bindSort(".role-table th[data-col]",   () => _roleSort,      s => _roleSort = s);
+    bindSort(".gender-table th[data-col]", () => _genderSort,    s => _genderSort = s);
+
+    // Response breakdown sort
+    document.querySelectorAll(".resp-head [data-resp-col]").forEach(th => {
+      th.onclick = () => {
+        const c = th.dataset.respCol;
+        _respSort = { col: c, dir: _respSort.col === c ? -_respSort.dir : -1 };
+        renderAnalytics();
+      };
+    });
+  }
+
+  // ── Funnel view ─────────────────────────────────
+  let _funnelIdx = 0;
+
+  function renderFunnelView() {
+    const funnels = DATA.funnels || [];
+    const sel = document.getElementById("funnel-select");
+    if (!funnels.length) {
+      sel.innerHTML = "";
+      document.getElementById("funnel-content").innerHTML =
+        `<div class="sankey-empty">No funnel data yet. Add a campaign to FUNNELS in extract.py.</div>`;
+      return;
+    }
+    sel.innerHTML = funnels.map((f, i) =>
+      `<option value="${i}" ${i === _funnelIdx ? "selected" : ""}>${esc((DATA.people[f.owner]?.name || f.owner) + " — " + f.campaign)}</option>`
+    ).join("");
+    sel.onchange = e => { _funnelIdx = +e.target.value; renderFunnelView(); };
+
+    const f = funnels[_funnelIdx];
+    const s = f.stages;
+    document.getElementById("funnel-content").innerHTML = `
+      <div class="funnel-card">
+        <div class="funnel-title">${esc(f.campaign)}</div>
+        <div class="funnel-sub">
+          ${esc(DATA.people[f.owner]?.name || f.owner)} ·
+          ${s.total} unique contacts ·
+          ${s.failed} flagged failed by LH ·
+          ${s.replied} replies (${pct(s.replied, s.total)}%) ·
+          ${s.meetings} meetings (${pct(s.meetings, s.total)}%) ·
+          <em style="color:var(--muted-2)">click a bar or a drop-off to list contacts</em>
+        </div>
+        ${renderStepFunnel(s)}
+      </div>
+    `;
+
+    // Wire step + drop clicks → side-sheet
+    document.querySelectorAll("#funnel-content [data-node-key]").forEach(el => {
+      el.addEventListener("click", () => {
+        const key = el.dataset.nodeKey;
+        const label = el.dataset.nodeLabel;
+        // "total" means all known contacts (processing ∪ processed)
+        const ids = key === "total"
+          ? Object.keys(s.contacts)
+          : (s.members[key] || []);
+        const contacts = ids.map(u => s.contacts[u]).filter(Boolean);
+        openSheet(`${label} · ${contacts.length}`, esc(f.campaign), contacts);
+      });
+    });
+  }
+
+  function renderStepFunnel(s) {
+    const T = s.total;
+    if (!T) return `<div class="sankey-empty">No funnel data.</div>`;
+    const RED = "#dc2626", GRAY = "#9ca3af", BLUE = "#3b82f6",
+          AMBER = "#f59e0b", GREEN = "#16a34a";
+
+    // Each step is a milestone (the trunk). Drops listed BEFORE a step are
+    // attrition that happens between the previous milestone and this one.
+    const steps = [
+      { key: "total", label: "Total contacts", value: T, color: BLUE, dropsBefore: [] },
+      { key: "processed", label: "Processed by LH", value: s.processed, color: BLUE, dropsBefore: [
+        { key: "processing",   label: "Still processing",     value: s.processing,            color: AMBER },
+      ]},
+      { key: "invited", label: "Invitation sent", value: s.invited, color: BLUE, dropsBefore: [
+        { key: "invite_failed",label: "Invite couldn't be sent", value: s.invite_failed_to_send, color: RED },
+      ]},
+      { key: "connected", label: "Accepted invitation", value: s.connected, color: BLUE, dropsBefore: [
+        { key: "not_accepted", label: "Pending or declined",  value: s.invite_not_accepted,   color: RED },
+      ]},
+      { key: "active_convo", label: "Active conversation", value: s.active_convo, color: BLUE, dropsBefore: [
+        { key: "convo_failed", label: "Stopped after accept", value: s.connected_failed,      color: RED },
+      ]},
+      { key: "replied", label: "Replied", value: s.replied, color: BLUE, dropsBefore: [
+        { key: "no_reply",     label: "No reply",             value: s.no_reply,              color: GRAY },
+      ]},
+      { key: "meetings", label: "Meeting booked", value: s.meetings, color: GREEN, dropsBefore: [
+        { key: "other_reply",  label: "Other replies",        value: s.other_reply,           color: GRAY },
+      ]},
+    ];
+
+    const blocks = steps.map((step, i) => {
+      const w = Math.max(2.5, (step.value / T) * 100);
+      const prevValue = i === 0 ? T : steps[i - 1].value;
+      const dropsHtml = step.dropsBefore.filter(d => d.value > 0).map(d => `
+        <div class="step-drop" data-node-key="${esc(d.key)}" data-node-label="${esc(d.label)}">
+          <span class="arrow">↘</span>
+          <span class="dot" style="background:${d.color}"></span>
+          <span class="lbl">${esc(d.label)}</span>
+          <span class="cnt">${d.value}</span>
+          <span class="pct">· ${pct(d.value, prevValue)}% of previous</span>
+        </div>
+      `).join("");
+      const stepHtml = `
+        <div class="step-row">
+          <div class="step-info">${esc(step.label)}</div>
+          <div class="step-bar-wrap">
+            <div class="step-bar" style="width:${w}%; background:${step.color}"
+                 data-node-key="${esc(step.key)}" data-node-label="${esc(step.label)}"
+                 title="${esc(step.label)}: ${step.value} (${pct(step.value, T)}% of total)">
+              <span class="v">${step.value}</span>
+              <span class="p">${pct(step.value, T)}%</span>
+            </div>
+          </div>
+        </div>
+      `;
+      return dropsHtml + stepHtml;
+    }).join("");
+
+    return `<div class="step-funnel">${blocks}</div>`;
+  }
+
+  function renderSankey(s) {
+    // Funnel layout. Failed.csv is a subset of Processed.csv, so the drop-off
+    // bars below align exactly with the LH "Failed" flag at each stage.
+    const T = s.total;
+    if (!T) return `<div class="sankey-empty">No funnel data.</div>`;
+
+    const RED  = "#dc2626"; // failed in LH
+    const GRAY = "#9ca3af"; // dropped (no failure)
+    const BLUE = "#3b82f6"; // continuing
+    const AMBER= "#f59e0b"; // still in queue
+    const GREEN= "#16a34a"; // success
+
+    // Positive milestones (milestone: true) show % of campaign total ("reach"),
+    // since they're cumulative counts. Drops show % of previous stage
+    // (conversion rate). That removes the visual double-count complaint.
+    const cols = [
+      [
+        { key: "processing", parent: null,           label: "Still processing", value: s.processing, color: AMBER },
+        { key: "processed",  parent: null,           label: "Processed",        value: s.processed,  color: BLUE, milestone: true },
+      ],
+      [
+        { key: "invite_failed", parent: "processed", label: "Invite failed",  value: s.invite_failed_to_send, color: RED  },
+        { key: "invited",       parent: "processed", label: "Invitation sent",value: s.invited,                color: BLUE, milestone: true },
+      ],
+      [
+        { key: "not_accepted", parent: "invited",    label: "Pending or declined", value: s.invite_not_accepted, color: RED  },
+        { key: "connected",    parent: "invited",    label: "Accepted",            value: s.connected,            color: BLUE, milestone: true },
+      ],
+      [
+        { key: "convo_failed", parent: "connected",  label: "Stopped after accept", value: s.connected_failed, color: RED  },
+        { key: "active_convo", parent: "connected",  label: "Active convo",         value: s.active_convo,     color: BLUE, milestone: true },
+      ],
+      [
+        { key: "no_reply", parent: "active_convo",   label: "No reply",           value: s.no_reply, color: GRAY },
+        { key: "replied",  parent: "active_convo",   label: "Replied",            value: s.replied,  color: BLUE, milestone: true },
+      ],
+      [
+        { key: "other_reply", parent: "replied",     label: "Other replies",   value: s.other_reply, color: GRAY  },
+        { key: "meetings",    parent: "replied",     label: "Meetings booked", value: s.meetings,    color: GREEN, milestone: true },
+      ],
+    ];
+
+    // Lookup for parent values so each node's % is its conversion from its parent.
+    const valueByKey = {};
+    cols.forEach(col => col.forEach(n => { valueByKey[n.key] = n.value; }));
+    const parentValue = (n) => n.parent ? (valueByKey[n.parent] || 0) : T;
+
+    const links = [
+      { s: [0, "processed"],    t: [1, "invite_failed"], v: s.invite_failed_to_send, c: RED  },
+      { s: [0, "processed"],    t: [1, "invited"],       v: s.invited,                c: BLUE },
+      { s: [1, "invited"],      t: [2, "not_accepted"],  v: s.invite_not_accepted,    c: RED  },
+      { s: [1, "invited"],      t: [2, "connected"],     v: s.connected,              c: BLUE },
+      { s: [2, "connected"],    t: [3, "convo_failed"],  v: s.connected_failed,       c: RED  },
+      { s: [2, "connected"],    t: [3, "active_convo"],  v: s.active_convo,           c: BLUE },
+      { s: [3, "active_convo"], t: [4, "no_reply"],      v: s.no_reply,               c: GRAY },
+      { s: [3, "active_convo"], t: [4, "replied"],       v: s.replied,                c: BLUE },
+      { s: [4, "replied"],      t: [5, "other_reply"],   v: s.other_reply,            c: GRAY },
+      { s: [4, "replied"],      t: [5, "meetings"],      v: s.meetings,               c: GREEN},
+    ];
+
+    // Layout
+    const W = 1100, H = 520;
+    const padX = 20, padY = 30;
+    const nodeW = 18;
+    const usableH = H - padY * 2;
+    const nGap = 14; // px between nodes within a column
+
+    // Scale: pixels per unit. Use the largest column-sum as 100% of usableH.
+    const colSum = i => cols[i].reduce((a, n) => a + n.value, 0);
+    const maxSum = Math.max(...cols.map((_, i) => colSum(i)));
+    const scale = (usableH - nGap * 2) / Math.max(1, maxSum);
+
+    // Position each node (top-aligned within its column, stacked downward)
+    const colXs = cols.map((_, i) => padX + i * ((W - padX * 2) / (cols.length - 1)));
+    const nodeMap = {};
+    cols.forEach((col, ci) => {
+      let y = padY;
+      col.forEach(n => {
+        const h = Math.max(1, n.value * scale);
+        nodeMap[ci + ":" + n.key] = { x: colXs[ci] - nodeW / 2, y, h, ...n, ci };
+        y += h + nGap;
+      });
+    });
+
+    // For source-link offsets: track how much of each source/target node is consumed
+    const usedSrc = {}, usedTgt = {};
+    const cur = (key, used) => (used[key] = used[key] || 0);
+
+    const linkPaths = links.filter(l => l.v > 0).map(l => {
+      const skey = l.s[0] + ":" + l.s[1];
+      const tkey = l.t[0] + ":" + l.t[1];
+      const sn = nodeMap[skey], tn = nodeMap[tkey];
+      if (!sn || !tn) return "";
+      const sOff = cur(skey, usedSrc), tOff = cur(tkey, usedTgt);
+      const lh = Math.max(1, l.v * scale);
+      const x0 = sn.x + nodeW;
+      const x1 = tn.x;
+      const y0a = sn.y + sOff;
+      const y0b = y0a + lh;
+      const y1a = tn.y + tOff;
+      const y1b = y1a + lh;
+      usedSrc[skey] = sOff + lh;
+      usedTgt[tkey] = tOff + lh;
+      const mx = (x0 + x1) / 2;
+      // Ribbon path: top edge bezier + bottom edge bezier
+      const d = `M ${x0} ${y0a}
+                 C ${mx} ${y0a}, ${mx} ${y1a}, ${x1} ${y1a}
+                 L ${x1} ${y1b}
+                 C ${mx} ${y1b}, ${mx} ${y0b}, ${x0} ${y0b}
+                 Z`;
+      return `<path class="link" d="${d}" fill="${l.c}"><title>${esc(sn.label)} → ${esc(tn.label)}: ${l.v}</title></path>`;
+    }).join("");
+
+    const nodeRects = Object.values(nodeMap).map(n => {
+      const labelX = n.ci === cols.length - 1 ? n.x - 8 : n.x + nodeW + 8;
+      const anchor = n.ci === cols.length - 1 ? "end" : "start";
+      const ly = n.y + n.h / 2;
+      const showSub = n.h >= 22;
+      const pv = parentValue(n);
+      // Milestone nodes = positive cumulative reach → show % of campaign total.
+      // Drop / outcome nodes = transitions → show % of the previous stage.
+      const denom = n.milestone ? T : pv;
+      const denomLabel = n.milestone ? "of total" : "of prev";
+      const tooltip = `${esc(n.label)}: ${n.value} (${pct(n.value, pv)}% of previous stage, ${pct(n.value, T)}% of campaign)`;
+      return `<g class="node" data-node-key="${esc(n.key)}" data-node-label="${esc(n.label)}">
+        <title>${tooltip}</title>
+        <rect x="${n.x}" y="${n.y}" width="${nodeW}" height="${n.h}" fill="${n.color}" rx="2"></rect>
+        <text class="node-label" x="${labelX}" y="${ly - (showSub ? 6 : 0)}" text-anchor="${anchor}">${esc(n.label)}</text>
+        ${showSub ? `<text class="node-sub" x="${labelX}" y="${ly + 7}" text-anchor="${anchor}">${n.value} · ${pct(n.value, denom)}% ${denomLabel}</text>`
+                  : `<text class="node-sub" x="${labelX}" y="${ly + 12}" text-anchor="${anchor}">${n.value}</text>`}
+      </g>`;
+    }).join("");
+
+    return `<svg class="sankey-svg" viewBox="0 0 ${W} ${H}" width="100%" height="${H}">
+      ${linkPaths}
+      ${nodeRects}
+    </svg>`;
+  }
+
+  // ── Side-sheet ───────────────────────────────────
+  function openSheet(title, sub, contacts) {
+    document.getElementById("sidesheet-sub").textContent = sub || "";
+    document.getElementById("sidesheet-title").textContent = title || "";
+    const body = document.getElementById("sidesheet-body");
+    if (!contacts.length) {
+      body.innerHTML = `<div class="sankey-empty">No contacts in this segment.</div>`;
+    } else {
+      body.innerHTML = contacts.map(c => {
+        const meta = [c.position, c.company].filter(Boolean).join(" · ");
+        const initial = (c.full_name || "?")[0].toUpperCase();
+        return `<div class="contact-row">
+          <div class="contact-avatar">${esc(initial)}</div>
+          <div class="contact-meta">
+            <div class="contact-name">${esc(c.full_name || "Unknown")}</div>
+            <div class="contact-sub">${esc(meta)}</div>
+          </div>
+          ${c.profile_url ? `<a class="contact-link" href="${esc(c.profile_url)}" target="_blank">↗ LinkedIn</a>` : ""}
+        </div>`;
+      }).join("");
+    }
+    document.getElementById("sidesheet").classList.add("open");
+    document.getElementById("sidesheet").setAttribute("aria-hidden", "false");
+    document.getElementById("sheet-backdrop").classList.add("open");
+    body.scrollTop = 0;
+  }
+  function closeSheet() {
+    document.getElementById("sidesheet").classList.remove("open");
+    document.getElementById("sidesheet").setAttribute("aria-hidden", "true");
+    document.getElementById("sheet-backdrop").classList.remove("open");
+  }
+  document.getElementById("sidesheet-close").onclick = closeSheet;
+  document.getElementById("sheet-backdrop").onclick = closeSheet;
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && document.getElementById("sidesheet").classList.contains("open")) closeSheet();
+  });
+
+  // ── Keyboard shortcuts ──────────────────────────
+  document.addEventListener("keydown", e => {
+    const tag = e.target.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+    if (state.view !== "inbox") return;
+
+    if (e.key === "j" || e.key === "ArrowDown") { e.preventDefault(); navigate(+1); }
+    else if (e.key === "k" || e.key === "ArrowUp") { e.preventDefault(); navigate(-1); }
+    else if (e.key === "Enter") { e.preventDefault(); navigate(+1); }
+    else if (e.key === "f" && state.selectedRid) { e.preventDefault(); toggleFlag(state.selectedRid); }
+    else if (state.selectedRid) {
+      const n = e.key === "0" ? 10 : parseInt(e.key);
+      if (n >= 1 && n <= DISPOSITIONS.length) {
+        toggleTag(state.selectedRid, DISPOSITIONS[n - 1].id);
+        e.preventDefault();
+      }
+    }
+  });
+
+  // ── Init ─────────────────────────────────────────
+  function render() {
+    renderList();
+    renderDetail();
+  }
+
+  populateCampaignFilter();
+  populateDispFilter();
+
+  // Auto-select first reply
+  const first = filteredReplies()[0];
+  if (first) state.selectedRid = replyId(first);
+
+  renderAnalytics();
+  render();
+
+})();
+</script>
+</body>
+</html>
