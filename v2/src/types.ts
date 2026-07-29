@@ -1,0 +1,37 @@
+export type Sentiment = 'positive' | 'negative' | 'neutral'
+
+export interface Message {
+  sender: 'owner' | 'prospect'
+  sender_name: string
+  date: string
+  text: string
+}
+
+export interface Conversation {
+  profile_url: string
+  full_name: string
+  email: string
+  company: string
+  position: string
+  connected_at: string
+  owner: string
+  messages: Message[]
+  replied: boolean
+  sentiment: Sentiment | null
+  tags: string[]
+}
+
+export interface DashboardData {
+  conversations: Conversation[]
+  daily: {
+    sent: Record<string, number>
+    received: Record<string, number>
+  }
+  summary: {
+    total_messaged: number
+    total_replied: number
+    reply_rate: number
+    sentiment_counts: Partial<Record<Sentiment, number>>
+    sentiment_share: Partial<Record<Sentiment, number>>
+  }
+}

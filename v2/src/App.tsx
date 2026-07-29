@@ -1,33 +1,24 @@
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { DailyChart } from '@/components/DailyChart'
+import { KpiStrip } from '@/components/KpiStrip'
+import { SentimentBreakdown } from '@/components/SentimentBreakdown'
+import rawData from '../data.json'
+import type { DashboardData } from '@/types'
+
+const data = rawData as unknown as DashboardData
 
 function App() {
   return (
-    <main className="flex min-h-svh items-center justify-center bg-background p-8">
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle>shadcn/ui is working</CardTitle>
-          <CardDescription>
-            v2 is scaffolded on Vite, React, Tailwind, and shadcn/ui.
-          </CardDescription>
-          <CardAction>
-            <Badge>v2</Badge>
-          </CardAction>
-        </CardHeader>
-        <CardContent className="flex gap-2">
-          <Button>Primary</Button>
-          <Button variant="outline">Outline</Button>
-          <Button variant="ghost">Ghost</Button>
-        </CardContent>
-      </Card>
+    <main className="bg-background min-h-svh p-6">
+      <div className="mx-auto flex max-w-4xl flex-col gap-6">
+        <h1 className="text-xl font-bold">Outreach Dashboard</h1>
+
+        <KpiStrip summary={data.summary} />
+
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <DailyChart daily={data.daily} />
+          <SentimentBreakdown summary={data.summary} />
+        </div>
+      </div>
     </main>
   )
 }
