@@ -11,7 +11,7 @@ import hashlib
 import json
 import re
 import urllib.request
-from collections import Counter, defaultdict
+from collections import Counter
 from datetime import datetime
 from pathlib import Path
 
@@ -227,9 +227,33 @@ def compute_summary(conversations: list[dict]) -> dict:
     }
 
 
+DATA_PATH = Path(__file__).parent / "data.json"
+CACHE_PATH = Path(__file__).parent / "classify_cache.json"
+
+
+def merge_and_write(new_conversations: list[dict], owners_replaced: set[str]) -> dict:
+    """Write new_conversations into data.json, replacing any existing conversation whose
+    owner is in owners_replaced and leaving every other owner's data untouched.
+
+    Both the CLI batch path (main(), below) and server.py's single-profile upload path
+    call this, so a CLI run for one profile can never silently delete another profile
+    that was added through the other path — each write only ever owns its own owners.
+    """
+    existing = json.loads(DATA_PATH.read_text()) if DATA_PATH.exists() else {}
+    kept = [c for c in existing.get("conversations", []) if c.get("owner") not in owners_replaced]
+    conversations = kept + new_conversations
+
+    data = {
+        "conversations": conversations,
+        "daily": compute_daily_counts(conversations),
+        "summary": compute_summary(conversations),
+    }
+    DATA_PATH.write_text(json.dumps(data, ensure_ascii=False, indent=2))
+    return data
+
+
 def main() -> None:
-    cache_path = Path(__file__).parent / "classify_cache.json"
-    cache = json.loads(cache_path.read_text()) if cache_path.exists() else {}
+    cache = json.loads(CACHE_PATH.read_text()) if CACHE_PATH.exists() else {}
 
     conversations = []
     for source in SOURCES:
@@ -250,7 +274,7 @@ def main() -> None:
                 if not was_cached:
                     to_classify += 1
                     if to_classify % 5 == 0:
-                        cache_path.write_text(json.dumps(cache, ensure_ascii=False, indent=2))
+                        CACHE_PATH.write_text(json.dumps(cache, ensure_ascii=False, indent=2))
                     print(f"  classified {to_classify}: {conv['full_name']} -> {result}", flush=True)
             else:
                 conv["sentiment"] = None
@@ -258,16 +282,11 @@ def main() -> None:
             conversations.append(conv)
         print(f"{source['owner']}: {len(rows)} rows -> {len(conversations) - before} conversations with a real sent message", flush=True)
 
-    cache_path.write_text(json.dumps(cache, ensure_ascii=False, indent=2))
+    CACHE_PATH.write_text(json.dumps(cache, ensure_ascii=False, indent=2))
 
-    data = defaultdict(dict)
-    data["conversations"] = conversations
-    data["daily"] = compute_daily_counts(conversations)
-    data["summary"] = compute_summary(conversations)
-
-    out_path = Path(__file__).parent / "data.json"
-    out_path.write_text(json.dumps(data, ensure_ascii=False, indent=2))
-    print(f"wrote {out_path} — {len(conversations)} conversations, summary: {data['summary']}")
+    owners_replaced = {source["owner"] for source in SOURCES}
+    data = merge_and_write(conversations, owners_replaced)
+    print(f"wrote {DATA_PATH} — {len(data['conversations'])} total conversations, this run's summary: {compute_summary(conversations)}")
 
 
 if __name__ == "__main__":

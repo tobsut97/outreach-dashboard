@@ -68,6 +68,32 @@ Replies/Processed/Failed exports.
 
 3. Rebuild the app (`npm run build`) so the dashboard picks up the new `data.json`.
 
+### Uploading a profile from the dashboard, instead
+
+Editing `SOURCES` by hand isn't the only way in. Any profile in the sidebar with no data
+yet shows an upload card: pick a CSV (up to 50MB), confirm the auto-detected account owner
+name, and it classifies right there — no rebuild.
+
+This needs a second local process alongside `npm run dev`:
+
+```bash
+python3 server.py
+```
+
+It's a small stdlib-only HTTP server on `localhost:8787` that reuses `extract.py`'s own
+parsing and classification functions rather than duplicating them, so the two paths can't
+drift apart — `server.py` even calls the same `merge_and_write()` that `main()` uses, so
+either one can update `data.json` without erasing what the other already put there.
+Uploading a profile again replaces its conversations rather than duplicating them, same as
+re-running `python3 extract.py` for an existing `SOURCES` entry does.
+
+The owner name is auto-detected: across a whole export, the account owner is the one
+sender who recurs in nearly every row's conversation, so a quick frequency count over a
+row sample finds them. The field stays editable in case that guess is wrong.
+
+This is a local, single-user convenience, not a hosted multi-user tool — like `extract.py`,
+it only ever talks to Ollama and the filesystem on this machine.
+
 ### History rules
 
 These apply to every entry in `SOURCES`, so they hold for each new export without

@@ -2,6 +2,7 @@ import { Fragment, useEffect, useState } from 'react'
 import { AppSidebar } from '@/components/AppSidebar'
 import { DailyChart } from '@/components/DailyChart'
 import { KpiStrip } from '@/components/KpiStrip'
+import { ProfileUpload } from '@/components/ProfileUpload'
 import { SentimentBreakdown } from '@/components/SentimentBreakdown'
 import { SentimentDetail } from '@/components/SentimentDetail'
 import {
@@ -12,7 +13,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
-import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { answerSentiment, profileOwner, type AnswerName, type ProfileName } from '@/filters'
@@ -29,8 +29,6 @@ import { SENTIMENT_LABELS } from '@/lib/sentiment'
 import rawData from '../data.json'
 import type { DashboardData, Sentiment } from '@/types'
 
-const data = rawData as unknown as DashboardData
-
 type View = { name: 'dashboard' } | { name: 'sentiment'; sentiment: Sentiment }
 
 /** Hash routing rather than a router dependency: two views, and it still works over file://,
@@ -45,6 +43,10 @@ const navigate = (hash: string) => {
 }
 
 function App() {
+  // Seeded from the build-time import — the common case of just opening the dashboard
+  // needs nothing else. An in-app CSV upload (server.py) replaces this with a fresh fetch
+  // once a job completes, so a newly ingested profile appears without a rebuild.
+  const [data, setData] = useState<DashboardData>(() => rawData as unknown as DashboardData)
   const [profile, setProfile] = useState<ProfileName>('Show All')
   const [answer, setAnswer] = useState<AnswerName>('Show All')
   const [view, setView] = useState<View>(parseHash)
@@ -129,13 +131,14 @@ function App() {
         </header>
         <div className="flex min-w-0 flex-1 flex-col gap-4 p-4 pt-0">
           {conversations.length === 0 ? (
-            <Card>
-              <CardContent className="text-muted-foreground text-sm">
-                No export has been ingested for {profile} yet. Add their CSV to{' '}
-                <code className="text-foreground">SOURCES</code> in{' '}
-                <code className="text-foreground">extract.py</code> and re-run it.
-              </CardContent>
-            </Card>
+            profile === 'Show All' ? (
+              <p className="text-muted-foreground text-sm">
+                No profiles have any data yet. Pick a named profile from the sidebar to
+                upload its export.
+              </p>
+            ) : (
+              <ProfileUpload profile={profile} onUploaded={setData} />
+            )
           ) : view.name === 'sentiment' ? (
             <SentimentDetail
               sentiment={view.sentiment}

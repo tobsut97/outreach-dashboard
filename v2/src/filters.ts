@@ -38,8 +38,33 @@ export const ANSWERS: { name: AnswerName; sentiment: Sentiment | 'all' }[] = [
   { name: 'Negative', sentiment: 'negative' },
 ]
 
+// A profile's owner string is often just a placeholder guess (e.g. 'Lara' rather than her
+// real LinkedIn name) until their CSV is actually uploaded, at which point extract.py's
+// owner-detection (server.py) discovers the real name. This override — the same
+// localStorage-layering pattern as lib/overrides.ts — lets that discovery correct the
+// mapping at runtime instead of requiring a source edit.
+const OWNER_OVERRIDES_KEY = 'outreach-dashboard.profile-owners.v1'
+
+function loadOwnerOverrides(): Partial<Record<ProfileName, string>> {
+  try {
+    const raw = localStorage.getItem(OWNER_OVERRIDES_KEY)
+    return raw ? (JSON.parse(raw) as Partial<Record<ProfileName, string>>) : {}
+  } catch {
+    return {}
+  }
+}
+
+export function saveProfileOwner(profile: ProfileName, owner: string): void {
+  try {
+    const current = loadOwnerOverrides()
+    localStorage.setItem(OWNER_OVERRIDES_KEY, JSON.stringify({ ...current, [profile]: owner }))
+  } catch {
+    // Private browsing or a full quota — the mapping still applies for this session.
+  }
+}
+
 export const profileOwner = (name: ProfileName) =>
-  PROFILES.find((entry) => entry.name === name)?.owner ?? null
+  loadOwnerOverrides()[name] ?? PROFILES.find((entry) => entry.name === name)?.owner ?? null
 
 export const answerSentiment = (name: AnswerName) =>
   ANSWERS.find((entry) => entry.name === name)?.sentiment ?? 'all'
