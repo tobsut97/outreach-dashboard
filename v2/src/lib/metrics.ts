@@ -1,8 +1,16 @@
 import type { Conversation, DashboardData, Sentiment } from '@/types'
 
+/**
+ * `DashboardData['summary']` describes what extract.py writes into data.json, which carries
+ * no tag crosstab — so the derived shape is an intersection rather than a widening of it.
+ */
+export type Summary = DashboardData['summary'] & {
+  tag_counts: Partial<Record<Sentiment, Record<string, number>>>
+}
+
 export interface Metrics {
   daily: DashboardData['daily']
-  summary: DashboardData['summary']
+  summary: Summary
 }
 
 const oneDecimal = (part: number, whole: number) =>
@@ -13,8 +21,8 @@ const oneDecimal = (part: number, whole: number) =>
  *
  * `sentiment` scopes the reply side only — received messages, the replied count, and the
  * reply rate. Sent messages carry no sentiment, so `sent` and `total_messaged` ignore it.
- * `sentiment_counts` / `sentiment_share` also ignore it, since the breakdown is the context
- * for the filter rather than a subject of it.
+ * `sentiment_counts` / `sentiment_share` / `tag_counts` also ignore it, since the breakdown
+ * is the context for the filter rather than a subject of it.
  */
 export function deriveMetrics(
   conversations: Conversation[],
@@ -23,11 +31,17 @@ export function deriveMetrics(
   const sent: Record<string, number> = {}
   const received: Record<string, number> = {}
   const counts: Partial<Record<Sentiment, number>> = {}
+  const tagCounts: Partial<Record<Sentiment, Record<string, number>>> = {}
   let replied = 0
 
   for (const conversation of conversations) {
     if (conversation.sentiment) {
       counts[conversation.sentiment] = (counts[conversation.sentiment] ?? 0) + 1
+      const bucket = tagCounts[conversation.sentiment] ?? {}
+      for (const tag of conversation.tags) {
+        bucket[tag] = (bucket[tag] ?? 0) + 1
+      }
+      tagCounts[conversation.sentiment] = bucket
     }
 
     const matches = sentiment === 'all' || conversation.sentiment === sentiment
@@ -57,6 +71,7 @@ export function deriveMetrics(
       reply_rate: oneDecimal(replied, conversations.length),
       sentiment_counts: counts,
       sentiment_share: share,
+      tag_counts: tagCounts,
     },
   }
 }
