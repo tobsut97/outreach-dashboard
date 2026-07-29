@@ -48,11 +48,12 @@ const chartConfig = {
 // connections; the campaign itself starts in late 2025.
 const DATA_START = '2025-01-01'
 
-type DisplayMode = 'daily' | 'weekly' | 'quarterly' | 'yearly'
+type DisplayMode = 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly'
 
 const MODE_LABELS: Record<DisplayMode, string> = {
   daily: 'Daily',
   weekly: 'Weekly',
+  monthly: 'Monthly',
   quarterly: 'Quarterly',
   yearly: 'Yearly',
 }
@@ -66,6 +67,10 @@ function bucketFor(date: Date, mode: DisplayMode): { key: string; label: string 
     case 'weekly': {
       const start = startOfWeek(date)
       return { key: toKey(start), label: format(start, 'MMM dd') }
+    }
+    case 'monthly': {
+      const start = startOfMonth(date)
+      return { key: toKey(start), label: format(start, 'MMM yyyy') }
     }
     case 'quarterly': {
       const start = startOfQuarter(date)
