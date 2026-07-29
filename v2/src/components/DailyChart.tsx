@@ -96,7 +96,7 @@ export function DailyChart({ daily }: { daily: DashboardData['daily'] }) {
   const maxDate = parseISO(maxDay)
 
   const [range, setRange] = useState<DateRange | undefined>({ from: minDate, to: maxDate })
-  const [mode, setMode] = useState<DisplayMode>('daily')
+  const [mode, setMode] = useState<DisplayMode>('monthly')
   const [open, setOpen] = useState(false)
 
   const fromKey = range?.from ? toKey(range.from) : minDay
@@ -239,8 +239,8 @@ export function DailyChart({ daily }: { daily: DashboardData['daily'] }) {
                 }
               />
               <ChartLegend content={<ChartLegendContent />} />
-              <Bar dataKey="sent" fill="var(--color-sent)" radius={2} />
-              <Bar dataKey="received" fill="var(--color-received)" radius={2} />
+              <Bar dataKey="sent" fill="var(--color-sent)" radius={2} isAnimationActive={false} />
+              <Bar dataKey="received" fill="var(--color-received)" radius={2} isAnimationActive={false} />
             </BarChart>
           </ChartContainer>
         )}

@@ -1,4 +1,4 @@
-import { Leaf } from 'lucide-react'
+import { PinaLogo } from '@/components/PinaLogo'
 import {
   Sidebar,
   SidebarContent,
@@ -29,19 +29,10 @@ export function AppSidebar({
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg">
-              <div className="bg-primary text-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                <Leaf className="size-4" />
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">Pina Earth</span>
-                <span className="text-muted-foreground truncate text-xs">Outreach</span>
-              </div>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <div className="flex flex-col gap-2 px-2 py-1.5">
+          <PinaLogo className="h-8 w-auto self-start" />
+          <span className="text-muted-foreground text-xs">Outreach Dashboard</span>
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
