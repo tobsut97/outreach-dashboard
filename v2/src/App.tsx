@@ -14,10 +14,9 @@ function App() {
 
         <KpiStrip summary={data.summary} />
 
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <DailyChart daily={data.daily} />
-          <SentimentBreakdown summary={data.summary} />
-        </div>
+        <DailyChart daily={data.daily} />
+
+        <SentimentBreakdown summary={data.summary} />
       </div>
     </main>
   )

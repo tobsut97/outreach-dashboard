@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -17,7 +18,15 @@ const chartConfig = {
 
 export function DailyChart({ daily }: { daily: DashboardData['daily'] }) {
   const days = Array.from(new Set([...Object.keys(daily.sent), ...Object.keys(daily.received)])).sort()
-  const data = days.map((day) => ({
+
+  const minDate = days[0] || ''
+  const maxDate = days[days.length - 1] || ''
+
+  const [startDate, setStartDate] = useState(minDate)
+  const [endDate, setEndDate] = useState(maxDate)
+
+  const filteredDays = days.filter((day) => day >= startDate && day <= endDate)
+  const data = filteredDays.map((day) => ({
     day,
     sent: daily.sent[day] ?? 0,
     received: daily.received[day] ?? 0,
@@ -25,14 +34,53 @@ export function DailyChart({ daily }: { daily: DashboardData['daily'] }) {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex flex-col gap-3">
         <CardTitle className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
           Messages sent vs. answers received, per day
         </CardTitle>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:gap-3">
+          <div className="flex flex-col gap-1">
+            <label htmlFor="start-date" className="text-xs font-medium text-muted-foreground">
+              From
+            </label>
+            <input
+              id="start-date"
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              min={minDate}
+              max={endDate}
+              className="rounded border border-input bg-background px-3 py-1.5 text-sm font-mono"
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label htmlFor="end-date" className="text-xs font-medium text-muted-foreground">
+              To
+            </label>
+            <input
+              id="end-date"
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              min={startDate}
+              max={maxDate}
+              className="rounded border border-input bg-background px-3 py-1.5 text-sm font-mono"
+            />
+          </div>
+          <button
+            onClick={() => {
+              setStartDate(minDate)
+              setEndDate(maxDate)
+            }}
+            className="text-muted-foreground hover:text-foreground text-xs font-medium transition-colors"
+          >
+            Reset
+          </button>
+        </div>
       </CardHeader>
       <CardContent>
         {data.length === 0 ? (
-          <p className="text-muted-foreground text-sm">No data yet.</p>
+          <p className="text-muted-foreground text-sm">No data in this date range.</p>
         ) : (
           <ChartContainer config={chartConfig} className="h-64 w-full">
             <BarChart data={data}>
