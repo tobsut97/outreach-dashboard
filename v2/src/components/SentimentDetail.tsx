@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { format, parseISO } from 'date-fns'
 import { ExternalLink } from 'lucide-react'
+import { ConversationSheet } from '@/components/ConversationSheet'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -11,6 +13,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { oneDecimal, type Summary } from '@/lib/metrics'
+import type { ConversationOverride, ManagedConversation } from '@/lib/overrides'
 import { DOT_COLOR, SENTIMENT_LABELS, TAG_BAR_COLOR, tagLabel } from '@/lib/sentiment'
 import type { Conversation, Sentiment } from '@/types'
 
@@ -21,24 +24,37 @@ export function SentimentDetail({
   sentiment,
   conversations,
   summary,
+  onSaveOverride,
 }: {
   sentiment: Sentiment
-  conversations: Conversation[]
+  conversations: ManagedConversation[]
   summary: Summary
+  onSaveOverride: (conversation: ManagedConversation, override: ConversationOverride) => void
 }) {
+  const [selected, setSelected] = useState<ManagedConversation | null>(null)
+  const [sheetOpen, setSheetOpen] = useState(false)
+
   const rows = conversations
     .filter((conversation) => conversation.sentiment === sentiment)
     .sort((a, b) => (firstReply(b)?.date ?? '').localeCompare(firstReply(a)?.date ?? ''))
 
-  const count = rows.length
+  // Metrics exclude conversations marked irrelevant, so the counts here must too. They stay
+  // in the table, dimmed, or marking one would hide it beyond any way of undoing it.
+  const active = rows.filter((conversation) => !conversation.irrelevant)
+  const hidden = rows.length - active.length
   const share = summary.sentiment_share[sentiment] ?? 0
   const reasons = Object.entries(summary.tag_counts[sentiment] ?? {}).sort((a, b) => b[1] - a[1])
+
+  const openConversation = (conversation: ManagedConversation) => {
+    setSelected(conversation)
+    setSheetOpen(true)
+  }
 
   return (
     <>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {[
-          { label: `${SENTIMENT_LABELS[sentiment]} answers`, value: count },
+          { label: `${SENTIMENT_LABELS[sentiment]} answers`, value: active.length },
           { label: 'Share of all replies', value: `${share}%` },
           { label: 'Reasons identified', value: reasons.length },
         ].map((item) => (
@@ -70,7 +86,7 @@ export function SentimentDetail({
           ) : (
             <>
               {reasons.map(([tag, tagCount]) => {
-                const tagShare = oneDecimal(tagCount, count)
+                const tagShare = oneDecimal(tagCount, active.length)
                 return (
                   <div key={tag} className="flex items-center gap-3">
                     <span className="w-44 shrink-0 text-sm">{tagLabel(tag)}</span>
@@ -100,13 +116,18 @@ export function SentimentDetail({
       <Card>
         <CardHeader>
           <CardTitle className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
-            Conversations ({count})
+            Conversations ({active.length})
+            {hidden > 0 && (
+              <span className="ml-2 font-normal normal-case">
+                + {hidden} marked irrelevant
+              </span>
+            )}
           </CardTitle>
         </CardHeader>
         <CardContent>
           {/* table-fixed: without it the column percentages below are only hints, and long
               reply text blows the table out to thousands of pixels wide. */}
-          {count === 0 ? (
+          {rows.length === 0 ? (
             <p className="text-muted-foreground text-sm">No conversations in this category.</p>
           ) : (
             <Table className="table-fixed">
@@ -123,7 +144,13 @@ export function SentimentDetail({
                 {rows.map((conversation) => {
                   const reply = firstReply(conversation)
                   return (
-                    <TableRow key={conversation.profile_url || conversation.full_name}>
+                    <TableRow
+                      key={conversation.profile_url || conversation.full_name}
+                      onClick={() => openConversation(conversation)}
+                      className={`hover:bg-muted/60 cursor-pointer ${
+                        conversation.irrelevant ? 'opacity-45' : ''
+                      }`}
+                    >
                       {/* TableCell defaults to whitespace-nowrap, which would clip the reply
                           text and let long company names collide with the next column. */}
                       <TableCell className="align-top font-medium whitespace-normal">
@@ -132,6 +159,8 @@ export function SentimentDetail({
                             href={conversation.profile_url}
                             target="_blank"
                             rel="noreferrer"
+                            // Otherwise opening LinkedIn would also open the sheet.
+                            onClick={(event) => event.stopPropagation()}
                             className="hover:text-primary inline-flex items-center gap-1 hover:underline"
                           >
                             {conversation.full_name || '—'}
@@ -145,6 +174,18 @@ export function SentimentDetail({
                             {conversation.position}
                           </div>
                         )}
+                        <div className="mt-1 flex flex-wrap gap-1">
+                          {conversation.irrelevant && (
+                            <Badge variant="outline" className="text-xs font-normal">
+                              Irrelevant
+                            </Badge>
+                          )}
+                          {conversation.edited && !conversation.irrelevant && (
+                            <Badge variant="outline" className="text-xs font-normal">
+                              Edited
+                            </Badge>
+                          )}
+                        </div>
                       </TableCell>
                       <TableCell className="text-muted-foreground align-top break-words whitespace-normal">
                         {conversation.company || '—'}
@@ -178,6 +219,15 @@ export function SentimentDetail({
           )}
         </CardContent>
       </Card>
+
+      <ConversationSheet
+        conversation={selected}
+        open={sheetOpen}
+        onOpenChange={setSheetOpen}
+        onSave={(override) => {
+          if (selected) onSaveOverride(selected, override)
+        }}
+      />
     </>
   )
 }

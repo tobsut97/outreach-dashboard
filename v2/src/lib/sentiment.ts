@@ -41,4 +41,10 @@ export const TAG_LABELS: Record<string, string> = {
   unclear: 'Unclear',
 }
 
+/** Mirrors ALLOWED_TAGS in extract.py — keep the two in step. */
+export const ALLOWED_TAGS = Object.keys(TAG_LABELS)
+
+/** A reply carries at most this many reasons, matching the classifier's constraint. */
+export const MAX_TAGS = 2
+
 export const tagLabel = (tag: string) => TAG_LABELS[tag] ?? tag

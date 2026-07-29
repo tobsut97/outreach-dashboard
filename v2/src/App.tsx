@@ -17,6 +17,14 @@ import { Separator } from '@/components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { answerSentiment, profileOwner, type AnswerName, type ProfileName } from '@/filters'
 import { deriveMetrics } from '@/lib/metrics'
+import {
+  applyOverrides,
+  conversationKey,
+  loadOverrides,
+  persistOverrides,
+  type ConversationOverride,
+  type Overrides,
+} from '@/lib/overrides'
 import { SENTIMENT_LABELS } from '@/lib/sentiment'
 import rawData from '../data.json'
 import type { DashboardData, Sentiment } from '@/types'
@@ -40,6 +48,7 @@ function App() {
   const [profile, setProfile] = useState<ProfileName>('Show All')
   const [answer, setAnswer] = useState<AnswerName>('Show All')
   const [view, setView] = useState<View>(parseHash)
+  const [overrides, setOverrides] = useState<Overrides>(loadOverrides)
 
   useEffect(() => {
     const onHashChange = () => setView(parseHash())
@@ -48,16 +57,25 @@ function App() {
   }, [])
 
   const owner = profileOwner(profile)
-  const conversations = owner
+  const scoped = owner
     ? data.conversations.filter((conversation) => conversation.owner === owner)
     : data.conversations
+  const conversations = applyOverrides(scoped, overrides)
 
   // The detail page is scoped by its own sentiment, so the answer filter only shapes the
   // dashboard. Changing it therefore returns to the dashboard.
   const { daily, summary } = deriveMetrics(
-    conversations,
+    conversations.filter((conversation) => !conversation.irrelevant),
     view.name === 'sentiment' ? 'all' : answerSentiment(answer),
   )
+
+  const saveOverride = (key: string, override: ConversationOverride) => {
+    setOverrides((current) => {
+      const next: Overrides = { ...current, [key]: override }
+      persistOverrides(next)
+      return next
+    })
+  }
 
   const trail: { label: string; hash?: string }[] = [{ label: 'Profiles', hash: '#/' }]
   if (view.name === 'sentiment') {
@@ -123,6 +141,9 @@ function App() {
               sentiment={view.sentiment}
               conversations={conversations}
               summary={summary}
+              onSaveOverride={(conversation, override) =>
+                saveOverride(conversationKey(conversation), override)
+              }
             />
           ) : (
             <>
