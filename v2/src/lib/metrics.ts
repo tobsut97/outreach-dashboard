@@ -13,7 +13,7 @@ export interface Metrics {
   summary: Summary
 }
 
-const oneDecimal = (part: number, whole: number) =>
+export const oneDecimal = (part: number, whole: number) =>
   whole ? Math.round((1000 * part) / whole) / 10 : 0
 
 /**

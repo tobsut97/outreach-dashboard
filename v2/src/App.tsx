@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { AppSidebar } from '@/components/AppSidebar'
 import { DailyChart } from '@/components/DailyChart'
 import { KpiStrip } from '@/components/KpiStrip'
 import { SentimentBreakdown } from '@/components/SentimentBreakdown'
+import { SentimentDetail } from '@/components/SentimentDetail'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,20 +17,76 @@ import { Separator } from '@/components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { answerSentiment, profileOwner, type AnswerName, type ProfileName } from '@/filters'
 import { deriveMetrics } from '@/lib/metrics'
+import {
+  applyOverrides,
+  conversationKey,
+  loadOverrides,
+  persistOverrides,
+  type ConversationOverride,
+  type Overrides,
+} from '@/lib/overrides'
+import { SENTIMENT_LABELS } from '@/lib/sentiment'
 import rawData from '../data.json'
-import type { DashboardData } from '@/types'
+import type { DashboardData, Sentiment } from '@/types'
 
 const data = rawData as unknown as DashboardData
+
+type View = { name: 'dashboard' } | { name: 'sentiment'; sentiment: Sentiment }
+
+/** Hash routing rather than a router dependency: two views, and it still works over file://,
+ *  which the single-file dist build is meant to support. */
+function parseHash(): View {
+  const match = /^#\/sentiment\/(positive|neutral|negative)$/.exec(window.location.hash)
+  return match ? { name: 'sentiment', sentiment: match[1] as Sentiment } : { name: 'dashboard' }
+}
+
+const navigate = (hash: string) => {
+  window.location.hash = hash
+}
 
 function App() {
   const [profile, setProfile] = useState<ProfileName>('Show All')
   const [answer, setAnswer] = useState<AnswerName>('Show All')
+  const [view, setView] = useState<View>(parseHash)
+  const [overrides, setOverrides] = useState<Overrides>(loadOverrides)
+
+  useEffect(() => {
+    const onHashChange = () => setView(parseHash())
+    window.addEventListener('hashchange', onHashChange)
+    return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
 
   const owner = profileOwner(profile)
-  const conversations = owner
+  const scoped = owner
     ? data.conversations.filter((conversation) => conversation.owner === owner)
     : data.conversations
-  const { daily, summary } = deriveMetrics(conversations, answerSentiment(answer))
+  const conversations = applyOverrides(scoped, overrides)
+
+  // The detail page is scoped by its own sentiment, so the answer filter only shapes the
+  // dashboard. Changing it therefore returns to the dashboard.
+  const { daily, summary } = deriveMetrics(
+    conversations.filter((conversation) => !conversation.irrelevant),
+    view.name === 'sentiment' ? 'all' : answerSentiment(answer),
+  )
+
+  const saveOverride = (key: string, override: ConversationOverride) => {
+    setOverrides((current) => {
+      const next: Overrides = { ...current, [key]: override }
+      persistOverrides(next)
+      return next
+    })
+  }
+
+  const trail: { label: string; hash?: string }[] = [{ label: 'Profiles', hash: '#/' }]
+  if (view.name === 'sentiment') {
+    trail.push({ label: profile, hash: '#/' })
+    trail.push({ label: `${SENTIMENT_LABELS[view.sentiment]} answers` })
+  } else if (answer === 'Show All') {
+    trail.push({ label: profile })
+  } else {
+    trail.push({ label: profile, hash: '#/' })
+    trail.push({ label: `${answer} answers` })
+  }
 
   return (
     <SidebarProvider>
@@ -37,39 +94,40 @@ function App() {
         profile={profile}
         answer={answer}
         onProfileChange={setProfile}
-        onAnswerChange={setAnswer}
+        onAnswerChange={(next) => {
+          setAnswer(next)
+          navigate('#/')
+        }}
       />
-      <SidebarInset>
+      {/* min-w-0: flex items default to min-width:auto, so the conversations table would
+          otherwise widen the whole inset instead of scrolling inside its own container. */}
+      <SidebarInset className="min-w-0">
         <header className="flex h-16 shrink-0 items-center gap-2">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 !h-4" />
             <Breadcrumb>
               <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">Profiles</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                {answer === 'Show All' ? (
-                  <BreadcrumbItem>
-                    <BreadcrumbPage>{profile}</BreadcrumbPage>
-                  </BreadcrumbItem>
-                ) : (
-                  <>
-                    <BreadcrumbItem className="hidden md:block">
-                      <BreadcrumbLink href="#">{profile}</BreadcrumbLink>
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator className="hidden md:block" />
-                    <BreadcrumbItem>
-                      <BreadcrumbPage>{answer} answers</BreadcrumbPage>
-                    </BreadcrumbItem>
-                  </>
-                )}
+                {trail.map((crumb, index) => {
+                  const isLast = index === trail.length - 1
+                  return (
+                    <Fragment key={crumb.label}>
+                      <BreadcrumbItem className={isLast ? undefined : 'hidden md:block'}>
+                        {isLast || !crumb.hash ? (
+                          <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
+                        ) : (
+                          <BreadcrumbLink href={crumb.hash}>{crumb.label}</BreadcrumbLink>
+                        )}
+                      </BreadcrumbItem>
+                      {!isLast && <BreadcrumbSeparator className="hidden md:block" />}
+                    </Fragment>
+                  )
+                })}
               </BreadcrumbList>
             </Breadcrumb>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+        <div className="flex min-w-0 flex-1 flex-col gap-4 p-4 pt-0">
           {conversations.length === 0 ? (
             <Card>
               <CardContent className="text-muted-foreground text-sm">
@@ -78,11 +136,23 @@ function App() {
                 <code className="text-foreground">extract.py</code> and re-run it.
               </CardContent>
             </Card>
+          ) : view.name === 'sentiment' ? (
+            <SentimentDetail
+              sentiment={view.sentiment}
+              conversations={conversations}
+              summary={summary}
+              onSaveOverride={(conversation, override) =>
+                saveOverride(conversationKey(conversation), override)
+              }
+            />
           ) : (
             <>
               <KpiStrip summary={summary} />
               <DailyChart daily={daily} />
-              <SentimentBreakdown summary={summary} />
+              <SentimentBreakdown
+                summary={summary}
+                onSelect={(sentiment) => navigate(`#/sentiment/${sentiment}`)}
+              />
             </>
           )}
         </div>

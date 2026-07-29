@@ -44,10 +44,6 @@ const chartConfig = {
   received: { label: 'Received', color: 'var(--chart-2)' },
 } satisfies ChartConfig
 
-// data.json carries years of pre-campaign LinkedIn history for contacts who were already
-// connections; the campaign itself starts in late 2025.
-const DATA_START = '2025-01-01'
-
 type DisplayMode = 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly'
 
 const MODE_LABELS: Record<DisplayMode, string> = {
@@ -86,12 +82,15 @@ function bucketFor(date: Date, mode: DisplayMode): { key: string; label: string 
 }
 
 export function DailyChart({ daily }: { daily: DashboardData['daily'] }) {
-  const days = Array.from(new Set([...Object.keys(daily.sent), ...Object.keys(daily.received)]))
-    .filter((day) => day >= DATA_START)
-    .sort()
+  const days = Array.from(
+    new Set([...Object.keys(daily.sent), ...Object.keys(daily.received)]),
+  ).sort()
 
-  const minDay = days[0] ?? DATA_START
-  const maxDay = days[days.length - 1] ?? DATA_START
+  // extract.py enforces the history cutoff, so the domain is just what the data contains.
+  // The fallback only keeps the date maths valid when every conversation is filtered out.
+  const todayKey = format(new Date(), 'yyyy-MM-dd')
+  const minDay = days[0] ?? todayKey
+  const maxDay = days[days.length - 1] ?? todayKey
   const minDate = parseISO(minDay)
   const maxDate = parseISO(maxDay)
 

@@ -57,11 +57,10 @@ Replies/Processed/Failed exports.
    python3 extract.py
    ```
 
-   This parses every conversation, filters out messages that predate the row's
-   `add_to_target_date_iso` (excludes pre-existing personal LinkedIn history for
-   contacts who were already connections before being added to a campaign), classifies
-   every replied conversation's sentiment (`positive`/`negative`/`neutral`, always
-   exactly one) and up to 2 tags via the local Ollama model, and writes `data.json`.
+   This parses every conversation, drops messages excluded by the history rules below,
+   classifies every replied conversation's sentiment (`positive`/`negative`/`neutral`,
+   always exactly one) and up to 2 tags via the local Ollama model, and writes
+   `data.json`.
 
    Classification results are cached in `classify_cache.json` (keyed by profile +
    reply content) so re-runs only classify new or changed conversations. Progress is
@@ -69,9 +68,37 @@ Replies/Processed/Failed exports.
 
 3. Rebuild the app (`npm run build`) so the dashboard picks up the new `data.json`.
 
+### History rules
+
+These apply to every entry in `SOURCES`, so they hold for each new export without
+per-CSV tweaking. A message is kept only if it falls on/after **both**:
+
+- `HISTORY_CUTOFF` in [extract.py](extract.py) — currently 2023-01-01. LinkedIn exports
+  carry years of unrelated personal history for contacts who were already connections
+  before any campaign existed. Change the constant to move the boundary.
+- the row's `add_to_target_date_iso`, i.e. when the contact became a campaign target.
+  Rows with a blank value are only subject to the cutoff.
+
+A conversation left with no outgoing message is dropped entirely. On the current export
+this removes 7 conversations dating from 2018 and 2020.
+
 ### Tags
 
 Fixed list, up to 2 per replied conversation, independent of sentiment: `meeting_booked`,
 `open_to_call`, `referred_colleague`, `future_timing`, `has_existing_solution`,
 `no_budget`, `not_relevant`, `role_change`, `no_reason_given`, `unclear`. Defined in
 `ALLOWED_TAGS` in extract.py — the model is constrained to only pick from this list.
+`ALLOWED_TAGS` in [src/lib/sentiment.ts](src/lib/sentiment.ts) mirrors it for the editor;
+keep the two in step.
+
+## Manual corrections
+
+Clicking a row in a sentiment detail page opens a side sheet with the full message thread.
+**Edit** allows changing the sentiment, swapping the reasons (still capped at 2), and
+marking a conversation irrelevant, which excludes it from every metric while leaving it
+visible but dimmed in the table so it can be undone.
+
+Edits are keyed by `profile_url` and stored in `localStorage`, then layered over
+`data.json` at render time — so they survive re-running `extract.py`, but they are
+per-browser and do **not** feed back into the pipeline. `classify_cache.json` still holds
+the model's original answer, so a re-run will not learn from a correction.
