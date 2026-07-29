@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Calendar } from '@/components/ui/calendar'
 import {
   ChartContainer,
   ChartLegend,
@@ -16,6 +19,18 @@ const chartConfig = {
   received: { label: 'Received', color: 'var(--chart-2)' },
 } satisfies ChartConfig
 
+function formatDate(dateStr: string): string {
+  if (!dateStr) return 'Pick a date'
+  const [year, month, day] = dateStr.split('-')
+  return `${day}/${month}/${year}`
+}
+
+function parseDate(dateStr: string): Date | undefined {
+  if (!dateStr) return undefined
+  const [year, month, day] = dateStr.split('-')
+  return new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+}
+
 export function DailyChart({ daily }: { daily: DashboardData['daily'] }) {
   const days = Array.from(new Set([...Object.keys(daily.sent), ...Object.keys(daily.received)])).sort()
 
@@ -24,6 +39,8 @@ export function DailyChart({ daily }: { daily: DashboardData['daily'] }) {
 
   const [startDate, setStartDate] = useState(minDate)
   const [endDate, setEndDate] = useState(maxDate)
+  const [startOpen, setStartOpen] = useState(false)
+  const [endOpen, setEndOpen] = useState(false)
 
   const filteredDays = days.filter((day) => day >= startDate && day <= endDate)
   const data = filteredDays.map((day) => ({
@@ -32,50 +49,84 @@ export function DailyChart({ daily }: { daily: DashboardData['daily'] }) {
     received: daily.received[day] ?? 0,
   }))
 
+  const handleStartDateSelect = (date: Date | undefined) => {
+    if (!date) return
+    const isoStr = date.toISOString().split('T')[0]
+    setStartDate(isoStr)
+    setStartOpen(false)
+  }
+
+  const handleEndDateSelect = (date: Date | undefined) => {
+    if (!date) return
+    const isoStr = date.toISOString().split('T')[0]
+    setEndDate(isoStr)
+    setEndOpen(false)
+  }
+
+  const minDateObj = parseDate(minDate)
+  const maxDateObj = parseDate(maxDate)
+  const startDateObj = parseDate(startDate)
+  const endDateObj = parseDate(endDate)
+
   return (
     <Card>
       <CardHeader className="flex flex-col gap-3">
         <CardTitle className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
           Messages sent vs. answers received, per day
         </CardTitle>
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:gap-3">
-          <div className="flex flex-col gap-1">
-            <label htmlFor="start-date" className="text-xs font-medium text-muted-foreground">
-              From
-            </label>
-            <input
-              id="start-date"
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              min={minDate}
-              max={endDate}
-              className="rounded border border-input bg-background px-3 py-1.5 text-sm font-mono"
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="end-date" className="text-xs font-medium text-muted-foreground">
-              To
-            </label>
-            <input
-              id="end-date"
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              min={startDate}
-              max={maxDate}
-              className="rounded border border-input bg-background px-3 py-1.5 text-sm font-mono"
-            />
-          </div>
-          <button
+        <div className="flex flex-wrap items-end gap-2">
+          <Popover open={startOpen} onOpenChange={setStartOpen}>
+            <PopoverTrigger>
+              <Button variant="outline" className="w-40">
+                From: {formatDate(startDate)}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={startDateObj}
+                onSelect={handleStartDateSelect}
+                disabled={(date) =>
+                  (minDateObj && date < minDateObj) ||
+                  (maxDateObj && date > maxDateObj) ||
+                  (endDateObj && date > endDateObj) ||
+                  false
+                }
+              />
+            </PopoverContent>
+          </Popover>
+
+          <Popover open={endOpen} onOpenChange={setEndOpen}>
+            <PopoverTrigger>
+              <Button variant="outline" className="w-40">
+                To: {formatDate(endDate)}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={endDateObj}
+                onSelect={handleEndDateSelect}
+                disabled={(date) =>
+                  (minDateObj && date < minDateObj) ||
+                  (maxDateObj && date > maxDateObj) ||
+                  (startDateObj && date < startDateObj) ||
+                  false
+                }
+              />
+            </PopoverContent>
+          </Popover>
+
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={() => {
               setStartDate(minDate)
               setEndDate(maxDate)
             }}
-            className="text-muted-foreground hover:text-foreground text-xs font-medium transition-colors"
           >
             Reset
-          </button>
+          </Button>
         </div>
       </CardHeader>
       <CardContent>
