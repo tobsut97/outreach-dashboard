@@ -1,9 +1,27 @@
 import { useState } from 'react'
+import {
+  endOfMonth,
+  endOfQuarter,
+  endOfWeek,
+  endOfYear,
+  format,
+  parseISO,
+  startOfMonth,
+  startOfQuarter,
+  startOfWeek,
+  startOfYear,
+  subMonths,
+  subQuarters,
+  subWeeks,
+  subYears,
+} from 'date-fns'
+import { CalendarIcon } from 'lucide-react'
+import { type DateRange } from 'react-day-picker'
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Calendar } from '@/components/ui/calendar'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
   ChartContainer,
   ChartLegend,
@@ -19,108 +37,61 @@ const chartConfig = {
   received: { label: 'Received', color: 'var(--chart-2)' },
 } satisfies ChartConfig
 
-function formatRangeDisplay(start: string, end: string): string {
-  if (!start || !end) return 'Select date range'
-  const [sy, sm, sd] = start.split('-')
-  const [ey, em, ed] = end.split('-')
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-  return `${months[parseInt(sm) - 1]} ${parseInt(sd)}, ${sy} - ${months[parseInt(em) - 1]} ${parseInt(ed)}, ${ey}`
-}
+// data.json carries years of pre-campaign LinkedIn history for contacts who were already
+// connections; the campaign itself starts in late 2025.
+const DATA_START = '2025-01-01'
 
-function parseDate(dateStr: string): Date | undefined {
-  if (!dateStr) return undefined
-  const [year, month, day] = dateStr.split('-')
-  return new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
-}
-
-function dateToIso(date: Date): string {
-  return date.toISOString().split('T')[0]
-}
+const toKey = (date: Date) => format(date, 'yyyy-MM-dd')
 
 export function DailyChart({ daily }: { daily: DashboardData['daily'] }) {
-  const days = Array.from(new Set([...Object.keys(daily.sent), ...Object.keys(daily.received)])).sort()
-  const minDate = days[0] || ''
-  const maxDate = days[days.length - 1] || ''
+  const days = Array.from(new Set([...Object.keys(daily.sent), ...Object.keys(daily.received)]))
+    .filter((day) => day >= DATA_START)
+    .sort()
 
-  const [startDate, setStartDate] = useState(minDate)
-  const [endDate, setEndDate] = useState(maxDate)
+  const minDay = days[0] ?? DATA_START
+  const maxDay = days[days.length - 1] ?? DATA_START
+  const minDate = parseISO(minDay)
+  const maxDate = parseISO(maxDay)
+
+  const [range, setRange] = useState<DateRange | undefined>({ from: minDate, to: maxDate })
   const [open, setOpen] = useState(false)
 
-  const filteredDays = days.filter((day) => day >= startDate && day <= endDate)
-  const data = filteredDays.map((day) => ({
-    day,
-    sent: daily.sent[day] ?? 0,
-    received: daily.received[day] ?? 0,
-  }))
+  const fromKey = range?.from ? toKey(range.from) : minDay
+  const endKey = range?.to ? toKey(range.to) : fromKey
 
-  const minDateObj = parseDate(minDate)
-  const maxDateObj = parseDate(maxDate)
-  const startDateObj = parseDate(startDate)
-  const endDateObj = parseDate(endDate)
+  const data = days
+    .filter((day) => day >= fromKey && day <= endKey)
+    .map((day) => ({
+      day,
+      sent: daily.sent[day] ?? 0,
+      received: daily.received[day] ?? 0,
+    }))
 
-  const applyRange = (start: Date, end: Date) => {
-    setStartDate(dateToIso(start))
-    setEndDate(dateToIso(end))
-    setOpen(false)
-  }
+  const today = new Date()
+  const lastWeek = subWeeks(today, 1)
+  const lastMonth = subMonths(today, 1)
+  const lastQuarter = subQuarters(today, 1)
+  const lastYear = subYears(today, 1)
 
-  const quickSelects = [
-    {
-      label: 'This week',
-      apply: () => {
-        const today = new Date()
-        const start = new Date(today)
-        start.setDate(today.getDate() - today.getDay())
-        applyRange(start, today)
-      },
-    },
-    {
-      label: 'Last week',
-      apply: () => {
-        const today = new Date()
-        const end = new Date(today)
-        end.setDate(today.getDate() - today.getDay() - 1)
-        const start = new Date(end)
-        start.setDate(end.getDate() - 6)
-        applyRange(start, end)
-      },
-    },
-    {
-      label: 'Last month',
-      apply: () => {
-        const today = new Date()
-        const end = new Date(today.getFullYear(), today.getMonth(), 0)
-        const start = new Date(today.getFullYear(), today.getMonth() - 1, 1)
-        applyRange(start, end)
-      },
-    },
+  const presets: { label: string; range: DateRange }[] = [
+    { label: 'Show all', range: { from: minDate, to: maxDate } },
+    { label: 'This week', range: { from: startOfWeek(today), to: today } },
+    { label: 'Last week', range: { from: startOfWeek(lastWeek), to: endOfWeek(lastWeek) } },
+    { label: 'Last month', range: { from: startOfMonth(lastMonth), to: endOfMonth(lastMonth) } },
     {
       label: 'Last quarter',
-      apply: () => {
-        const today = new Date()
-        const quarter = Math.floor(today.getMonth() / 3)
-        const end = new Date(today.getFullYear(), quarter * 3, 0)
-        const start = new Date(today.getFullYear(), quarter * 3 - 3, 1)
-        applyRange(start, end)
-      },
+      range: { from: startOfQuarter(lastQuarter), to: endOfQuarter(lastQuarter) },
     },
-    {
-      label: 'This year',
-      apply: () => {
-        const today = new Date()
-        const start = new Date(today.getFullYear(), 0, 1)
-        applyRange(start, today)
-      },
-    },
-    {
-      label: 'Last year',
-      apply: () => {
-        const start = new Date(new Date().getFullYear() - 1, 0, 1)
-        const end = new Date(new Date().getFullYear() - 1, 11, 31)
-        applyRange(start, end)
-      },
-    },
+    { label: 'This year', range: { from: startOfYear(today), to: today } },
+    { label: 'Last year', range: { from: startOfYear(lastYear), to: endOfYear(lastYear) } },
   ]
+
+  const hasData = (preset: DateRange) => {
+    if (!preset.from || !preset.to) return false
+    const from = toKey(preset.from)
+    const to = toKey(preset.to)
+    return days.some((day) => day >= from && day <= to)
+  }
 
   return (
     <Card>
@@ -129,62 +100,51 @@ export function DailyChart({ daily }: { daily: DashboardData['daily'] }) {
           Messages sent vs. answers received, per day
         </CardTitle>
         <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger>
-            <Button variant="outline" className="justify-start">
-              📅 {formatRangeDisplay(startDate, endDate)}
-            </Button>
-          </PopoverTrigger>
+          <PopoverTrigger
+            render={
+              <Button variant="outline" className="w-fit justify-start px-2.5 font-normal">
+                <CalendarIcon data-icon="inline-start" />
+                {range?.from ? (
+                  range.to ? (
+                    <>
+                      {format(range.from, 'LLL dd, y')} - {format(range.to, 'LLL dd, y')}
+                    </>
+                  ) : (
+                    format(range.from, 'LLL dd, y')
+                  )
+                ) : (
+                  <span>Pick a date</span>
+                )}
+              </Button>
+            }
+          />
           <PopoverContent className="w-auto p-0" align="start">
-            <div className="flex">
-              <div className="flex flex-col gap-2 border-r border-input p-4">
-                {quickSelects.map((qs) => (
+            <div className="flex max-sm:flex-col">
+              <div className="flex flex-col gap-1 border-r p-3 max-sm:border-r-0 max-sm:border-b">
+                {presets.map((preset) => (
                   <Button
-                    key={qs.label}
+                    key={preset.label}
                     variant="ghost"
                     size="sm"
-                    className="justify-start text-sm font-normal"
-                    onClick={qs.apply}
+                    disabled={!hasData(preset.range)}
+                    className="justify-start font-normal"
+                    onClick={() => {
+                      setRange(preset.range)
+                      setOpen(false)
+                    }}
                   >
-                    {qs.label}
+                    {preset.label}
                   </Button>
                 ))}
               </div>
-              <div className="flex gap-4 p-4">
-                <Calendar
-                  mode="single"
-                  selected={startDateObj}
-                  onSelect={(date) => {
-                    if (date && endDateObj && date <= endDateObj) {
-                      setStartDate(dateToIso(date))
-                    } else if (date) {
-                      setStartDate(dateToIso(date))
-                      setEndDate(dateToIso(date))
-                    }
-                  }}
-                  disabled={(date) =>
-                    (minDateObj && date < minDateObj) ||
-                    (maxDateObj && date > maxDateObj) ||
-                    false
-                  }
-                />
-                <Calendar
-                  mode="single"
-                  selected={endDateObj}
-                  onSelect={(date) => {
-                    if (date && startDateObj && date >= startDateObj) {
-                      setEndDate(dateToIso(date))
-                    } else if (date) {
-                      setStartDate(dateToIso(date))
-                      setEndDate(dateToIso(date))
-                    }
-                  }}
-                  disabled={(date) =>
-                    (minDateObj && date < minDateObj) ||
-                    (maxDateObj && date > maxDateObj) ||
-                    false
-                  }
-                />
-              </div>
+              <Calendar
+                mode="range"
+                defaultMonth={subMonths(maxDate, 1)}
+                selected={range}
+                onSelect={setRange}
+                numberOfMonths={2}
+                disabled={{ before: minDate, after: maxDate }}
+              />
             </div>
           </PopoverContent>
         </Popover>
