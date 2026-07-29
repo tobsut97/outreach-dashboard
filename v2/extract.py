@@ -23,6 +23,12 @@ SOURCES = [
     },
 ]
 
+# Messages before this date are dropped, and a conversation left with nothing is dropped
+# with them. LinkedIn exports carry years of unrelated personal history for contacts who
+# were already connections before any campaign existed. This applies to every entry in
+# SOURCES, not just the first one.
+HISTORY_CUTOFF = datetime(2023, 1, 1)
+
 OLLAMA_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen2.5:7b-instruct"
 
@@ -103,9 +109,13 @@ def parse_iso(s: str) -> datetime | None:
 
 
 def build_conversation(row: dict, owner: str) -> dict | None:
-    """Parse one CSV row's full_messaging_history into a conversation, filtered to
-    messages sent on/after the row was added as a campaign target (excludes any
-    pre-existing personal message history for contacts who predate the campaign)."""
+    """Parse one CSV row's full_messaging_history into a conversation.
+
+    Messages are kept only if they fall on/after both HISTORY_CUTOFF and the date the row
+    was added as a campaign target, which excludes pre-existing personal message history
+    for contacts who predate the campaign. A row with no surviving outgoing message is
+    dropped by returning None.
+    """
     history = (row.get("full_messaging_history") or "").replace("\xa0", " ")
     if not history.strip():
         return None
@@ -115,7 +125,7 @@ def build_conversation(row: dict, owner: str) -> dict | None:
     messages = []
     for i, m in enumerate(matches):
         date = parse_de_date(m.group(2))
-        if date is None or (floor and date < floor):
+        if date is None or date < HISTORY_CUTOFF or (floor and date < floor):
             continue
         text_start = m.end()
         text_end = matches[i + 1].start() if i + 1 < len(matches) else len(history)
