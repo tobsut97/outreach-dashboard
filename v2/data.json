@@ -153482,6 +153482,379 @@
         "referred_colleague",
         "future_timing"
       ]
+    },
+    {
+      "profile_url": "https://www.linkedin.com/in/simon-tamm-658790a6/",
+      "full_name": "Simon Tamm",
+      "email": "",
+      "company": "",
+      "position": "",
+      "connected_at": "2026-06-21T22:00:00.000Z",
+      "messages": [
+        {
+          "sender": "owner",
+          "sender_name": "Christine Rzepka",
+          "date": "2026-07-24T13:14:08",
+          "text": "Hi Simon, ich habe gesehen, dass du auch in der Thinktank Nachhaltigkeit & CSR Gruppe bist. Cool, dass du dich für das Thema Nachhaltigkeit interessierst!\nHabt ihr euch im Rahmen euer Nachhaltigkeitsstrategie auch schon mit Kompensation beschäftigt? Sollen wir uns dazu mal austauschen?\nViele Grüße, Chrissy"
+        },
+        {
+          "sender": "prospect",
+          "sender_name": "Simon Tamm",
+          "date": "2026-07-24T13:17:41",
+          "text": "Hi Chrissy, danke für Deine Nachricht. Nein, wir arbeiten erst an der Reduktion, Kompensation steht aktuell nicht zur Debatte. Viele Grüße Simon"
+        },
+        {
+          "sender": "owner",
+          "sender_name": "Christine Rzepka",
+          "date": "2026-07-28T17:07:12",
+          "text": "Hi Simon,\n\ndanke dir für deine Rückmeldung! Um Enkelfähig zu bleiben, wird das leider nicht ausreichen. \n\nSollte es das Thema lokaler Klimaschutz doch auf die Agenda schaffen, würde ich mich über eine Rückmeldung freuen. \n\nLG!\nChrissy"
+        }
+      ],
+      "replied": true,
+      "owner": "Christine Rzepka",
+      "sentiment": "negative",
+      "tags": [
+        "not_relevant"
+      ]
+    },
+    {
+      "profile_url": "https://www.linkedin.com/in/hermann-rösch/",
+      "full_name": "Hermann Rösch",
+      "email": "post@tonicom.org",
+      "company": "TIT Imhof Gruppe",
+      "position": "Leiter Entsorgung-Recycling / Mitglied der Geschäftsleitung",
+      "connected_at": "2026-07-24T13:07:30.355Z",
+      "messages": [
+        {
+          "sender": "owner",
+          "sender_name": "Christine Rzepka",
+          "date": "2026-07-24T17:48:52",
+          "text": "Hi Hermann, ich habe gesehen, dass du auch in der Thinktank Nachhaltigkeit & CSR Gruppe bist. Cool, dass du dich für das Thema Nachhaltigkeit interessierst!\nHabt ihr euch im Rahmen euer Nachhaltigkeitsstrategie auch schon mit Kompensation beschäftigt? Sollen wir uns dazu mal austauschen?\nViele Grüße, Chrissy"
+        },
+        {
+          "sender": "prospect",
+          "sender_name": "Hermann Rösch",
+          "date": "2026-07-24T19:48:52",
+          "text": "Hallo Christine, unsere Nachhaltigkeitstrategie besteht darin, anderen einen Weg zur Abfallvermeidung, besseren Entsorgung und sinnvollem Recycling zu verhelfen. \nWenn du Industriekunden hast, die sich für dieses Thema interessieren und neue Wege suchen, bin ich der richtige Ansprechpartner.\nViele Grüße, Hermann"
+        },
+        {
+          "sender": "owner",
+          "sender_name": "Christine Rzepka",
+          "date": "2026-07-28T17:06:01",
+          "text": "Hi Hermann, \nin wie weit sind denn eure Kunden bzw. Ansprechpartner mit dem Thema CO2 vertraut? Vllt. gibt es ja Überschneidungen.\nLG\nChrissy"
+        }
+      ],
+      "replied": true,
+      "owner": "Christine Rzepka",
+      "sentiment": "neutral",
+      "tags": [
+        "unclear"
+      ]
+    },
+    {
+      "profile_url": "https://www.linkedin.com/in/bernd-steiner-4629ba1b/",
+      "full_name": "Bernd Steiner",
+      "email": "",
+      "company": "",
+      "position": "",
+      "connected_at": "2026-07-24T12:49:46.749Z",
+      "messages": [
+        {
+          "sender": "owner",
+          "sender_name": "Christine Rzepka",
+          "date": "2026-07-24T18:48:14",
+          "text": "Hi Bernd, ich habe gesehen, dass du auch in der Thinktank Nachhaltigkeit & CSR Gruppe bist. Cool, dass du dich für das Thema Nachhaltigkeit interessierst!\nHabt ihr euch im Rahmen euer Nachhaltigkeitsstrategie auch schon mit Kompensation beschäftigt? Sollen wir uns dazu mal austauschen?\nViele Grüße, Chrissy"
+        },
+        {
+          "sender": "prospect",
+          "sender_name": "Bernd Steiner",
+          "date": "2026-07-25T10:07:22",
+          "text": "Hola Chrissy,\nhabe ich mich, ja.\nDeshalb beteiligen wir uns an einer Bürgerenergiegenossenschaft um die Energiewende vor Ort voran zu bringen.\nIch halte das für zielführend als Zertifikate zu kaufen.\n\nIch wünsche Dir ein schönes Wochenende \n\nViele Grüße \nBernd"
+        }
+      ],
+      "replied": true,
+      "owner": "Christine Rzepka",
+      "sentiment": "negative",
+      "tags": [
+        "has_existing_solution"
+      ]
+    },
+    {
+      "profile_url": "https://www.linkedin.com/in/uwe-folkert-jahnke/",
+      "full_name": "Uwe Jahnke",
+      "email": "u.jahnke@tbd.de",
+      "company": "leitfeuer.de Familienholding GmbH",
+      "position": "Gründer | Geschäftsführer | CEO",
+      "connected_at": "2026-07-24T22:00:00.000Z",
+      "messages": [
+        {
+          "sender": "owner",
+          "sender_name": "Christine Rzepka",
+          "date": "2026-07-25T15:28:17",
+          "text": "Hi Uwe, ich habe gesehen, dass du auch in der Thinktank Nachhaltigkeit & CSR Gruppe bist. Cool, dass du dich für das Thema Nachhaltigkeit interessierst!\nHabt ihr euch im Rahmen euer Nachhaltigkeitsstrategie auch schon mit Kompensation beschäftigt? Sollen wir uns dazu mal austauschen?\nViele Grüße, Chrissy"
+        },
+        {
+          "sender": "prospect",
+          "sender_name": "Uwe Jahnke",
+          "date": "2026-07-25T15:32:07",
+          "text": "Hallo Chrissy, \n\ndas Thema de nachhaltigen Entwicklung unseres Geschäftsbetriebes ist für mich eine Herzensangelegenheit. \n\nKompensation war und ist für uns kein Thema. Wir setzen auf Reduzierung und Vermeidung. \n\nLiebe Grüße , Uwe"
+        },
+        {
+          "sender": "owner",
+          "sender_name": "Christine Rzepka",
+          "date": "2026-07-28T17:04:27",
+          "text": "Hi Uwe,\ndanke dir für deine Rückmeldung! Um Enkelfähig zu bleiben, wird das leider nicht ausreichen. \nSollte es das Thema lokaler Klimaschutz doch auf die Agenda schaffen, würde ich mich über eine Rückmeldung freuen. \nLG\nChrissy"
+        },
+        {
+          "sender": "prospect",
+          "sender_name": "Uwe Jahnke",
+          "date": "2026-07-28T17:23:12",
+          "text": "Hallo Chrissy, \n\nDen lokalen Klimaschutz hatte ich nicht der Kompensation zugeordnet, sondern als Teil unserer gesellschaftlichen Verantwortung als selbstverständlich angesehen. \n\nWir haben diverse kleinere eigene Projekte, z.B. Wallhecken, Blühwiesen, Kräutergärten, etc. Ferner erhält der Niedersächsische Landesforst eine finanzielle Unterstützung für die Aufforstung. \n\nSorry, dass ich bei Kompensation nur an die  weltweiten „zertifizierten“ Projekte, die häufig in der Kritik stehen, gedacht habe. \n\nLG \nUwe"
+        },
+        {
+          "sender": "owner",
+          "sender_name": "Christine Rzepka",
+          "date": "2026-07-29T10:55:48",
+          "text": "Hi Uwe,\ndas ist super! Wenn ihr die Unterstüzung in TÜV zertifizerte Projekte mit messbarem Impact investieren wollt, freuen wir uns nachtürlich. Wir haben auch Projekte in Niedersachsen: https://projects.pina.earth/ \nLG\nChrissy"
+        },
+        {
+          "sender": "prospect",
+          "sender_name": "Uwe Jahnke",
+          "date": "2026-07-29T22:47:12",
+          "text": "attachments count: 1"
+        },
+        {
+          "sender": "prospect",
+          "sender_name": "Uwe Jahnke",
+          "date": "2026-07-29T22:47:41",
+          "text": "Konnte kein Projekt in unserer Region finden 🫣"
+        }
+      ],
+      "replied": true,
+      "owner": "Christine Rzepka",
+      "sentiment": "negative",
+      "tags": [
+        "has_existing_solution",
+        "not_relevant"
+      ]
+    },
+    {
+      "profile_url": "https://www.linkedin.com/in/erich-martin-255767260/",
+      "full_name": "Erich Martin",
+      "email": "",
+      "company": "",
+      "position": "",
+      "connected_at": "2026-07-24T13:33:24.192Z",
+      "messages": [
+        {
+          "sender": "owner",
+          "sender_name": "Christine Rzepka",
+          "date": "2026-07-24T21:49:40",
+          "text": "Hi Erich, ich habe gesehen, dass du auch in der Thinktank Nachhaltigkeit & CSR Gruppe bist. Cool, dass du dich für das Thema Nachhaltigkeit interessierst!\nHabt ihr euch im Rahmen euer Nachhaltigkeitsstrategie auch schon mit Kompensation beschäftigt? Sollen wir uns dazu mal austauschen?\nViele Grüße, Chrissy"
+        },
+        {
+          "sender": "prospect",
+          "sender_name": "Erich Martin",
+          "date": "2026-07-27T08:45:48",
+          "text": "Hallo Christine, vielen Dank für die Nachricht. Nein, mit Kompensationsmaßnahmen gehen und wollen wir auch nicht umgehen. Wir fokussieren uns auch wirksame technische Lösungen im Betrieb und bei unserem Neubau. Ich wünsche eine schöne Woche. VG Erich"
+        },
+        {
+          "sender": "owner",
+          "sender_name": "Christine Rzepka",
+          "date": "2026-07-28T17:00:24",
+          "text": "Danke dir für deine Antwort. Wenn ihr zusätzlich in Klimaschutzprojekte vor Ort investieren wollt, meld dich gerne. LG Chrissy"
+        }
+      ],
+      "replied": true,
+      "owner": "Christine Rzepka",
+      "sentiment": "negative",
+      "tags": [
+        "hard_no_carbon_credits"
+      ]
+    },
+    {
+      "profile_url": "https://www.linkedin.com/in/dr-rudolf-maleri-465aa810/",
+      "full_name": "Rudolf Maleri",
+      "email": "rmaleri@gmail.com",
+      "company": "Klebs + Hartmann GmbH & Co. KG",
+      "position": "Geschäftsführer",
+      "connected_at": "2026-06-23T22:00:00.000Z",
+      "messages": [
+        {
+          "sender": "owner",
+          "sender_name": "Christine Rzepka",
+          "date": "2026-07-24T14:20:44",
+          "text": "Hi Rudolf, ich habe gesehen, dass du auch in der Thinktank Nachhaltigkeit & CSR Gruppe bist. Cool, dass du dich für das Thema Nachhaltigkeit interessierst!\nHabt ihr euch im Rahmen euer Nachhaltigkeitsstrategie auch schon mit Kompensation beschäftigt? Sollen wir uns dazu mal austauschen?\nViele Grüße, Chrissy"
+        },
+        {
+          "sender": "prospect",
+          "sender_name": "Rudolf Maleri",
+          "date": "2026-07-27T12:54:05",
+          "text": "Hallo Chrissy,\ndas Thema Nachhaltigkeit bzw. CSR ist so ein wenig mein Steckenpferd. \"Wir\" sind ein Handwerksbetrieb mit etwas unter 100 Mitarbeitern und als solcher im Rahmen der 2022/2464 nicht berichtspflichtig.\nSo ganz können wir uns dem Thema aber trotzdem nicht entziehen, da viele unserer Kunden berichtspflichtig sind und das Reporting natürlich zu uns durchreichen.\nDaher habe ich mich mit dem Thema Kompensation zwar schon beschäftigt, relevant ist das für uns aber nicht.\nGerade zum Thema Nachhaltigkeit haben wir in den vergangenen Jahren viel proaktiv gemacht, allerdings ist der sonstige Bürokratieaufwand inzwischen so angewachsen, dass wir (fast) nur noch das machen, was wir müssen. \nWir haben zwar noch eine Nachhaltigkeitsberichtserstattung, ehrlicherweise muss ich aber sagen, dass das jedes Jahr weniger wird. So haben wir letztes Jahr beispielsweise unsere Ecovadis-Mitgliedschaft gekündigt, weil es uns auf Dauer einfach zu teuer geworden ist.\n\nViele Grüße,\nR."
+        },
+        {
+          "sender": "owner",
+          "sender_name": "Christine Rzepka",
+          "date": "2026-07-28T16:59:25",
+          "text": "Hi Rudolf,\nvielen Dank für deine Rückmeldung und die Info zu eurem Hintergrund. Sehr verständlich! Zu unseren Kunden zählen auch zB eine Tischlerei, welche nur 10 Mitarbeiter hat, aber etwas für den regionalen Klimaschutz tun möchte. Wenn das für euch interessant ist, können wir gerne sprechen :)\nLG\nChrissy"
+        },
+        {
+          "sender": "prospect",
+          "sender_name": "Rudolf Maleri",
+          "date": "2026-07-29T15:22:35",
+          "text": "Nunja,\nganz grundsätzlich habe ich da das Problem, dass nach wie vor Standards fehlen.\nBeim Qualitätsmanagement hast du beispielsweise die ISO 9001, an die sich jeder halten muss, in anderen Bereichen die Maschinenrichtlinie, ISO 14001usw.\nWir haben jedes Jahr rund 900 verschiedene Kunden, berichtspflichtig sind v.A. die größeren davon; das sind beispielsweise Firmen wie die BASF, Nestle, Abbvie, Air Liquide, Siemens, Pirelli etc.\nViele davon haben unterschiedliche Systeme. SMETA, Ecovadis, amfori, integrityNext, Oeko-Tex, TfS, um nur ein paar zu nennen. Alle dieser Systeme haben zwar grundsätzlich die gleiche Funktion und wollen die gleichen Informationen und Daten. Aber wir müssen sie alle ausfüllen, denn solchen Kunden kannst du nicht vorschreiben, welches System sie zu akzeptieren haben.\nDas frisst bei uns so viele Ressourcen, dass letztendlich kaum Zeit mehr da ist, sowas richtig und fundiert durchzuziehen.\n\nWenn du dafür eine Patentlösung hast, kannst du glaube ich viel Geld verdienen."
+        },
+        {
+          "sender": "prospect",
+          "sender_name": "Rudolf Maleri",
+          "date": "2026-07-29T15:29:12",
+          "text": "...dazu kommt der Kostenfaktor. Als wir vor knapp 10 Jahren mit dem Thema Nachhaltigkeit angefangen haben, hat die ECOVADIS-Lizenz knapp 300€ im Jahr gekostet, und, viel wichtiger, die meisten unserer Kunden haben das akzeptiert. Vor zwei Jahren habe ich Ecovadis gekündigt, weil die inzwischen deutlich über 2000€ dafür wollten und dazu etliche unserer Kunden das nicht mehr akzeptiert haben weil sie zwischenzeitlich andere Lösungen hatten."
+        }
+      ],
+      "replied": true,
+      "owner": "Christine Rzepka",
+      "sentiment": "negative",
+      "tags": [
+        "not_relevant",
+        "no_budget"
+      ]
+    },
+    {
+      "profile_url": "https://www.linkedin.com/in/hartmut-fach-34ba90359/",
+      "full_name": "Hartmut Fach",
+      "email": "",
+      "company": "Bundesverband Spannbeton-Fertigdecken",
+      "position": "Geschäftsführer",
+      "connected_at": "2026-07-03T22:00:00.000Z",
+      "messages": [
+        {
+          "sender": "owner",
+          "sender_name": "Christine Rzepka",
+          "date": "2026-07-24T13:16:08",
+          "text": "Hi Hartmut, ich habe gesehen, dass du auch in der Thinktank Nachhaltigkeit & CSR Gruppe bist. Cool, dass du dich für das Thema Nachhaltigkeit interessierst!\nHabt ihr euch im Rahmen euer Nachhaltigkeitsstrategie auch schon mit Kompensation beschäftigt? Sollen wir uns dazu mal austauschen?\nViele Grüße, Chrissy"
+        },
+        {
+          "sender": "prospect",
+          "sender_name": "Hartmut Fach",
+          "date": "2026-07-27T22:55:53",
+          "text": "Hey Chrissy,\ndanke für die direkte Ansprache. \nNachhaltigkeit ist für unsere Produkte ein wichtiges Argument, auch wenn in Deutschland relativ selten mit unseren ökologischen wie ökonomischen Spannbeton-Fertigdecken gebaut wird. Warum auch immer. \nIch glaube nicht, dass sich unsere Unternehmen - wir als Verband fairerweise auch nicht - mit dem Thema Kompensation beschäftigt haben. \nAlso ja, mich würde das Thema sehr interessieren, ich möchte Dir aber auch keine allzu großen Hoffnungen machen, dass sich da kurzfristig großes Engagement entwickeln lässt. \nWenn Du trotzdem für ein erstes Gespräch mit mir Zeit hast, dann lass uns für nächste Woche eine Videokonferenz vereinbaren. Am 4. und 6. August hätte ich nachmittags keine Termine und hätte ab 14.00 für eine Videoschalte Zeit.\nLiebe Grüße Hartmut"
+        },
+        {
+          "sender": "owner",
+          "sender_name": "Christine Rzepka",
+          "date": "2026-07-28T16:57:25",
+          "text": "Lieber Hartmut,\nvielen Dank für deine Rückmeldung und die Infos. \nIch denke es macht Sinn, wenn wir uns einmal austauschen, da wir beide langfristig die Nachhaltigkeitsstrategie denken müssen. Meine Kollege Max wäre da der richtige Ansprechpartner. Kannst du mir bitte deine Email sagen für die Video-Schalte?\nDanke und liebe Grüße,\nChrissy"
+        },
+        {
+          "sender": "prospect",
+          "sender_name": "Hartmut Fach",
+          "date": "2026-07-28T19:53:00",
+          "text": "fach@spannbeton-fertigdecken.de"
+        },
+        {
+          "sender": "owner",
+          "sender_name": "Christine Rzepka",
+          "date": "2026-07-29T10:57:58",
+          "text": "Max sollte dir eben geschrieben haben :)"
+        }
+      ],
+      "replied": true,
+      "owner": "Christine Rzepka",
+      "sentiment": "positive",
+      "tags": [
+        "meeting_booked"
+      ]
+    },
+    {
+      "profile_url": "https://www.linkedin.com/in/mirja-christ-653a4b315/",
+      "full_name": "Mirja Christ",
+      "email": "",
+      "company": "Martin Christ Gefriertrocknungsanlagen GmbH",
+      "position": "Sustainability Manager",
+      "connected_at": "2026-06-15T22:00:00.000Z",
+      "messages": [
+        {
+          "sender": "owner",
+          "sender_name": "Christine Rzepka",
+          "date": "2026-07-24T14:25:53",
+          "text": "Hi Mirja, ich habe gesehen, dass du auch in der Thinktank Nachhaltigkeit & CSR Gruppe bist. Cool, dass du dich für das Thema Nachhaltigkeit interessierst!\nHabt ihr euch im Rahmen euer Nachhaltigkeitsstrategie auch schon mit Kompensation beschäftigt? Sollen wir uns dazu mal austauschen?\nViele Grüße, Chrissy"
+        },
+        {
+          "sender": "prospect",
+          "sender_name": "Mirja Christ",
+          "date": "2026-07-29T08:31:44",
+          "text": "Hallo Chrissy, danke für deine Nachricht und Nachfrage. Aktuell haben bei uns andere Themen Priorität. Sollte Kompensation in den nächsten Monaten relevant werden, melde ich mich gerne. Beste Grüße, Mirja"
+        },
+        {
+          "sender": "owner",
+          "sender_name": "Christine Rzepka",
+          "date": "2026-07-29T10:53:41",
+          "text": "Liebe Mirja,\nvielen Dank für deine Antwort. Würde mich freuen, wenn ihr das Thema lokaler Klimaschutz auf die Agenda nehmt 🙏\nLiebe Grüße\nChrissy"
+        }
+      ],
+      "replied": true,
+      "owner": "Christine Rzepka",
+      "sentiment": "negative",
+      "tags": [
+        "future_timing"
+      ]
+    },
+    {
+      "profile_url": "https://www.linkedin.com/in/sönmez-yildirim-36905a227/",
+      "full_name": "Sönmez Yildirim",
+      "email": "",
+      "company": "Supreme Sports Hospitality | Teamführung, Business-to-Business (B2B)",
+      "position": "Geschäftsführer",
+      "connected_at": "2026-07-26T22:00:00.000Z",
+      "messages": [
+        {
+          "sender": "owner",
+          "sender_name": "Christine Rzepka",
+          "date": "2026-07-28T07:45:39",
+          "text": "Hi Sönmez, ich habe gesehen, dass du auch in der Thinktank Nachhaltigkeit & CSR Gruppe bist. Cool, dass du dich für das Thema Nachhaltigkeit interessierst!\nHabt ihr euch im Rahmen euer Nachhaltigkeitsstrategie auch schon mit Kompensation beschäftigt? Sollen wir uns dazu mal austauschen?\nViele Grüße, Chrissy"
+        },
+        {
+          "sender": "prospect",
+          "sender_name": "Sönmez Yildirim",
+          "date": "2026-07-29T17:26:42",
+          "text": "Hi Chrissy,\n\nDas habe ich persönlich nur ansatzweise...ist jedoch sehr interessant.\n\nAb nächster Woche Freitag bin ich wieder einigermaßen zu erreichen...ab dem darauffolgenden Montag, wieder ganz gut. \nMagst Du Dich einfach dann einmal kurz melden?\n\nVG\n\nSönmez"
+        }
+      ],
+      "replied": true,
+      "owner": "Christine Rzepka",
+      "sentiment": "positive",
+      "tags": [
+        "open_to_call",
+        "future_timing"
+      ]
+    },
+    {
+      "profile_url": "https://www.linkedin.com/in/ameetbhinganiya/",
+      "full_name": "Ameet Bhinganiya",
+      "email": "",
+      "company": "Only B2B",
+      "position": "Founder & Chief Executive Office",
+      "connected_at": "2026-06-15T22:00:00.000Z",
+      "messages": [
+        {
+          "sender": "owner",
+          "sender_name": "Christine Rzepka",
+          "date": "2026-07-24T14:30:35",
+          "text": "Hi Ameet, ich habe gesehen, dass du auch in der Thinktank Nachhaltigkeit & CSR Gruppe bist. Cool, dass du dich für das Thema Nachhaltigkeit interessierst!\nHabt ihr euch im Rahmen euer Nachhaltigkeitsstrategie auch schon mit Kompensation beschäftigt? Sollen wir uns dazu mal austauschen?\nViele Grüße, Chrissy"
+        },
+        {
+          "sender": "prospect",
+          "sender_name": "Ameet Bhinganiya",
+          "date": "2026-07-30T12:25:13",
+          "text": "Hi Chrissy,\n\nGreat to connect with you, and thank you for reaching out!\n\nYes, sustainability has been at the core of our work for many years. Through Youth Talent Development Society (YTDS), we have been implementing large-scale environmental initiatives, particularly tree plantation and urban forest projects under our #PlantAMillionTrees campaign.\n\nWe are actively exploring carbon sequestration and carbon credit opportunities as part of our long-term sustainability strategy. Our focus is on developing high-quality, measurable plantation projects that create both environmental and social impact while contributing to carbon offset goals.\n\nI would love to learn more about your work and exchange ideas on sustainability and carbon compensation. Let's stay connected and perhaps schedule a quick call sometime.\n\nLooking forward to hearing from you.\n\nBest regards,\n\nAmeet"
+        }
+      ],
+      "replied": true,
+      "owner": "Christine Rzepka",
+      "sentiment": "positive",
+      "tags": [
+        "open_to_call"
+      ]
     }
   ],
   "daily": {
@@ -154037,9 +154410,11 @@
       "2026-07-21": 20,
       "2026-07-22": 36,
       "2026-07-23": 27,
-      "2026-07-24": 1,
+      "2026-07-24": 9,
+      "2026-07-25": 1,
       "2026-07-27": 1,
-      "2026-07-28": 4
+      "2026-07-28": 11,
+      "2026-07-29": 3
     },
     "received": {
       "2023-01-23": 1,
@@ -154425,22 +154800,27 @@
       "2026-07-21": 3,
       "2026-07-22": 1,
       "2026-07-23": 3,
-      "2026-07-28": 2
+      "2026-07-24": 2,
+      "2026-07-25": 2,
+      "2026-07-27": 3,
+      "2026-07-28": 4,
+      "2026-07-29": 6,
+      "2026-07-30": 1
     }
   },
   "summary": {
-    "total_messaged": 3994,
-    "total_replied": 1342,
-    "reply_rate": 33.6,
+    "total_messaged": 4004,
+    "total_replied": 1352,
+    "reply_rate": 33.8,
     "sentiment_counts": {
-      "neutral": 431,
-      "positive": 248,
-      "negative": 663
+      "neutral": 432,
+      "positive": 251,
+      "negative": 669
     },
     "sentiment_share": {
-      "neutral": 32.1,
-      "positive": 18.5,
-      "negative": 49.4
+      "neutral": 32.0,
+      "positive": 18.6,
+      "negative": 49.5
     }
   }
 }
