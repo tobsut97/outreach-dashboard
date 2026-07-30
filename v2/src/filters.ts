@@ -1,5 +1,5 @@
 export type ProfileName =
-  | 'Show All'
+  | 'Overview'
   | 'Christian'
   | 'Lara'
   | 'Chrissy'
@@ -16,7 +16,7 @@ export type ProfileName =
  * which point the `owner` here has to match the full name used in that conversation data.
  */
 export const PROFILES: { name: ProfileName; owner: string | null }[] = [
-  { name: 'Show All', owner: null },
+  { name: 'Overview', owner: null },
   { name: 'Christian', owner: 'Christian Lutz' },
   { name: 'Lara', owner: 'Lara Ebert' },
   { name: 'Chrissy', owner: 'Christine Rzepka' },

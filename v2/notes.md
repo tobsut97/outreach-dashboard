@@ -3,6 +3,27 @@
 Running log of what changed and why, kept so this project can be picked up in a fresh chat
 without re-deriving context. Newest entries at the top.
 
+## Sidebar IA fix: profiles are pages, not filters (2026-07-30, branch `fix/sidebar-ia`)
+
+**Why:** User feedback — "Show All" read like a filter toggle rather than a page name, and
+clicking a profile while the HubSpot Pipeline page was open didn't feel right: Pipeline is its
+own top-level entity (already its own sidebar group, separate from "Profiles"), not something
+that should stay open while silently re-scoping to whichever profile you click. Each profile
+button is a page (that person's Outreach Overview), not a filter layered on top of the current
+view.
+
+**Changes:**
+- Renamed `ProfileName`'s `'Show All'` to `'Overview'` (`src/filters.ts`) — same value used for
+  the sidebar label, the default profile, and the breadcrumb, so this is a single-source rename.
+- `App.tsx`'s `handleProfileChange` now navigates to `#/` (dashboard) whenever a profile is
+  clicked, in addition to setting the profile — so clicking a profile from the Pipeline page (or
+  a sentiment drill-down) always takes you to that profile's Overview page, matching the
+  "profiles are pages" model instead of leaving Pipeline open with a changed scope underneath it.
+
+**Checks run and passing:** `tsc`/`build`/`oxlint` clean; browser-verified: sidebar shows
+"Overview" instead of "Show All", and clicking a profile while Pipeline is open navigates to
+that profile's Outreach Overview (breadcrumb + KPI numbers update, Pipeline is exited).
+
 ## Lara campaign backfill: 396 missing conversations (2026-07-30, branch `feat/hubspot-pipeline`)
 
 **Why:** User exported 12 raw LinkedHelper campaign CSVs (all launched from Lara Ebert's
