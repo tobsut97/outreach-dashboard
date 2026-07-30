@@ -129,7 +129,7 @@ export function SentimentDetail({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-muted-foreground text-sm font-semibold">Why</CardTitle>
+          <CardTitle className="text-foreground text-sm font-semibold">Why</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
           {reasons.length === 0 ? (
@@ -166,7 +166,7 @@ export function SentimentDetail({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-muted-foreground text-sm font-semibold">
+          <CardTitle className="text-foreground text-sm font-semibold">
             Conversations ({filteredActive.length})
             {filteredHidden > 0 && (
               <span className="ml-2 font-normal">+ {filteredHidden} marked irrelevant</span>

@@ -91,7 +91,7 @@ export function DailyChart({ daily }: { daily: DashboardData['daily'] }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-muted-foreground text-sm font-semibold">
+        <CardTitle className="text-foreground text-sm font-semibold">
           Messages sent vs. answers received
         </CardTitle>
         <CardAction>
