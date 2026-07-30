@@ -3,6 +3,24 @@
 Running log of what changed and why, kept so this project can be picked up in a fresh chat
 without re-deriving context. Newest entries at the top.
 
+## Reason multi-select: switched to Command, not hand-rolled checkboxes (2026-07-30, branch `feat/dashboard-charts`)
+
+**Why:** The multi-select in the entry below composed `Popover` + plain `Checkbox` rows by
+hand. User feedback: use shadcn's actual pattern for this, not an improvised one — shadcn's own
+combobox example composes `Popover` + `Command`/`CommandItem`, not raw checkboxes. Installed
+`command` (`npx shadcn add command`, which also pulled in its own dependencies — `dialog`,
+`input-group`, `textarea`, `cmdk`) and rebuilt the reason filter with it: each `CommandItem` gets
+`data-checked={selectedReasons.has(tag)}` so the built-in check-icon affordance shows selection
+state, `onSelect` toggles the tag without closing the popover (needed for multi-select — the
+canonical single-select demo calls `setOpen(false)` on select, which would defeat picking more
+than one reason). `Checkbox`/`checkbox.tsx` is now unused by this component but left installed
+(still genuine shadcn, no harm keeping it available).
+
+The pagination component from the entry below was double-checked against shadcn's own
+`pagination-demo` example and confirmed to be the unmodified installed file — that one was a
+false alarm, not a real gap.
+
+
 ## Conversations table: reason multi-select, search, pagination (2026-07-30, branch `feat/dashboard-charts`)
 
 **Why:** The first pass at filtering the sentiment pages' conversations table (see the entry

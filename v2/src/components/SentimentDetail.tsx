@@ -5,7 +5,7 @@ import { KpiCard } from '@/components/KpiCard'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Checkbox } from '@/components/ui/checkbox'
+import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui/command'
 import { Input } from '@/components/ui/input'
 import {
   Pagination,
@@ -197,21 +197,22 @@ export function SentimentDetail({
                     </Button>
                   }
                 />
-                <PopoverContent align="start" className="w-64">
-                  <div className="flex flex-col gap-2">
-                    {reasons.map(([tag]) => (
-                      <label
-                        key={tag}
-                        className="hover:bg-muted -mx-1 flex items-center gap-2 rounded-md px-1 py-1.5 text-sm"
-                      >
-                        <Checkbox
-                          checked={selectedReasons.has(tag)}
-                          onCheckedChange={() => toggleReason(tag)}
-                        />
-                        {tagLabel(tag)}
-                      </label>
-                    ))}
-                  </div>
+                <PopoverContent align="start" className="w-64 p-0">
+                  <Command>
+                    <CommandList>
+                      <CommandGroup>
+                        {reasons.map(([tag]) => (
+                          <CommandItem
+                            key={tag}
+                            data-checked={selectedReasons.has(tag)}
+                            onSelect={() => toggleReason(tag)}
+                          >
+                            {tagLabel(tag)}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
                 </PopoverContent>
               </Popover>
             )}
