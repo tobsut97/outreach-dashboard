@@ -20,6 +20,19 @@ export const BAR_COLOR: Record<Sentiment, string> = {
   negative: 'bg-red-400',
 }
 
+// KpiCard icon/badge tones — literal classes, not runtime concatenation.
+export const SENTIMENT_ICON_COLOR: Record<Sentiment, string> = {
+  positive: 'text-emerald-500',
+  neutral: 'text-slate-400',
+  negative: 'text-red-400',
+}
+
+export const SENTIMENT_BADGE_COLOR: Record<Sentiment, string> = {
+  positive: 'bg-emerald-500/10',
+  neutral: 'bg-slate-400/10',
+  negative: 'bg-red-400/10',
+}
+
 // Literal classes, not runtime concatenation — Tailwind only emits what it can see.
 export const TAG_BAR_COLOR: Record<Sentiment, string> = {
   positive: 'bg-emerald-500/40',

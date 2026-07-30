@@ -1,5 +1,5 @@
 import { format, parseISO } from 'date-fns'
-import { ExternalLink } from 'lucide-react'
+import { ExternalLink, MessageSquareReply, Percent, Tags } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -10,9 +10,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { KpiCard } from '@/components/KpiCard'
 import { oneDecimal, type Summary } from '@/lib/metrics'
 import type { ManagedConversation } from '@/lib/overrides'
-import { DOT_COLOR, SENTIMENT_LABELS, TAG_BAR_COLOR, tagLabel } from '@/lib/sentiment'
+import {
+  SENTIMENT_BADGE_COLOR,
+  SENTIMENT_ICON_COLOR,
+  SENTIMENT_LABELS,
+  TAG_BAR_COLOR,
+  tagLabel,
+} from '@/lib/sentiment'
 import type { Conversation, Sentiment } from '@/types'
 
 const firstReply = (conversation: Conversation) =>
@@ -43,25 +50,27 @@ export function SentimentDetail({
   return (
     <>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {[
-          { label: `${SENTIMENT_LABELS[sentiment]} answers`, value: active.length },
-          { label: 'Share of all replies', value: `${share}%` },
-          { label: 'Reasons identified', value: reasons.length },
-        ].map((item) => (
-          <Card key={item.label}>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
-                {item.label}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-2">
-                <span className={`h-2 w-2 shrink-0 rounded-full ${DOT_COLOR[sentiment]}`} />
-                <span className="text-3xl font-bold tabular-nums">{item.value}</span>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+        <KpiCard
+          label={`${SENTIMENT_LABELS[sentiment]} answers`}
+          value={active.length}
+          icon={MessageSquareReply}
+          iconClassName={SENTIMENT_ICON_COLOR[sentiment]}
+          badgeClassName={SENTIMENT_BADGE_COLOR[sentiment]}
+        />
+        <KpiCard
+          label="Share of all replies"
+          value={`${share}%`}
+          icon={Percent}
+          iconClassName="text-muted-foreground"
+          badgeClassName="bg-muted-foreground/10"
+        />
+        <KpiCard
+          label="Reasons identified"
+          value={reasons.length}
+          icon={Tags}
+          iconClassName="text-sky-500"
+          badgeClassName="bg-sky-500/10"
+        />
       </div>
 
       <Card>

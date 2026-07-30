@@ -19,18 +19,8 @@ export interface Metrics {
 export const oneDecimal = (part: number, whole: number) =>
   whole ? Math.round((1000 * part) / whole) / 10 : 0
 
-/**
- * Recompute the dashboard's metrics from a conversation list.
- *
- * `sentiment` scopes the reply side only — received messages, the replied count, and the
- * reply rate. Sent messages carry no sentiment, so `sent` and `total_messaged` ignore it.
- * `sentiment_counts` / `sentiment_share` / `tag_counts` also ignore it, since the breakdown
- * is the context for the filter rather than a subject of it.
- */
-export function deriveMetrics(
-  conversations: Conversation[],
-  sentiment: Sentiment | 'all',
-): Metrics {
+/** Recompute the dashboard's metrics from a conversation list. */
+export function deriveMetrics(conversations: Conversation[]): Metrics {
   const sent: Record<string, number> = {}
   const received: Record<string, number> = {}
   const counts: Partial<Record<Sentiment, number>> = {}
@@ -47,14 +37,13 @@ export function deriveMetrics(
       tagCounts[conversation.sentiment] = bucket
     }
 
-    const matches = sentiment === 'all' || conversation.sentiment === sentiment
-    if (conversation.replied && matches) replied++
+    if (conversation.replied) replied++
 
     for (const message of conversation.messages) {
       const day = message.date.slice(0, 10)
       if (message.sender === 'owner') {
         sent[day] = (sent[day] ?? 0) + 1
-      } else if (matches) {
+      } else {
         received[day] = (received[day] ?? 0) + 1
       }
     }
