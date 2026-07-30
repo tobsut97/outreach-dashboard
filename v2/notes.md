@@ -3,6 +3,37 @@
 Running log of what changed and why, kept so this project can be picked up in a fresh chat
 without re-deriving context. Newest entries at the top.
 
+## Two new dashboard charts: job titles among replies, negative reason breakdown (2026-07-30, branch `feat/dashboard-charts`)
+
+**Why:** User asked for a job-position chart and a most-mentioned-negative-tag chart on the
+profile dashboards. First pass read "reply rate by job position" as a per-position reply rate;
+user corrected it — they meant the composition of repliers: "out of all replies, what are the
+most common job titles."
+
+**Most common job titles among replies** (`src/lib/metrics.ts`'s `positionShareAmongReplies`,
+`src/components/PositionBreakdown.tsx`): groups replied conversations by the prospect's raw
+`position` string (2076 distinct values across 4004 conversations) — no DE/EN synonym merging
+(e.g. `CEO`/`Geschäftsführer`, `CFO`/`Chief Financial Officer` stay separate), matching
+`extract.py`'s existing lack of normalization for this field. Shows the top 8 titles by volume
+as a share of *all* replies, folding the long tail into "Other." Replies with no title on file
+(324 of 1295, overall) count toward the percentage denominator but aren't shown as their own
+row — a caption below the bars states how many, so the percentages' shortfall from 100% is
+explained rather than silently unaccounted for.
+
+**Most mentioned negative reasons** (`src/components/NegativeTagBreakdown.tsx`): no new
+aggregation needed — `deriveMetrics`'s `summary.tag_counts.negative` already had this. Renders
+tag counts sorted descending, bar width = share of negative-sentiment conversations.
+
+Both follow the existing bar-list visual pattern (`SentimentBreakdown.tsx`'s dot/label/bar/count
+row), slotted into the dashboard view in `App.tsx` between the sentiment breakdown and the daily
+chart, in a 2-column grid. Both re-scope correctly under the existing profile/date filters (no
+new filtering logic needed — they take the same `conversations`/`summary` already computed for
+the rest of the dashboard).
+
+**Checks run and passing:** `tsc`/`build`/`oxlint` clean; browser-verified both charts render
+with correct top-8-plus-Other rows and negative-tag counts, and re-scope correctly when
+switching profiles (verified against Chrissy).
+
 ## Sidebar IA fix: profiles are pages, not filters (2026-07-30, branch `fix/sidebar-ia`)
 
 **Why:** User feedback — "Show All" read like a filter toggle rather than a page name, and
