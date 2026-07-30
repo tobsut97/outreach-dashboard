@@ -3,6 +3,39 @@
 Running log of what changed and why, kept so this project can be picked up in a fresh chat
 without re-deriving context. Newest entries at the top.
 
+## Vercel deployment + CI prep (2026-07-30, branch `chore/vercel-ci-cd`)
+
+**Why:** User wants this dashboard published on Vercel with a CI/CD pipeline. Nothing existed
+for either before this — no `.github/workflows/`, no `vercel.json`, no Node version pin.
+
+**Key constraint:** `v2/data.json`, `v2/hubspot.json`, and the pre-built `v2/dist/index.html`
+all contain real prospect/lead data (names, companies, emails, LinkedIn URLs, HubSpot lead/deal
+info) baked directly into the bundle — the repo-root `README.md` already flags this. Confirmed
+with the user: deployment uses **Vercel Password Protection** (manual dashboard step, both
+Production and Preview) rather than shipping this publicly, and **only `v2/` is deployed**
+(Vercel Root Directory = `v2`) — the repo-root version-picker page and frozen `v1/` (which has
+its own separate real data) are excluded.
+
+**Added:**
+- `v2/.nvmrc` (`22`, matching the org's Node LTS standard) and `v2/vercel.json`
+  (`framework: vite`, explicit build command/output dir) so the build config is versioned
+  rather than left to dashboard-only settings.
+- `.github/workflows/ci.yml` at the repo root — lint (oxlint) + type-check (`tsc --noEmit`) +
+  build, triggered on PRs and pushes to `main`, scoped to `v2/` via `defaults.run.working-directory`.
+  Actions pinned to full commit SHA with version comments, `persist-credentials: false`,
+  a `concurrency` group to cancel superseded runs. This is CI only (a quality gate) — CD is
+  Vercel's own Git integration (Preview per PR, Production on merge to `main`), not a custom
+  `vercel deploy` Action, so no `VERCEL_TOKEN` secret is needed anywhere.
+- A "Deployment" section in `v2/README.md` documenting the one-time manual Vercel setup steps
+  (import repo, set Root Directory, enable Password Protection) — these require the user's own
+  Vercel account and can't be done from the repo.
+
+**Checks run and passing:** `actionlint` and `zizmor --persona=pedantic` clean on the new
+workflow (two initial pedantic-only findings — missing job name, missing concurrency group —
+fixed); `npm run lint` / `npx tsc --noEmit` / `npm run build` all pass locally, matching exactly
+what CI runs. The CI workflow itself is verified by opening this PR and confirming it runs and
+passes (`gh pr checks`). No test-runner step — none exists in the project yet.
+
 ## Conversations table: reason multi-select, search, pagination (2026-07-30, branch `feat/dashboard-charts`)
 
 **Why:** The first pass at filtering the sentiment pages' conversations table (see the entry

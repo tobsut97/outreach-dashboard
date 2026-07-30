@@ -91,6 +91,26 @@ Fixed list, up to 2 per replied conversation, independent of sentiment: `meeting
 `ALLOWED_TAGS` in [src/lib/sentiment.ts](src/lib/sentiment.ts) mirrors it for the editor;
 keep the two in step.
 
+## Deployment
+
+Deployed on Vercel from this directory (`v2/vercel.json` sets the build command and output
+directory; `v2/.nvmrc` pins the Node version). CI (`.github/workflows/ci.yml` at the repo root)
+runs lint, type-check, and build on every PR and on push to `main` — it's a quality gate only;
+Vercel's own Git integration handles the actual deploy (Preview per PR, Production on merge),
+so there's no custom deploy step or `VERCEL_TOKEN` secret involved.
+
+**One-time setup, done in the Vercel dashboard (not automatable from the repo):**
+
+1. Import `tobsut97/outreach-dashboard` into Vercel, and set **Root Directory** to `v2`. The
+   repo-root version-picker page and the frozen `v1/` are intentionally not deployed.
+2. Confirm the first deploy picks up `v2/vercel.json`.
+3. **Project Settings → Deployment Protection → enable Password Protection**, for both
+   Production and Preview, before treating the URL as safe to share. `data.json`/`hubspot.json`
+   contain real prospect and lead data (names, companies, emails, LinkedIn URLs, HubSpot
+   deal info) baked into the build — see the warning in the repo-root `README.md`.
+4. No environment variables are needed — all data is baked in at build time from the committed
+   JSON files.
+
 ## Manual corrections
 
 Clicking a row in a sentiment detail page opens a side sheet with the full message thread.
