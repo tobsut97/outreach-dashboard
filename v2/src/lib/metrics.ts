@@ -1,3 +1,4 @@
+import { categorizePosition } from '@/lib/position'
 import type { Conversation, DashboardData, Sentiment } from '@/types'
 
 /**
@@ -37,12 +38,13 @@ export const OTHER_POSITION_LABEL = 'Other'
 /**
  * Distribution of job titles among conversations that replied, as a share of ALL replies —
  * "out of everyone who replied, what titles come up most," not a per-position reply rate.
- * Replies with no title on file count toward the denominator (`totalReplied`) but aren't shown
- * as their own row; `missingPosition` reports how many so the UI can caveat the percentages
- * rather than let them silently not add up to 100%. Titles are grouped by exact string (no
- * DE/EN synonym merging, matching extract.py's lack of normalization); the long tail beyond the
- * top few by volume is folded into "Other" so one-off titles don't each get their own noisy,
- * single-reply bar.
+ * Titles are grouped into role categories inferred from the raw strings (see
+ * `categorizePosition`), not by exact string, so DE/EN variants of the same role (e.g.
+ * "Geschäftsführer"/"CEO", "CFO"/"Chief Financial Officer") land in one bucket instead of
+ * splitting the count and inflating "Other". Replies with no title on file count toward the
+ * denominator (`totalReplied`) but aren't shown as their own row; `missingPosition` reports how
+ * many so the UI can caveat the percentages rather than let them silently not add up to 100%.
+ * The long tail beyond the top few categories by volume is folded into "Other".
  */
 export function positionShareAmongReplies(conversations: Conversation[]): PositionBreakdown {
   const replied = conversations.filter((conversation) => conversation.replied)
@@ -53,7 +55,8 @@ export function positionShareAmongReplies(conversations: Conversation[]): Positi
   for (const conversation of replied) {
     const position = conversation.position.trim()
     if (!position) continue
-    counts.set(position, (counts.get(position) ?? 0) + 1)
+    const category = categorizePosition(position)
+    counts.set(category, (counts.get(category) ?? 0) + 1)
   }
 
   const ranked = Array.from(counts.entries()).sort((a, b) => b[1] - a[1])

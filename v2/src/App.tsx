@@ -144,7 +144,7 @@ function App() {
       ? `${SENTIMENT_LABELS[view.sentiment]} Answers`
       : view.name === 'pipeline'
         ? 'HubSpot Pipeline'
-        : 'Outreach Overview'
+        : `Outreach Analytics ${profile}`
 
   return (
     <SidebarProvider>

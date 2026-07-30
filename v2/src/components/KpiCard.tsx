@@ -14,7 +14,7 @@ export function KpiCard({ label, value, sub, icon: Icon, iconClassName, badgeCla
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
+        <CardTitle className="text-muted-foreground text-sm font-semibold">
           {label}
         </CardTitle>
         <span
