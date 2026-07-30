@@ -88,9 +88,18 @@ export function SentimentBreakdown({
                     }`}
                   />
                 </button>
-                {isExpanded && (
-                  <div className="mb-2 flex flex-col gap-3 px-2 pt-1">
-                    <Table className="table-fixed">
+                <div
+                  className={`grid transition-[grid-template-rows] duration-300 ease-out ${
+                    isExpanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+                  }`}
+                >
+                  <div
+                    className={`overflow-hidden transition-opacity duration-300 ease-out ${
+                      isExpanded ? 'opacity-100 delay-100' : 'opacity-0'
+                    }`}
+                  >
+                    <div className="mb-2 flex flex-col gap-3 px-2 pt-1">
+                      <Table className="table-fixed">
                       <TableHeader>
                         <TableRow>
                           <TableHead className="w-[20%]">Name</TableHead>
@@ -144,17 +153,18 @@ export function SentimentBreakdown({
                           )
                         })}
                       </TableBody>
-                    </Table>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="w-fit justify-start"
-                      onClick={() => onSelect(sentiment)}
-                    >
-                      Show all {SENTIMENT_LABELS[sentiment]} answers
-                    </Button>
+                      </Table>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-fit justify-start"
+                        onClick={() => onSelect(sentiment)}
+                      >
+                        Show all {SENTIMENT_LABELS[sentiment]} answers
+                      </Button>
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
             )
           })
