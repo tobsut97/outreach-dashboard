@@ -1,3 +1,4 @@
+import { Waypoints } from 'lucide-react'
 import { PinaLogo } from '@/components/PinaLogo'
 import {
   Sidebar,
@@ -15,9 +16,12 @@ import { PROFILES, type ProfileName } from '@/filters'
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   profile: ProfileName
   onProfileChange: (profile: ProfileName) => void
+  pipelineActive: boolean
 }
 
-export function AppSidebar({ profile, onProfileChange, ...props }: AppSidebarProps) {
+const ACTIVE_CLASSNAME = 'data-active:bg-neutral-300! data-active:hover:bg-neutral-300!'
+
+export function AppSidebar({ profile, onProfileChange, pipelineActive, ...props }: AppSidebarProps) {
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -34,14 +38,29 @@ export function AppSidebar({ profile, onProfileChange, ...props }: AppSidebarPro
               {PROFILES.map((entry) => (
                 <SidebarMenuItem key={entry.name}>
                   <SidebarMenuButton
-                    isActive={profile === entry.name}
+                    isActive={!pipelineActive && profile === entry.name}
                     onClick={() => onProfileChange(entry.name)}
-                    className="data-active:bg-neutral-300! data-active:hover:bg-neutral-300!"
+                    className={ACTIVE_CLASSNAME}
                   >
                     {entry.name}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Pipeline</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton isActive={pipelineActive} className={ACTIVE_CLASSNAME} render={
+                  <a href="#/pipeline">
+                    <Waypoints />
+                    HubSpot Pipeline
+                  </a>
+                } />
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
