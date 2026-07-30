@@ -3,6 +3,42 @@
 Running log of what changed and why, kept so this project can be picked up in a fresh chat
 without re-deriving context. Newest entries at the top.
 
+## Lara campaign backfill: 396 missing conversations (2026-07-30, branch `feat/hubspot-pipeline`)
+
+**Why:** User exported 12 raw LinkedHelper campaign CSVs (all launched from Lara Ebert's
+LinkedIn account) and suspected some conversations never made it into `data.json`. Confirmed:
+396 were missing (breakdown by campaign in `v2/add_lara_campaigns.py`'s docstring/output), plus
+5 within-batch duplicates (same contact in two overlapping campaigns, added once) and 11 people
+who *also* have an existing conversation under a different owner (Leos/Christine/Christian) —
+verified these are genuinely separate, independent outreach threads (different templates,
+months apart), not duplicate exports, so they were added as their own Lara-owned records
+alongside the existing ones, per user's decision.
+
+**Why a new script instead of `extract.py`:** `extract.py`'s `SOURCES` list only has Christian
+Lutz's export, yet `data.json` already held five owners' conversations — it's drifted out of
+sync with what actually built the file over time. Running `extract.py` as-is would have
+overwritten `data.json` and silently dropped everyone except Christian. `v2/add_lara_campaigns.py`
+is additive instead: loads the existing `data.json`, adds only genuinely-new conversations
+(identified by `(owner, profile_url|email|full_name)`, not just the identity key alone — that
+scoping is what keeps the 11 cross-owner people as separate records instead of colliding), and
+writes the merged result back. Verified other owners' counts are byte-identical before/after
+(Leos 948, Christine 916, Christian 443, Max 106 — unchanged; Lara 1185 → 1581).
+
+**Classification note:** mid-session, hit the org's monthly Claude API spend limit while trying
+to classify the 395 replied conversations via parallel Agent-tool subagents (same rubric as
+`extract.py`'s `SYSTEM_PROMPT`). Per user's explicit choice, fell back to classifying all 395
+directly in-conversation (no Ollama, no API-billed subagents) rather than waiting — this is a
+one-off for this batch, not a standing pipeline change; `extract.py` still uses local Ollama for
+everything else, and that remains the default going forward. The two-phase script design
+(`prepare` dumps candidates + pending-classification list, `apply` merges results back) exists
+specifically to support this: classification method is decoupled from the parsing/merging logic.
+
+**Checks run and passing:** owner counts verified unchanged for the other four owners;
+`match_hubspot.py` re-run afterward (below) with the enlarged conversation set; `tsc`/`build`/
+`oxlint` clean (no source changes, just data); browser-verified Lara's dashboard now shows 1581
+messaged (was 1185) and the Pipeline page's Lara-scoped numbers update accordingly, including a
+previously-cross-owned contact (Alissa Ritter) now appearing as her own independent match.
+
 ## HubSpot pipeline: outreach → lead → deal + BANT (2026-07-30, branch `feat/hubspot-pipeline`)
 
 **Why:** User wants to see conversion from LinkedIn outreach into HubSpot leads, BANT scoring
@@ -21,11 +57,13 @@ slower Ollama pipeline) that fuzzy-matches:
 Every match is tagged `high` or `medium` confidence — `medium` matches are shown in the UI for
 spot-checking but excluded from headline funnel KPIs. A blank company on either side is
 treated as "no signal" (not scored as 0), since that was silently tanking otherwise-perfect
-name matches in an early version of the threshold logic. Final result: 60 leads matched to
-conversations (48 high, 12 medium) out of 1599 leads / 3598 conversations — low coverage is
-expected and is a direct consequence of there being no reliable join key, not a matching bug;
-`hubspot.json`'s `aggregate` block still totals every CSV row regardless of match, so raw
-HubSpot pipeline numbers aren't limited by outreach attribution.
+name matches in an early version of the threshold logic. Initial result: 60 leads matched to
+conversations (48 high, 12 medium) out of 1599 leads / 3598 conversations; after the Lara
+campaign backfill above added 396 more conversations, a re-run found 64 matches (52 high, 12
+medium) out of 3994 conversations — low coverage is expected and is a direct consequence of
+there being no reliable join key, not a matching bug; `hubspot.json`'s `aggregate` block still
+totals every CSV row regardless of match, so raw HubSpot pipeline numbers aren't limited by
+outreach attribution.
 
 Output is `v2/hubspot.json` (committed to git, same treatment as `data.json`) — re-run
 `python3 match_hubspot.py` whenever fresh CSVs are exported; it does not touch
