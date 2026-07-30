@@ -3,6 +3,26 @@
 Running log of what changed and why, kept so this project can be picked up in a fresh chat
 without re-deriving context. Newest entries at the top.
 
+## Conversations table: reason multi-select, search, pagination (2026-07-30, branch `feat/dashboard-charts`)
+
+**Why:** The first pass at filtering the sentiment pages' conversations table (see the entry
+below) made the "Why" breakdown's bars themselves clickable — user feedback: that's a weird,
+bespoke interaction; they wanted a plain multi-select control instead, plus search and
+pagination, since the table can run into the hundreds of rows.
+
+**Changes to `src/components/SentimentDetail.tsx`:**
+- Reverted the "Why" bars to plain, non-interactive rows (back to the original design).
+- Added a search `Input` (name/company/reply text, case-insensitive substring match) and a
+  reason multi-select — a `Popover` of `Checkbox` rows (added via `npx shadcn add checkbox
+  pagination`) behind a trigger button showing "All reasons" / the tag name / "N reasons" —
+  above the table. Selecting reasons is OR logic (any selected tag matches).
+- Added pagination (added shadcn `pagination` component; 20 rows/page) since a sentiment can
+  have 600+ conversations. Search/filter changes reset to page 1.
+
+**Checks run and passing:** `tsc`/`build`/`oxlint` clean; browser-verified: popover multi-select
+checks/unchecks correctly and updates the trigger label and table count, search combines with
+the reason filter (AND), and Next/Previous pagination advances the shown page and page count.
+
 ## Dashboard polish: headline, card titles, job-title categories, reason filter (2026-07-30, branch `feat/dashboard-charts`)
 
 **Why:** Follow-up requests on top of this branch's just-added charts, before the PR was
