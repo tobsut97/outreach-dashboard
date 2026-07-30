@@ -162,7 +162,7 @@ function App() {
           </div>
         </header>
         <div className="flex flex-col gap-4 px-6 pt-4 pb-8">
-          <h1 className="text-xl font-semibold tracking-tight">{headline}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">{headline}</h1>
           <div className="flex flex-wrap items-center gap-2">
             <DateRangeFilter
               range={range}
@@ -193,11 +193,13 @@ function App() {
           ) : (
             <>
               <KpiStrip summary={summary} />
-              <DailyChart daily={trimmedDaily} />
               <SentimentBreakdown
                 summary={summary}
+                conversations={metricsInput}
                 onSelect={(sentiment) => navigate(`#/sentiment/${sentiment}`)}
+                onOpenConversation={openConversation}
               />
+              <DailyChart daily={trimmedDaily} />
             </>
           )}
         </div>
