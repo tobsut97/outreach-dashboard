@@ -43,6 +43,7 @@ ALLOWED_TAGS = [
     "role_change",
     "no_reason_given",
     "unclear",
+    "hard_no_carbon_credits",
 ]
 
 SYSTEM_PROMPT = f"""You classify replies to a German-language B2B cold outreach campaign \
@@ -63,6 +64,11 @@ without stating their own position.
 
 tags: 0 to 2 values from this fixed list only: {ALLOWED_TAGS}
 
+hard_no_carbon_credits is distinct from has_existing_solution and not_relevant: it is for a
+prospect who rejects carbon credits/offsets as a concept — e.g. calls them greenwashing,
+says they don't believe in offsetting, or that their company policy excludes carbon
+credits specifically — not merely "not a priority" or "we already have another solution".
+
 Examples:
 1. Prospect: "Wir haben bereits eine Klimastrategie, die wir verfolgen." -> \
 {{"sentiment": "negative", "tags": ["has_existing_solution"]}}
@@ -74,6 +80,8 @@ Examples:
 {{"sentiment": "neutral", "tags": ["unclear"]}}
 5. Prospect: "Das ist nicht mein Bereich, wende dich an meine Kollegin Julia." -> \
 {{"sentiment": "neutral", "tags": ["referred_colleague"]}}
+6. Prospect: "Wir halten Kompensation durch Zertifikate für Greenwashing und setzen \
+grundsätzlich nicht darauf." -> {{"sentiment": "negative", "tags": ["hard_no_carbon_credits"]}}
 
 Respond with strict JSON only: {{"sentiment": "...", "tags": ["..."]}}"""
 

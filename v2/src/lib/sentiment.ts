@@ -39,6 +39,7 @@ export const TAG_LABELS: Record<string, string> = {
   role_change: 'Changed role',
   no_reason_given: 'No reason given',
   unclear: 'Unclear',
+  hard_no_carbon_credits: 'Hard no to carbon credits',
 }
 
 /** Mirrors ALLOWED_TAGS in extract.py — keep the two in step. */
