@@ -1,11 +1,20 @@
 import { useState } from 'react'
 import { format, parseISO } from 'date-fns'
 import { ChevronRight } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import type { Summary } from '@/lib/metrics'
 import type { ManagedConversation } from '@/lib/overrides'
-import { BAR_COLOR, DOT_COLOR, SENTIMENT_LABELS, SENTIMENT_ORDER } from '@/lib/sentiment'
+import { BAR_COLOR, DOT_COLOR, SENTIMENT_LABELS, SENTIMENT_ORDER, tagLabel } from '@/lib/sentiment'
 import type { Conversation, Sentiment } from '@/types'
 
 const firstReply = (conversation: Conversation) =>
@@ -80,27 +89,66 @@ export function SentimentBreakdown({
                   />
                 </button>
                 {isExpanded && (
-                  <div className="mb-2 ml-5 flex flex-col gap-1 border-l pl-4">
-                    {recentBySentiment(sentiment).map((conversation) => {
-                      const reply = firstReply(conversation)
-                      return (
-                        <button
-                          key={conversation.profile_url || conversation.full_name}
-                          type="button"
-                          onClick={() => onOpenConversation(conversation)}
-                          className="hover:bg-muted focus-visible:ring-ring/50 flex items-center justify-between gap-3 rounded-lg px-2 py-1.5 text-left text-sm transition-colors outline-none focus-visible:ring-3"
-                        >
-                          <span className="truncate">{conversation.full_name || 'Unknown'}</span>
-                          <span className="text-muted-foreground shrink-0 text-xs tabular-nums">
-                            {reply ? format(parseISO(reply.date), 'MMM d, yyyy') : '—'}
-                          </span>
-                        </button>
-                      )
-                    })}
+                  <div className="mb-2 flex flex-col gap-3 px-2 pt-1">
+                    <Table className="table-fixed">
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="w-[20%]">Name</TableHead>
+                          <TableHead className="w-[22%]">Tags</TableHead>
+                          <TableHead className="w-[17%] whitespace-nowrap">Date</TableHead>
+                          <TableHead className="w-[37%]">Preview</TableHead>
+                          <TableHead className="w-[4%]" />
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {recentBySentiment(sentiment).map((conversation) => {
+                          const reply = firstReply(conversation)
+                          return (
+                            <TableRow
+                              key={conversation.profile_url || conversation.full_name}
+                              onClick={() => onOpenConversation(conversation)}
+                              className="hover:bg-muted/60 cursor-pointer"
+                            >
+                              <TableCell className="align-top font-medium whitespace-normal">
+                                {conversation.full_name || 'Unknown'}
+                              </TableCell>
+                              <TableCell className="align-top whitespace-normal">
+                                <div className="flex flex-wrap gap-1">
+                                  {conversation.tags.length === 0 ? (
+                                    <span className="text-muted-foreground text-xs">—</span>
+                                  ) : (
+                                    conversation.tags.map((tag) => (
+                                      <Badge
+                                        key={tag}
+                                        variant="secondary"
+                                        className="whitespace-nowrap"
+                                      >
+                                        {tagLabel(tag)}
+                                      </Badge>
+                                    ))
+                                  )}
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-muted-foreground align-top overflow-hidden text-ellipsis whitespace-nowrap tabular-nums">
+                                {reply ? format(parseISO(reply.date), 'MMM d, yyyy') : '—'}
+                              </TableCell>
+                              <TableCell className="text-muted-foreground align-top whitespace-normal">
+                                <p className="line-clamp-2 break-words" title={reply?.text ?? ''}>
+                                  {reply?.text ?? '—'}
+                                </p>
+                              </TableCell>
+                              <TableCell className="align-top">
+                                <ChevronRight className="text-muted-foreground size-4" />
+                              </TableCell>
+                            </TableRow>
+                          )
+                        })}
+                      </TableBody>
+                    </Table>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="mt-1 w-fit justify-start"
+                      className="w-fit justify-start"
                       onClick={() => onSelect(sentiment)}
                     >
                       Show all {SENTIMENT_LABELS[sentiment]} answers
