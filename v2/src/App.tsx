@@ -71,7 +71,7 @@ function trimDaily(
 const allConversations = restrictToDataYears(data.conversations)
 
 function App() {
-  const [profile, setProfile] = useState<ProfileName>('Show All')
+  const [profile, setProfile] = useState<ProfileName>('Overview')
   const [view, setView] = useState<View>(parseHash)
   const [overrides, setOverrides] = useState<Overrides>(loadOverrides)
   const [range, setRange] = useState<DateRange | undefined>(undefined)
@@ -119,9 +119,12 @@ function App() {
     setSheetOpen(true)
   }
 
+  /** Profiles are pages, not a filter layered on top of whatever's open — clicking one always
+   *  takes you to that person's Overview, including out of the Pipeline page. */
   const handleProfileChange = (next: ProfileName) => {
     setProfile(next)
     setRange(undefined)
+    navigate('#/')
   }
 
   const trail: { label: string; hash?: string }[] = [{ label: 'Profiles', hash: '#/' }]
