@@ -1,7 +1,5 @@
-import { useState } from 'react'
 import { format, parseISO } from 'date-fns'
 import { ExternalLink } from 'lucide-react'
-import { ConversationSheet } from '@/components/ConversationSheet'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -13,7 +11,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { oneDecimal, type Summary } from '@/lib/metrics'
-import type { ConversationOverride, ManagedConversation } from '@/lib/overrides'
+import type { ManagedConversation } from '@/lib/overrides'
 import { DOT_COLOR, SENTIMENT_LABELS, TAG_BAR_COLOR, tagLabel } from '@/lib/sentiment'
 import type { Conversation, Sentiment } from '@/types'
 
@@ -24,16 +22,13 @@ export function SentimentDetail({
   sentiment,
   conversations,
   summary,
-  onSaveOverride,
+  onOpenConversation,
 }: {
   sentiment: Sentiment
   conversations: ManagedConversation[]
   summary: Summary
-  onSaveOverride: (conversation: ManagedConversation, override: ConversationOverride) => void
+  onOpenConversation: (conversation: ManagedConversation) => void
 }) {
-  const [selected, setSelected] = useState<ManagedConversation | null>(null)
-  const [sheetOpen, setSheetOpen] = useState(false)
-
   const rows = conversations
     .filter((conversation) => conversation.sentiment === sentiment)
     .sort((a, b) => (firstReply(b)?.date ?? '').localeCompare(firstReply(a)?.date ?? ''))
@@ -44,11 +39,6 @@ export function SentimentDetail({
   const hidden = rows.length - active.length
   const share = summary.sentiment_share[sentiment] ?? 0
   const reasons = Object.entries(summary.tag_counts[sentiment] ?? {}).sort((a, b) => b[1] - a[1])
-
-  const openConversation = (conversation: ManagedConversation) => {
-    setSelected(conversation)
-    setSheetOpen(true)
-  }
 
   return (
     <>
@@ -146,7 +136,7 @@ export function SentimentDetail({
                   return (
                     <TableRow
                       key={conversation.profile_url || conversation.full_name}
-                      onClick={() => openConversation(conversation)}
+                      onClick={() => onOpenConversation(conversation)}
                       className={`hover:bg-muted/60 cursor-pointer ${
                         conversation.irrelevant ? 'opacity-45' : ''
                       }`}
@@ -219,15 +209,6 @@ export function SentimentDetail({
           )}
         </CardContent>
       </Card>
-
-      <ConversationSheet
-        conversation={selected}
-        open={sheetOpen}
-        onOpenChange={setSheetOpen}
-        onSave={(override) => {
-          if (selected) onSaveOverride(selected, override)
-        }}
-      />
     </>
   )
 }

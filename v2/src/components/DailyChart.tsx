@@ -1,27 +1,14 @@
 import { useState } from 'react'
 import {
-  endOfMonth,
-  endOfQuarter,
-  endOfWeek,
-  endOfYear,
   format,
   parseISO,
   startOfMonth,
   startOfQuarter,
   startOfWeek,
   startOfYear,
-  subMonths,
-  subQuarters,
-  subWeeks,
-  subYears,
 } from 'date-fns'
-import { CalendarIcon } from 'lucide-react'
-import { type DateRange } from 'react-day-picker'
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
-import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
   Select,
   SelectContent,
@@ -81,29 +68,17 @@ function bucketFor(date: Date, mode: DisplayMode): { key: string; label: string 
   }
 }
 
+/** The date range itself is a page-level filter (see App.tsx / DateRangeFilter) so `daily`
+ * already only contains days within it — this component just groups what it's given. */
 export function DailyChart({ daily }: { daily: DashboardData['daily'] }) {
+  const [mode, setMode] = useState<DisplayMode>('monthly')
+
   const days = Array.from(
     new Set([...Object.keys(daily.sent), ...Object.keys(daily.received)]),
   ).sort()
 
-  // extract.py enforces the history cutoff, so the domain is just what the data contains.
-  // The fallback only keeps the date maths valid when every conversation is filtered out.
-  const todayKey = format(new Date(), 'yyyy-MM-dd')
-  const minDay = days[0] ?? todayKey
-  const maxDay = days[days.length - 1] ?? todayKey
-  const minDate = parseISO(minDay)
-  const maxDate = parseISO(maxDay)
-
-  const [range, setRange] = useState<DateRange | undefined>({ from: minDate, to: maxDate })
-  const [mode, setMode] = useState<DisplayMode>('monthly')
-  const [open, setOpen] = useState(false)
-
-  const fromKey = range?.from ? toKey(range.from) : minDay
-  const endKey = range?.to ? toKey(range.to) : fromKey
-
   const buckets = new Map<string, { key: string; label: string; sent: number; received: number }>()
   for (const day of days) {
-    if (day < fromKey || day > endKey) continue
     const { key, label } = bucketFor(parseISO(day), mode)
     const bucket = buckets.get(key) ?? { key, label, sent: 0, received: 0 }
     bucket.sent += daily.sent[day] ?? 0
@@ -113,39 +88,13 @@ export function DailyChart({ daily }: { daily: DashboardData['daily'] }) {
   const data = [...buckets.values()].sort((a, b) => a.key.localeCompare(b.key))
   const labelByKey = new Map(data.map((bucket) => [bucket.key, bucket.label]))
 
-  const today = new Date()
-  const lastWeek = subWeeks(today, 1)
-  const lastMonth = subMonths(today, 1)
-  const lastQuarter = subQuarters(today, 1)
-  const lastYear = subYears(today, 1)
-
-  const presets: { label: string; range: DateRange }[] = [
-    { label: 'Show all', range: { from: minDate, to: maxDate } },
-    { label: 'This week', range: { from: startOfWeek(today), to: today } },
-    { label: 'Last week', range: { from: startOfWeek(lastWeek), to: endOfWeek(lastWeek) } },
-    { label: 'Last month', range: { from: startOfMonth(lastMonth), to: endOfMonth(lastMonth) } },
-    {
-      label: 'Last quarter',
-      range: { from: startOfQuarter(lastQuarter), to: endOfQuarter(lastQuarter) },
-    },
-    { label: 'This year', range: { from: startOfYear(today), to: today } },
-    { label: 'Last year', range: { from: startOfYear(lastYear), to: endOfYear(lastYear) } },
-  ]
-
-  const hasData = (preset: DateRange) => {
-    if (!preset.from || !preset.to) return false
-    const from = toKey(preset.from)
-    const to = toKey(preset.to)
-    return days.some((day) => day >= from && day <= to)
-  }
-
   return (
     <Card>
       <CardHeader>
         <CardTitle className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
           Messages sent vs. answers received
         </CardTitle>
-        <CardAction className="flex flex-wrap items-center gap-2">
+        <CardAction>
           <Select
             value={mode}
             onValueChange={(value) => {
@@ -163,56 +112,6 @@ export function DailyChart({ daily }: { daily: DashboardData['daily'] }) {
               ))}
             </SelectContent>
           </Select>
-
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger
-              render={
-                <Button variant="outline" className="w-fit justify-start px-2.5 font-normal">
-                  <CalendarIcon data-icon="inline-start" />
-                  {range?.from ? (
-                    range.to ? (
-                      <>
-                        {format(range.from, 'LLL dd, y')} - {format(range.to, 'LLL dd, y')}
-                      </>
-                    ) : (
-                      format(range.from, 'LLL dd, y')
-                    )
-                  ) : (
-                    <span>Pick a date</span>
-                  )}
-                </Button>
-              }
-            />
-            <PopoverContent className="w-auto p-0" align="end">
-              <div className="flex max-sm:flex-col">
-                <div className="flex flex-col gap-1 border-r p-3 max-sm:border-r-0 max-sm:border-b">
-                  {presets.map((preset) => (
-                    <Button
-                      key={preset.label}
-                      variant="ghost"
-                      size="sm"
-                      disabled={!hasData(preset.range)}
-                      className="justify-start font-normal"
-                      onClick={() => {
-                        setRange(preset.range)
-                        setOpen(false)
-                      }}
-                    >
-                      {preset.label}
-                    </Button>
-                  ))}
-                </div>
-                <Calendar
-                  mode="range"
-                  defaultMonth={subMonths(maxDate, 1)}
-                  selected={range}
-                  onSelect={setRange}
-                  numberOfMonths={2}
-                  disabled={{ before: minDate, after: maxDate }}
-                />
-              </div>
-            </PopoverContent>
-          </Popover>
         </CardAction>
       </CardHeader>
       <CardContent>
@@ -239,7 +138,12 @@ export function DailyChart({ daily }: { daily: DashboardData['daily'] }) {
               />
               <ChartLegend content={<ChartLegendContent />} />
               <Bar dataKey="sent" fill="var(--color-sent)" radius={2} isAnimationActive={false} />
-              <Bar dataKey="received" fill="var(--color-received)" radius={2} isAnimationActive={false} />
+              <Bar
+                dataKey="received"
+                fill="var(--color-received)"
+                radius={2}
+                isAnimationActive={false}
+              />
             </BarChart>
           </ChartContainer>
         )}

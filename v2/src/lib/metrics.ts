@@ -6,6 +6,9 @@ import type { Conversation, DashboardData, Sentiment } from '@/types'
  */
 export type Summary = DashboardData['summary'] & {
   tag_counts: Partial<Record<Sentiment, Record<string, number>>>
+  positive_reply_rate: number
+  meeting_booked_count: number
+  meeting_booked_rate: number
 }
 
 export interface Metrics {
@@ -63,6 +66,11 @@ export function deriveMetrics(
     share[key as Sentiment] = oneDecimal(count, classified)
   }
 
+  const meetingBookedCount = Object.values(tagCounts).reduce(
+    (total, bucket) => total + (bucket['meeting_booked'] ?? 0),
+    0,
+  )
+
   return {
     daily: { sent, received },
     summary: {
@@ -72,6 +80,9 @@ export function deriveMetrics(
       sentiment_counts: counts,
       sentiment_share: share,
       tag_counts: tagCounts,
+      positive_reply_rate: oneDecimal(counts.positive ?? 0, classified),
+      meeting_booked_count: meetingBookedCount,
+      meeting_booked_rate: oneDecimal(meetingBookedCount, conversations.length),
     },
   }
 }
