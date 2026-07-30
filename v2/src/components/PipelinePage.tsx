@@ -97,7 +97,7 @@ export function PipelinePage({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-muted-foreground text-sm font-semibold">
+          <CardTitle className="text-foreground text-sm font-semibold">
             Outreach → lead → deal funnel
           </CardTitle>
         </CardHeader>
@@ -116,7 +116,7 @@ export function PipelinePage({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-muted-foreground text-sm font-semibold">
+          <CardTitle className="text-foreground text-sm font-semibold">
             BANT breakdown (matched leads)
           </CardTitle>
         </CardHeader>
@@ -133,7 +133,7 @@ export function PipelinePage({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-muted-foreground text-sm font-semibold">
+          <CardTitle className="text-foreground text-sm font-semibold">
             Matched leads ({rows.length})
           </CardTitle>
         </CardHeader>
@@ -168,7 +168,7 @@ export function PipelinePage({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-muted-foreground text-sm font-semibold">
+          <CardTitle className="text-foreground text-sm font-semibold">
             HubSpot pipeline totals (all leads/deals, independent of outreach match)
           </CardTitle>
         </CardHeader>

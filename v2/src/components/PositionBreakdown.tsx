@@ -8,7 +8,7 @@ export function PositionBreakdown({ conversations }: { conversations: Conversati
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-muted-foreground text-sm font-semibold">
+        <CardTitle className="text-foreground text-sm font-semibold">
           Most common job titles among replies
         </CardTitle>
       </CardHeader>

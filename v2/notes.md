@@ -3,6 +3,19 @@
 Running log of what changed and why, kept so this project can be picked up in a fresh chat
 without re-deriving context. Newest entries at the top.
 
+## Card title color: grey to black (2026-07-30, branch `fix/card-title-color`)
+
+**Why:** User feedback — card headers were too grey, wanted them black.
+
+Swapped `text-muted-foreground` → `text-foreground` on every `CardTitle` (11 occurrences across
+`DailyChart.tsx`, `KpiCard.tsx`, `NegativeTagBreakdown.tsx`, `PositionBreakdown.tsx`,
+`SentimentBreakdown.tsx`, `PipelinePage.tsx` ×4, `SentimentDetail.tsx` ×2). `CardTitle`'s base
+component (`ui/card.tsx`) has no color of its own, so this per-instance override is what
+controlled the color. `Label`s in `ConversationSheet.tsx` (form field labels, not card titles)
+were left as `text-muted-foreground` — out of scope for this change.
+
+**Checks run and passing:** `tsc`/`build`/`oxlint` clean; browser-verified headers render black.
+
 ## Conversations table: reason multi-select, search, pagination (2026-07-30, branch `feat/dashboard-charts`)
 
 **Why:** The first pass at filtering the sentiment pages' conversations table (see the entry
