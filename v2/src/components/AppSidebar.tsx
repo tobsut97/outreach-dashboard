@@ -1,8 +1,10 @@
+import { X } from 'lucide-react'
 import { PinaLogo } from '@/components/PinaLogo'
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
+  SidebarGroupAction,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
@@ -10,20 +12,31 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
-import { ANSWERS, PROFILES, type AnswerName, type ProfileName } from '@/filters'
+import { PROFILES, type ProfileName } from '@/filters'
+import type { ManagedConversation } from '@/lib/overrides'
+
+/** The conversations behind one selected finding from the insights callout — shown in the
+ * sidebar rather than a new list component, per how the rest of the app surfaces conversation
+ * lists (see SentimentDetail's table for the other place this happens). */
+export interface HighlightedConversations {
+  label: string
+  conversations: ManagedConversation[]
+}
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   profile: ProfileName
-  answer: AnswerName
   onProfileChange: (profile: ProfileName) => void
-  onAnswerChange: (answer: AnswerName) => void
+  highlighted: HighlightedConversations | null
+  onClearHighlighted: () => void
+  onSelectConversation: (conversation: ManagedConversation) => void
 }
 
 export function AppSidebar({
   profile,
-  answer,
   onProfileChange,
-  onAnswerChange,
+  highlighted,
+  onClearHighlighted,
+  onSelectConversation,
   ...props
 }: AppSidebarProps) {
   return (
@@ -52,23 +65,34 @@ export function AppSidebar({
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <SidebarGroup>
-          <SidebarGroupLabel>Answers</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {ANSWERS.map((entry) => (
-                <SidebarMenuItem key={entry.name}>
-                  <SidebarMenuButton
-                    isActive={answer === entry.name}
-                    onClick={() => onAnswerChange(entry.name)}
-                  >
-                    {entry.name}
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+
+        {highlighted && (
+          <SidebarGroup className="relative">
+            <SidebarGroupLabel>{highlighted.label}</SidebarGroupLabel>
+            <SidebarGroupAction title="Clear" onClick={onClearHighlighted}>
+              <X />
+            </SidebarGroupAction>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {highlighted.conversations.length === 0 ? (
+                  <p className="text-sidebar-foreground/60 px-2 py-1.5 text-xs">
+                    No conversations match.
+                  </p>
+                ) : (
+                  highlighted.conversations.map((conversation) => (
+                    <SidebarMenuItem
+                      key={conversation.profile_url || conversation.full_name}
+                    >
+                      <SidebarMenuButton onClick={() => onSelectConversation(conversation)}>
+                        {conversation.full_name || 'Unknown'}
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))
+                )}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
     </Sidebar>
   )
