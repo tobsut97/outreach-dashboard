@@ -45,7 +45,7 @@ export function SentimentBreakdown({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
+        <CardTitle className="text-muted-foreground text-sm font-semibold">
           Answer sentiment
         </CardTitle>
       </CardHeader>

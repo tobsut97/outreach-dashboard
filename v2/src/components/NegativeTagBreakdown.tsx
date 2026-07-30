@@ -12,7 +12,7 @@ export function NegativeTagBreakdown({ summary }: { summary: Summary }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
+        <CardTitle className="text-muted-foreground text-sm font-semibold">
           Most mentioned negative reasons
         </CardTitle>
       </CardHeader>

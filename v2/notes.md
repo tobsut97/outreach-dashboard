@@ -3,6 +3,44 @@
 Running log of what changed and why, kept so this project can be picked up in a fresh chat
 without re-deriving context. Newest entries at the top.
 
+## Dashboard polish: headline, card titles, job-title categories, reason filter (2026-07-30, branch `feat/dashboard-charts`)
+
+**Why:** Follow-up requests on top of this branch's just-added charts, before the PR was
+reviewed — landed as more commits on the same branch per the project's convention for
+same-task tweaks.
+
+**Headline:** `App.tsx`'s dashboard headline is now `` `Outreach Analytics ${profile}` `` instead
+of the fixed `'Outreach Overview'` — becomes "Outreach Analytics Overview" by default and
+"Outreach Analytics Chrissy" etc. per profile, since `profile`'s default value is `'Overview'`.
+
+**Card titles:** every `CardTitle` across the app dropped `uppercase`/`tracking-wide` in favor of
+sentence-case (`text-sm font-semibold`) — the JSX strings were already written in sentence case,
+so this was a pure styling change, no copy changes.
+
+**Job-title categorization** (`src/lib/position.ts`'s `categorizePosition`): the "Most common job
+titles among replies" chart (added earlier this session) grouped by exact raw string, which sent
+64% of replies into "Other" since DE/EN variants of the same role split the count (e.g.
+"Geschäftsführer" vs "CEO" vs "Managing Director"). Added a keyword-based categorizer — patterns
+inferred by reading the actual title strings in the ingested CSVs — folding titles into ~11 role
+buckets (Sustainability/ESG, Executive/Managing Director, Marketing/Communications, Finance,
+HR/People, Consulting, Sales/Business Development, Procurement/Supply Chain, Legal/Compliance,
+IT/Technology, Operations). Verified against the real dataset before implementing (Python
+prototype) and after (browser): "Other" dropped from 64.1% to 13.6% of replies. Titles that don't
+match any category still fall through to their raw string, so they still contribute to the long
+tail rather than getting miscategorized.
+
+**Reason filter on sentiment pages** (`src/components/SentimentDetail.tsx`): the existing "Why"
+breakdown's reason rows are now clickable buttons (same interaction pattern as
+`SentimentBreakdown.tsx`'s expandable rows) — clicking one filters the conversations table below
+to only that tag, with a clearable `Badge` chip in the table's header showing which reason is
+active. The table's own count/hidden-count recompute against the filtered set, not the full
+sentiment set (the "Why" bars and KPIs above stay based on the full set, since those are
+overview stats, not table state).
+
+**Checks run and passing:** `tsc`/`build`/`oxlint` clean; browser-verified all four changes:
+headline text, sentence-case card titles, the shrunk "Other" share with the new category names,
+and the reason-filter click/clear cycle on the Negative Answers page.
+
 ## Two new dashboard charts: job titles among replies, negative reason breakdown (2026-07-30, branch `feat/dashboard-charts`)
 
 **Why:** User asked for a job-position chart and a most-mentioned-negative-tag chart on the

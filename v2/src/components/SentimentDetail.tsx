@@ -1,5 +1,7 @@
 import { format, parseISO } from 'date-fns'
-import { ExternalLink, MessageSquareReply, Percent, Tags } from 'lucide-react'
+import { ExternalLink, MessageSquareReply, Percent, Tags, X } from 'lucide-react'
+import { useState } from 'react'
+import { KpiCard } from '@/components/KpiCard'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -10,7 +12,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { KpiCard } from '@/components/KpiCard'
 import { oneDecimal, type Summary } from '@/lib/metrics'
 import type { ManagedConversation } from '@/lib/overrides'
 import {
@@ -36,6 +37,8 @@ export function SentimentDetail({
   summary: Summary
   onOpenConversation: (conversation: ManagedConversation) => void
 }) {
+  const [reasonFilter, setReasonFilter] = useState<string | null>(null)
+
   const rows = conversations
     .filter((conversation) => conversation.sentiment === sentiment)
     .sort((a, b) => (firstReply(b)?.date ?? '').localeCompare(firstReply(a)?.date ?? ''))
@@ -43,9 +46,12 @@ export function SentimentDetail({
   // Metrics exclude conversations marked irrelevant, so the counts here must too. They stay
   // in the table, dimmed, or marking one would hide it beyond any way of undoing it.
   const active = rows.filter((conversation) => !conversation.irrelevant)
-  const hidden = rows.length - active.length
   const share = summary.sentiment_share[sentiment] ?? 0
   const reasons = Object.entries(summary.tag_counts[sentiment] ?? {}).sort((a, b) => b[1] - a[1])
+
+  const tableRows = reasonFilter ? rows.filter((conversation) => conversation.tags.includes(reasonFilter)) : rows
+  const tableActive = tableRows.filter((conversation) => !conversation.irrelevant)
+  const tableHidden = tableRows.length - tableActive.length
 
   return (
     <>
@@ -75,19 +81,28 @@ export function SentimentDetail({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
+          <CardTitle className="text-muted-foreground text-sm font-semibold">
             Why
           </CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-3">
+        <CardContent className="flex flex-col gap-1">
           {reasons.length === 0 ? (
             <p className="text-muted-foreground text-sm">No reasons tagged.</p>
           ) : (
             <>
               {reasons.map(([tag, tagCount]) => {
                 const tagShare = oneDecimal(tagCount, active.length)
+                const isSelected = reasonFilter === tag
                 return (
-                  <div key={tag} className="flex items-center gap-3">
+                  <button
+                    key={tag}
+                    type="button"
+                    onClick={() => setReasonFilter(isSelected ? null : tag)}
+                    aria-pressed={isSelected}
+                    className={`hover:bg-muted focus-visible:ring-ring/50 -mx-2 flex items-center gap-3 rounded-lg px-2 py-2 text-left transition-colors outline-none focus-visible:ring-3 ${
+                      isSelected ? 'bg-muted' : ''
+                    }`}
+                  >
                     <span className="w-44 shrink-0 text-sm">{tagLabel(tag)}</span>
                     <div className="bg-muted h-1.5 flex-1 overflow-hidden rounded-full">
                       <div
@@ -101,11 +116,12 @@ export function SentimentDetail({
                     <span className="w-12 shrink-0 text-right text-sm font-semibold tabular-nums">
                       {tagShare}%
                     </span>
-                  </div>
+                  </button>
                 )
               })}
-              <p className="text-muted-foreground text-xs">
-                A reply can carry up to two reasons, so these shares don't sum to 100%.
+              <p className="text-muted-foreground px-2 pt-2 text-xs">
+                A reply can carry up to two reasons, so these shares don't sum to 100%. Click a
+                reason to filter the conversations below.
               </p>
             </>
           )}
@@ -114,20 +130,33 @@ export function SentimentDetail({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
-            Conversations ({active.length})
-            {hidden > 0 && (
-              <span className="ml-2 font-normal normal-case">
-                + {hidden} marked irrelevant
-              </span>
+          <CardTitle className="flex flex-wrap items-center gap-2 text-muted-foreground text-sm font-semibold">
+            Conversations ({tableActive.length})
+            {tableHidden > 0 && (
+              <span className="font-normal">+ {tableHidden} marked irrelevant</span>
+            )}
+            {reasonFilter && (
+              <Badge variant="secondary" className="gap-1 font-normal">
+                {tagLabel(reasonFilter)}
+                <button
+                  type="button"
+                  onClick={() => setReasonFilter(null)}
+                  aria-label="Clear reason filter"
+                  className="hover:text-foreground -mr-0.5"
+                >
+                  <X className="size-3" />
+                </button>
+              </Badge>
             )}
           </CardTitle>
         </CardHeader>
         <CardContent>
           {/* table-fixed: without it the column percentages below are only hints, and long
               reply text blows the table out to thousands of pixels wide. */}
-          {rows.length === 0 ? (
-            <p className="text-muted-foreground text-sm">No conversations in this category.</p>
+          {tableRows.length === 0 ? (
+            <p className="text-muted-foreground text-sm">
+              {reasonFilter ? 'No conversations tagged with this reason.' : 'No conversations in this category.'}
+            </p>
           ) : (
             <Table className="table-fixed">
               <TableHeader>
@@ -140,7 +169,7 @@ export function SentimentDetail({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {rows.map((conversation) => {
+                {tableRows.map((conversation) => {
                   const reply = firstReply(conversation)
                   return (
                     <TableRow
