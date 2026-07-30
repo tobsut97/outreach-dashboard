@@ -19,6 +19,63 @@ export interface Metrics {
 export const oneDecimal = (part: number, whole: number) =>
   whole ? Math.round((1000 * part) / whole) / 10 : 0
 
+export interface PositionShare {
+  position: string
+  count: number
+  share: number
+}
+
+export interface PositionBreakdown {
+  rows: PositionShare[]
+  totalReplied: number
+  missingPosition: number
+}
+
+const TOP_POSITIONS = 8
+export const OTHER_POSITION_LABEL = 'Other'
+
+/**
+ * Distribution of job titles among conversations that replied, as a share of ALL replies —
+ * "out of everyone who replied, what titles come up most," not a per-position reply rate.
+ * Replies with no title on file count toward the denominator (`totalReplied`) but aren't shown
+ * as their own row; `missingPosition` reports how many so the UI can caveat the percentages
+ * rather than let them silently not add up to 100%. Titles are grouped by exact string (no
+ * DE/EN synonym merging, matching extract.py's lack of normalization); the long tail beyond the
+ * top few by volume is folded into "Other" so one-off titles don't each get their own noisy,
+ * single-reply bar.
+ */
+export function positionShareAmongReplies(conversations: Conversation[]): PositionBreakdown {
+  const replied = conversations.filter((conversation) => conversation.replied)
+  const totalReplied = replied.length
+  const missingPosition = replied.filter((conversation) => !conversation.position.trim()).length
+
+  const counts = new Map<string, number>()
+  for (const conversation of replied) {
+    const position = conversation.position.trim()
+    if (!position) continue
+    counts.set(position, (counts.get(position) ?? 0) + 1)
+  }
+
+  const ranked = Array.from(counts.entries()).sort((a, b) => b[1] - a[1])
+  const rows = ranked.slice(0, TOP_POSITIONS).map(([position, count]) => ({
+    position,
+    count,
+    share: oneDecimal(count, totalReplied),
+  }))
+
+  const rest = ranked.slice(TOP_POSITIONS)
+  if (rest.length > 0) {
+    const otherCount = rest.reduce((sum, [, count]) => sum + count, 0)
+    rows.push({
+      position: OTHER_POSITION_LABEL,
+      count: otherCount,
+      share: oneDecimal(otherCount, totalReplied),
+    })
+  }
+
+  return { rows, totalReplied, missingPosition }
+}
+
 /** Recompute the dashboard's metrics from a conversation list. */
 export function deriveMetrics(conversations: Conversation[]): Metrics {
   const sent: Record<string, number> = {}

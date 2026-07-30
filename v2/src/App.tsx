@@ -5,7 +5,9 @@ import { ConversationSheet } from '@/components/ConversationSheet'
 import { DailyChart } from '@/components/DailyChart'
 import { DateRangeFilter } from '@/components/DateRangeFilter'
 import { KpiStrip } from '@/components/KpiStrip'
+import { NegativeTagBreakdown } from '@/components/NegativeTagBreakdown'
 import { PipelinePage } from '@/components/PipelinePage'
+import { PositionBreakdown } from '@/components/PositionBreakdown'
 import { SentimentBreakdown } from '@/components/SentimentBreakdown'
 import { SentimentDetail } from '@/components/SentimentDetail'
 import {
@@ -224,6 +226,10 @@ function App() {
                 onSelect={(sentiment) => navigate(`#/sentiment/${sentiment}`)}
                 onOpenConversation={openConversation}
               />
+              <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                <PositionBreakdown conversations={metricsInput} />
+                <NegativeTagBreakdown summary={summary} />
+              </div>
               <DailyChart daily={trimmedDaily} />
             </>
           )}
