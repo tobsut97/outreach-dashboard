@@ -3,6 +3,50 @@
 Running log of what changed and why, kept so this project can be picked up in a fresh chat
 without re-deriving context. Newest entries at the top.
 
+## HubSpot pipeline: outreach → lead → deal + BANT (2026-07-30, branch `feat/hubspot-pipeline`)
+
+**Why:** User wants to see conversion from LinkedIn outreach into HubSpot leads, BANT scoring
+on those leads, and the fuller funnel through to closed deals. Exported two HubSpot CSVs
+(`~/Downloads/260730-all-leads.csv`, `~/Downloads/260730-all-deals.csv`).
+
+**Key constraint:** neither CSV has an email or LinkedIn URL field, so there's no clean join
+key to `data.json`'s conversations. Built `v2/match_hubspot.py` — a repeatable script (same
+`SOURCES`-from-absolute-path convention as `extract.py`, run manually, independent of the
+slower Ollama pipeline) that fuzzy-matches:
+- Leads → conversations, via `Primary Associated Object Name` vs `full_name` + `Company` vs
+  `company`, using stdlib `difflib.SequenceMatcher` (0.6 name / 0.4 company weighted score).
+- Deals → leads, via a company name parsed out of `Deal Name` (or `Invoice name of Company`
+  when populated) vs the lead's `Company` field.
+
+Every match is tagged `high` or `medium` confidence — `medium` matches are shown in the UI for
+spot-checking but excluded from headline funnel KPIs. A blank company on either side is
+treated as "no signal" (not scored as 0), since that was silently tanking otherwise-perfect
+name matches in an early version of the threshold logic. Final result: 60 leads matched to
+conversations (48 high, 12 medium) out of 1599 leads / 3598 conversations — low coverage is
+expected and is a direct consequence of there being no reliable join key, not a matching bug;
+`hubspot.json`'s `aggregate` block still totals every CSV row regardless of match, so raw
+HubSpot pipeline numbers aren't limited by outreach attribution.
+
+Output is `v2/hubspot.json` (committed to git, same treatment as `data.json`) — re-run
+`python3 match_hubspot.py` whenever fresh CSVs are exported; it does not touch
+`classify_cache.json` or `data.json`.
+
+New `#/pipeline` page (own sidebar group, separate from profile filtering): KPI strip
+(leads/deals matched, closed-won $, still-open $), an outreach→lead→deal funnel strip, a BANT
+breakdown (Authority/Budget/Need/Timeline, Yes/No/Maybe/TBD/blank bars) recomputed over the
+matched-and-filtered leads, a matched-leads table (confidence badge, BANT chips, best matched
+deal, click-through to `ConversationSheet` when resolvable), and a raw HubSpot totals card
+independent of matching. New files: `src/types/hubspot.ts`, `src/lib/hubspot.ts`,
+`src/components/PipelinePage.tsx`.
+
+**Checks run and passing:** `tsc --noEmit`, `npm run build`, `oxlint src/` (only the 3
+pre-existing unrelated warnings); `hubspot.json`'s `aggregate` totals verified to exactly match
+raw CSV ground truth (leads by stage, deals by stage/amount); browser-verified `#/pipeline`
+renders KPI/funnel/BANT/table/totals correctly and a matched-lead row opens the right
+`ConversationSheet`.
+
+**Not yet done:** branch not pushed / no PR opened yet — pending user confirmation.
+
 ## Data audit: reply rates and CSV contamination (2026-07-30-ish)
 
 **Why:** User was confident Lara Ebert's reply rate was wrong. Audited reply-rate math for
