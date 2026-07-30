@@ -1,5 +1,3 @@
-import type { Sentiment } from '@/types'
-
 export type ProfileName =
   | 'Show All'
   | 'Christian'
@@ -8,8 +6,6 @@ export type ProfileName =
   | 'Leos'
   | 'Max'
   | 'Caro'
-
-export type AnswerName = 'Show All' | 'Positive' | 'Neutral' | 'Negative'
 
 /**
  * `owner` is matched against `conversation.owner`, which is set to the full name of the
@@ -29,15 +25,5 @@ export const PROFILES: { name: ProfileName; owner: string | null }[] = [
   { name: 'Caro', owner: 'Caro' },
 ]
 
-export const ANSWERS: { name: AnswerName; sentiment: Sentiment | 'all' }[] = [
-  { name: 'Show All', sentiment: 'all' },
-  { name: 'Positive', sentiment: 'positive' },
-  { name: 'Neutral', sentiment: 'neutral' },
-  { name: 'Negative', sentiment: 'negative' },
-]
-
 export const profileOwner = (name: ProfileName) =>
   PROFILES.find((entry) => entry.name === name)?.owner ?? null
-
-export const answerSentiment = (name: AnswerName) =>
-  ANSWERS.find((entry) => entry.name === name)?.sentiment ?? 'all'

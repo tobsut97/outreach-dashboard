@@ -4,11 +4,9 @@ import { AppSidebar } from '@/components/AppSidebar'
 import { ConversationSheet } from '@/components/ConversationSheet'
 import { DailyChart } from '@/components/DailyChart'
 import { DateRangeFilter } from '@/components/DateRangeFilter'
-import { InsightsCallout } from '@/components/InsightsCallout'
 import { KpiStrip } from '@/components/KpiStrip'
 import { SentimentBreakdown } from '@/components/SentimentBreakdown'
 import { SentimentDetail } from '@/components/SentimentDetail'
-import { SentimentSelect } from '@/components/SentimentSelect'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -20,9 +18,8 @@ import {
 import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
-import { conversationInRange, dateBounds, toKey } from '@/lib/dateRange'
-import { answerSentiment, profileOwner, type AnswerName, type ProfileName } from '@/filters'
-import { computeFindings, findingConversations, type Finding } from '@/lib/findings'
+import { conversationInRange, dateBounds, restrictToDataYears, toKey } from '@/lib/dateRange'
+import { profileOwner, type ProfileName } from '@/filters'
 import { deriveMetrics } from '@/lib/metrics'
 import {
   applyOverrides,
@@ -33,7 +30,7 @@ import {
   type ManagedConversation,
   type Overrides,
 } from '@/lib/overrides'
-import { SENTIMENT_LABELS, tagLabel } from '@/lib/sentiment'
+import { SENTIMENT_LABELS } from '@/lib/sentiment'
 import rawData from '../data.json'
 import type { DashboardData, Sentiment } from '@/types'
 
@@ -66,13 +63,13 @@ function trimDaily(
   return { sent: trim(daily.sent), received: trim(daily.received) }
 }
 
+const allConversations = restrictToDataYears(data.conversations)
+
 function App() {
   const [profile, setProfile] = useState<ProfileName>('Show All')
-  const [answer, setAnswer] = useState<AnswerName>('Show All')
   const [view, setView] = useState<View>(parseHash)
   const [overrides, setOverrides] = useState<Overrides>(loadOverrides)
   const [range, setRange] = useState<DateRange | undefined>(undefined)
-  const [activeFinding, setActiveFinding] = useState<Finding | null>(null)
   const [selected, setSelected] = useState<ManagedConversation | null>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
 
@@ -84,8 +81,8 @@ function App() {
 
   const owner = profileOwner(profile)
   const scoped = owner
-    ? data.conversations.filter((conversation) => conversation.owner === owner)
-    : data.conversations
+    ? allConversations.filter((conversation) => conversation.owner === owner)
+    : allConversations
   const managed = applyOverrides(scoped, overrides)
 
   const { minDate, maxDate } = dateBounds(managed)
@@ -100,22 +97,9 @@ function App() {
     ),
   ).sort()
 
-  // The detail page is scoped by its own sentiment, so the answer filter only shapes the
-  // dashboard. Changing it therefore returns to the dashboard.
   const metricsInput = dateFiltered.filter((conversation) => !conversation.irrelevant)
-  const { daily, summary } = deriveMetrics(
-    metricsInput,
-    view.name === 'sentiment' ? 'all' : answerSentiment(answer),
-  )
+  const { daily, summary } = deriveMetrics(metricsInput)
   const trimmedDaily = trimDaily(daily, fromKey, toKeyValue)
-
-  const findings = computeFindings(metricsInput)
-  const highlighted = activeFinding
-    ? {
-        label: `${SENTIMENT_LABELS[activeFinding.sentiment]} · ${tagLabel(activeFinding.tag)}`,
-        conversations: findingConversations(metricsInput, activeFinding),
-      }
-    : null
 
   const saveOverride = (key: string, override: ConversationOverride) => {
     setOverrides((current) => {
@@ -133,40 +117,29 @@ function App() {
   const handleProfileChange = (next: ProfileName) => {
     setProfile(next)
     setRange(undefined)
-    setActiveFinding(null)
-  }
-
-  const handleSelectFinding = (finding: Finding) => {
-    setActiveFinding((current) => (current?.id === finding.id ? null : finding))
   }
 
   const trail: { label: string; hash?: string }[] = [{ label: 'Profiles', hash: '#/' }]
   if (view.name === 'sentiment') {
     trail.push({ label: profile, hash: '#/' })
     trail.push({ label: `${SENTIMENT_LABELS[view.sentiment]} answers` })
-  } else if (answer === 'Show All') {
-    trail.push({ label: profile })
   } else {
-    trail.push({ label: profile, hash: '#/' })
-    trail.push({ label: `${answer} answers` })
+    trail.push({ label: profile })
   }
+
+  const headline =
+    view.name === 'sentiment' ? `${SENTIMENT_LABELS[view.sentiment]} Answers` : 'Outreach Overview'
 
   return (
     <SidebarProvider>
-      <AppSidebar
-        profile={profile}
-        onProfileChange={handleProfileChange}
-        highlighted={highlighted}
-        onClearHighlighted={() => setActiveFinding(null)}
-        onSelectConversation={openConversation}
-      />
+      <AppSidebar profile={profile} onProfileChange={handleProfileChange} />
       {/* min-w-0: flex items default to min-width:auto, so the conversations table would
           otherwise widen the whole inset instead of scrolling inside its own container. */}
       <SidebarInset className="min-w-0">
         <header className="flex h-16 shrink-0 items-center gap-2">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
-            <Separator orientation="vertical" className="mr-2 !h-4" />
+            <Separator orientation="vertical" className="mr-2" />
             <Breadcrumb>
               <BreadcrumbList>
                 {trail.map((crumb, index) => {
@@ -188,23 +161,20 @@ function App() {
             </Breadcrumb>
           </div>
         </header>
-        <div className="flex flex-wrap items-center gap-2 px-4 pb-2">
-          <DateRangeFilter
-            range={range}
-            onRangeChange={setRange}
-            minDate={minDate}
-            maxDate={maxDate}
-            days={availableDays}
-          />
-          <SentimentSelect
-            value={answer}
-            onChange={(next) => {
-              setAnswer(next)
-              navigate('#/')
-            }}
-          />
+        <div className="flex flex-col gap-4 px-6 pt-4 pb-8">
+          <h1 className="text-xl font-semibold tracking-tight">{headline}</h1>
+          <div className="flex flex-wrap items-center gap-2">
+            <DateRangeFilter
+              range={range}
+              onRangeChange={setRange}
+              minDate={minDate}
+              maxDate={maxDate}
+              days={availableDays}
+            />
+          </div>
         </div>
-        <div className="flex min-w-0 flex-1 flex-col gap-4 p-4 pt-0">
+        <Separator />
+        <div className="flex min-w-0 flex-1 flex-col gap-4 p-4 pt-6">
           {managed.length === 0 ? (
             <Card>
               <CardContent className="text-muted-foreground text-sm">
@@ -222,11 +192,6 @@ function App() {
             />
           ) : (
             <>
-              <InsightsCallout
-                findings={findings}
-                activeId={activeFinding?.id ?? null}
-                onSelect={handleSelectFinding}
-              />
               <KpiStrip summary={summary} />
               <DailyChart daily={trimmedDaily} />
               <SentimentBreakdown

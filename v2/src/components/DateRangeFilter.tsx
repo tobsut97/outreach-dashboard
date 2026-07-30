@@ -45,7 +45,7 @@ export function DateRangeFilter({
                 format(range.from, 'LLL dd, y')
               )
             ) : (
-              <span>Pick a date</span>
+              <span>Timerange</span>
             )}
           </Button>
         }

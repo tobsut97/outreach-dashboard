@@ -39,6 +39,17 @@ export function conversationInRange(
   return key !== null && key >= fromKey && key <= toKeyValue
 }
 
+const DATA_MIN_YEAR = 2025
+const DATA_MAX_YEAR = 2026
+
+/** Hard cutoff: conversations starting outside this window are dropped everywhere, not just
+ *  hidden by the date-range picker. */
+export function restrictToDataYears(conversations: Conversation[]): Conversation[] {
+  return conversations.filter((conversation) =>
+    conversationInRange(conversation, `${DATA_MIN_YEAR}-01-01`, `${DATA_MAX_YEAR}-12-31`),
+  )
+}
+
 /** Bounds the date picker to when conversations in the current scope actually started. */
 export function dateBounds(conversations: Conversation[]): { minDate: Date; maxDate: Date } {
   const keys = conversations
