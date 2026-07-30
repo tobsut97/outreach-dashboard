@@ -3,6 +3,34 @@
 Running log of what changed and why, kept so this project can be picked up in a fresh chat
 without re-deriving context. Newest entries at the top.
 
+## Chrissy campaign backfill: 10 missing conversations (2026-07-30, branch `feat/chrissy-campaign-backfill`)
+
+**Why:** Same suspicion as the Lara backfill (below), this time for Christine "Chrissy" Rzepka:
+user exported 12 raw LinkedHelper campaign CSVs, all launched from her LinkedIn account. Unlike
+Lara's campaigns, these were already well-represented in `data.json`'s existing 916 Christine
+Rzepka conversations — only **10 new conversations** turned up (all from the "260609 Thinktank
+Nachhaltigkeit & CSR" campaign), 0 within-batch duplicates, 0 cross-owner overlaps.
+
+One file (`260703 BNW-Chrissy.csv`) was initially the wrong export type — a LinkedHelper
+*campaign settings* CSV (action/template config, no people rows) rather than a people export.
+User re-exported and re-attached the correct file before the backfill ran; it contributed 0 new
+conversations (all 17 of its people rows were already present).
+
+**Script:** `v2/add_chrissy_campaigns.py` — a straight copy of `v2/add_lara_campaigns.py`'s
+`identity()`/`prepare()`/`apply()` logic (already owner-agnostic) with `NEW_SOURCES` pointed at
+Christine's 12 CSVs instead. Same additive rationale applies: `extract.py`'s `SOURCES` list is
+still just Christian Lutz's export, so this avoids the same overwrite landmine. Verified owner
+counts before/after: Christine 916 → 926; Lara (1581), Leos (948), Christian (443), Max (106)
+unchanged.
+
+**Classification:** the 10 replied conversations were classified directly in-conversation (same
+one-off fallback as the Lara batch, not a pipeline change).
+
+**Checks run and passing:** owner counts verified; `match_hubspot.py` re-run — match count
+unchanged at 64 (52 high, 12 medium; none of the 10 new conversations happened to match a
+HubSpot lead), aggregate CSV totals unchanged (1599 leads, 1490 deals); `tsc`/`build`/`oxlint`
+clean.
+
 ## Lara campaign backfill: 396 missing conversations (2026-07-30, branch `feat/hubspot-pipeline`)
 
 **Why:** User exported 12 raw LinkedHelper campaign CSVs (all launched from Lara Ebert's
