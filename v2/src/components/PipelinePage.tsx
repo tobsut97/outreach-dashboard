@@ -1,6 +1,4 @@
 import { format, parseISO } from 'date-fns'
-import { Ban, Circle, CircleCheck, Handshake, MessageSquareHeart, TrendingUp, XCircle } from 'lucide-react'
-import { KpiCard } from '@/components/KpiCard'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -18,6 +16,7 @@ import {
   lostLeads,
   matchedLeads,
   meetingBookedConversations,
+  meetingsWithoutLead,
   openLeads,
   qualifiedLeads,
   wonDeals,
@@ -59,94 +58,64 @@ export function PipelinePage({
     conversations.map((conversation) => [conversationKey(conversation), conversation]),
   )
   const matched = matchedLeads(conversations, hubspot)
-  const open = openLeads(matched)
-  const qualified = qualifiedLeads(matched)
-  const lost = lostLeads(matched)
-  const qualifiedDealRows = dealsInStage(matched, 'Qualified')
-  const lostDealRows = lostDeals(matched)
-  const wonDealRows = wonDeals(matched)
-
   const meetingsBooked = meetingBookedConversations(conversations)
-  const leadsFromMeetings = leadsFromMeetingBooked(matched, conversations)
-  const qualifiedFromMeetings = qualifiedLeads(leadsFromMeetings)
-  const dealsFromMeetings = leadsFromMeetings.flatMap((lead) => lead.deals)
-  const wonFromMeetings = dealsFromMeetings.filter((deal) => deal.is_closed_won)
+  const withoutLead = meetingsWithoutLead(matched, conversations)
+  const leads = leadsFromMeetingBooked(matched, conversations)
+
+  const open = openLeads(leads)
+  const qualified = qualifiedLeads(leads)
+  const lost = lostLeads(leads)
+  const qualifiedDealRows = dealsInStage(leads, 'Qualified')
+  const lostDealRows = lostDeals(leads)
+  const wonDealRows = wonDeals(leads)
 
   return (
     <>
       <Card>
-        <CardHeader>
-          <CardTitle className="text-foreground text-sm font-semibold">
-            Meeting booked → lead → deal
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-wrap items-center gap-2 text-sm">
-          <FunnelStep label="Meetings booked" value={meetingsBooked.length} />
-          <FunnelArrow />
-          <FunnelStep label="Became a lead" value={leadsFromMeetings.length} />
-          <FunnelArrow />
-          <FunnelStep label="Qualified" value={qualifiedFromMeetings.length} />
-          <FunnelArrow />
-          <FunnelStep label="Became a deal" value={dealsFromMeetings.length} />
-          <FunnelArrow />
-          <FunnelStep label="Won" value={wonFromMeetings.length} />
+        <CardContent className="flex flex-col items-center gap-3 py-6">
+          <div className="flex items-center gap-4">
+            <FunnelOrigin label="Meetings booked" value={meetingsBooked.length} />
+            {withoutLead.length > 0 && (
+              <div className="border-muted-foreground/30 flex items-center gap-2 border-l pl-4">
+                <span className="text-muted-foreground text-xs">
+                  {withoutLead.length} never matched a HubSpot lead
+                </span>
+              </div>
+            )}
+          </div>
+
+          <FunnelConnector />
+
+          <FunnelCategory label="Leads" total={leads.length}>
+            <FunnelNode label="Open" value={open.length} dotClassName="bg-sky-500" />
+            <FunnelNode label="Qualified" value={qualified.length} dotClassName="bg-emerald-500" />
+            <FunnelNode label="Lost" value={lost.length} dotClassName="bg-red-500" />
+          </FunnelCategory>
+
+          <FunnelConnector />
+
+          <FunnelCategory label="Deals" total={qualifiedDealRows.length + lostDealRows.length + wonDealRows.length}>
+            <FunnelNode
+              label="Qualified"
+              value={qualifiedDealRows.length}
+              sub={currency(dealsAmount(qualifiedDealRows))}
+              dotClassName="bg-violet-500"
+            />
+            <FunnelNode
+              label="Lost"
+              value={lostDealRows.length}
+              sub={currency(dealsAmount(lostDealRows))}
+              dotClassName="bg-amber-500"
+            />
+            <FunnelNode
+              label="Won"
+              value={wonDealRows.length}
+              sub={currency(dealsAmount(wonDealRows))}
+              dotClassName="bg-emerald-500"
+            />
+          </FunnelCategory>
         </CardContent>
       </Card>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <KpiCard
-          label="Meetings booked"
-          value={meetingsBooked.length}
-          icon={MessageSquareHeart}
-          iconClassName="text-pink-500"
-          badgeClassName="bg-pink-500/10"
-        />
-        <KpiCard
-          label="Open leads"
-          value={open.length}
-          icon={Circle}
-          iconClassName="text-sky-500"
-          badgeClassName="bg-sky-500/10"
-        />
-        <KpiCard
-          label="Qualified leads"
-          value={qualified.length}
-          icon={CircleCheck}
-          iconClassName="text-emerald-500"
-          badgeClassName="bg-emerald-500/10"
-        />
-        <KpiCard
-          label="Lost leads"
-          value={lost.length}
-          icon={XCircle}
-          iconClassName="text-red-500"
-          badgeClassName="bg-red-500/10"
-        />
-        <KpiCard
-          label="Qualified deals"
-          value={qualifiedDealRows.length}
-          sub={currency(dealsAmount(qualifiedDealRows))}
-          icon={Handshake}
-          iconClassName="text-violet-500"
-          badgeClassName="bg-violet-500/10"
-        />
-        <KpiCard
-          label="Lost deals"
-          value={lostDealRows.length}
-          sub={currency(dealsAmount(lostDealRows))}
-          icon={Ban}
-          iconClassName="text-amber-500"
-          badgeClassName="bg-amber-500/10"
-        />
-        <KpiCard
-          label="Won deals"
-          value={wonDealRows.length}
-          sub={currency(dealsAmount(wonDealRows))}
-          icon={TrendingUp}
-          iconClassName="text-emerald-500"
-          badgeClassName="bg-emerald-500/10"
-        />
-      </div>
 
       <LeadTable
         title={`Open leads (${open.length})`}
@@ -192,21 +161,71 @@ export function PipelinePage({
         conversationByKey={conversationByKey}
         onOpenConversation={onOpenConversation}
       />
+
+      <MeetingsWithoutLeadTable meetings={withoutLead} onOpenConversation={onOpenConversation} />
     </>
   )
 }
 
-function FunnelStep({ label, value }: { label: string; value: number }) {
+/** Custom funnel diagram, not built from shadcn Card/Table — a bordered box with a
+ *  fieldset-style overlapping legend label groups each category's nodes, and a vertical
+ *  line+arrow connects one category to the next. */
+function FunnelOrigin({ label, value }: { label: string; value: number }) {
   return (
-    <div className="flex flex-col items-center gap-0.5 rounded-lg border px-3 py-2">
-      <span className="font-kpi text-lg font-bold tabular-nums">{value}</span>
-      <span className="text-muted-foreground text-xs whitespace-nowrap">{label}</span>
+    <div className="border-primary/30 bg-primary/5 flex flex-col items-center gap-1 rounded-xl border-2 px-6 py-4">
+      <span className="font-kpi text-2xl font-bold tabular-nums">{value}</span>
+      <span className="text-muted-foreground text-xs font-medium tracking-wide uppercase">{label}</span>
     </div>
   )
 }
 
-function FunnelArrow() {
-  return <span className="text-muted-foreground text-lg">→</span>
+function FunnelConnector() {
+  return (
+    <div className="flex flex-col items-center">
+      <div className="bg-border h-6 w-px" />
+      <div className="border-muted-foreground border-r-2 border-b-2 size-2 rotate-45" />
+    </div>
+  )
+}
+
+function FunnelCategory({
+  label,
+  total,
+  children,
+}: {
+  label: string
+  total: number
+  children: React.ReactNode
+}) {
+  return (
+    <div className="relative w-full max-w-2xl rounded-xl border pt-5 pb-4">
+      <span className="bg-card text-muted-foreground absolute -top-3 left-4 px-2 text-xs font-semibold tracking-wide uppercase">
+        {label} · {total}
+      </span>
+      <div className="grid grid-cols-3 gap-3 px-4">{children}</div>
+    </div>
+  )
+}
+
+function FunnelNode({
+  label,
+  value,
+  sub,
+  dotClassName,
+}: {
+  label: string
+  value: number
+  sub?: string
+  dotClassName: string
+}) {
+  return (
+    <div className="bg-muted/40 flex flex-col items-center gap-1 rounded-lg px-3 py-3 text-center">
+      <span className={`size-1.5 rounded-full ${dotClassName}`} />
+      <span className="font-kpi text-lg font-bold tabular-nums">{value}</span>
+      <span className="text-muted-foreground text-xs">{label}</span>
+      {sub && <span className="text-muted-foreground text-[11px] tabular-nums">{sub}</span>}
+    </div>
+  )
 }
 
 function LeadTable({
@@ -338,6 +357,56 @@ function DealTable({
                   </TableRow>
                 )
               })}
+            </TableBody>
+          </Table>
+        )}
+      </CardContent>
+    </Card>
+  )
+}
+
+function MeetingsWithoutLeadTable({
+  meetings,
+  onOpenConversation,
+}: {
+  meetings: ManagedConversation[]
+  onOpenConversation: (conversation: ManagedConversation) => void
+}) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-foreground text-sm font-semibold">
+          Meetings booked with no matching HubSpot lead ({meetings.length})
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        {meetings.length === 0 ? (
+          <p className="text-muted-foreground text-sm">Every booked meeting has a matching HubSpot lead.</p>
+        ) : (
+          <Table className="table-fixed">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[35%]">Contact</TableHead>
+                <TableHead className="w-[35%]">Company</TableHead>
+                <TableHead className="w-[30%]">Owner</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {meetings.map((conversation) => (
+                <TableRow
+                  key={conversationKey(conversation)}
+                  onClick={() => onOpenConversation(conversation)}
+                  className="hover:bg-muted/60 cursor-pointer"
+                >
+                  <TableCell className="align-top whitespace-normal font-medium">{conversation.full_name}</TableCell>
+                  <TableCell className="text-muted-foreground align-top whitespace-normal">
+                    {conversation.company || '—'}
+                  </TableCell>
+                  <TableCell className="text-muted-foreground align-top whitespace-normal">
+                    {conversation.owner || '—'}
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         )}

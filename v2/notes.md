@@ -3,6 +3,59 @@
 Running log of what changed and why, kept so this project can be picked up in a fresh chat
 without re-deriving context. Newest entries at the top.
 
+## Funnel page: custom visual redesign + meeting_booked audit merged (2026-07-31, branch `feat/funnel-visual-redesign`)
+
+**Why:** After the previous Funnel rebuild (below) shipped, the user was still unhappy: the
+page was a flat KPI-grid + six stacked tables, not "a proper funnel." They also noticed the
+numbers looked off (roughly "71 meetings booked, 46 leads" from memory) and asked to find out
+what happened to the rest.
+
+**Root cause of the number confusion:** two unrelated PRs had landed on `main` separately —
+#17 (this Funnel rebuild) and, unmerged until now, #18 (the `meeting_booked` HubSpot audit that
+corrected the tag count 84 → 102). Depending on which the user's browser/localStorage was
+actually reflecting, the visible numbers wouldn't match either branch cleanly. **Merged #18
+into `main` first** (`chore/audit-meeting-booked`, already reviewed/described in the entry
+below) so there's one consistent baseline before building on top of it.
+
+**Investigated "what happened to the rest":** of 102 meetings booked, only 38 have a matching
+HubSpot lead at all — the other 73 never got promoted into (or entered as) a HubSpot Lead
+record. This isn't a bug in the matching — it was cross-checked directly against
+`hubspot.json`/`data.json` in Python and is now surfaced in the UI itself as a dedicated
+"Meetings booked with no matching HubSpot lead" table, rather than just disappearing as an
+unexplained gap between two KPI numbers.
+
+**Visual redesign** (`src/components/PipelinePage.tsx`, custom-built per the user's explicit
+request to *not* use shadcn `Card`/existing KPI-grid patterns for this part — plain Tailwind
+using the existing design tokens instead):
+- `FunnelOrigin` — the "Meetings booked" starting node, visually distinct (bordered, tinted
+  background) as the funnel's anchor, with the "N never matched a lead" count shown beside it.
+- `FunnelConnector` — a vertical line + chevron between stages.
+- `FunnelCategory` — a bordered box with an overlapping "legend" label (fieldset-style, e.g.
+  "Leads · 38") containing a 3-column grid of `FunnelNode`s — this is the "category with
+  subcategories" shape the user described (Leads: Open/Qualified/Lost; Deals:
+  Qualified/Lost/Won).
+- Removed the old 7-tile `KpiCard` grid and the old `FunnelStep`/`FunnelArrow` strip entirely —
+  the new diagram's nodes serve as the KPIs now, so the redundant tiles were dropped rather than
+  kept alongside.
+
+**Scoping change:** the six detail tables below the diagram (Open/Qualified/Lost leads,
+Qualified/Lost/Won deals) are now built from `leadsFromMeetingBooked` — i.e. leads that trace
+back to an actual booked-meeting conversation — instead of every outreach-matched lead
+regardless of tag. This makes every number on the page part of one coherent
+meetings-booked-anchored funnel, addressing the earlier "disconnect" feedback for good instead
+of leaving the tables on a different scope than the funnel strip above them.
+
+**New in `src/lib/hubspot.ts`:** `meetingsWithoutLead(matches, conversations)`.
+
+**Numbers after the merge + redesign** (unscoped — Funnel ignores profile/date filters, per
+earlier decision): 102 meetings booked → 73 without a matching lead, 38 leads (4 open / 10
+qualified / 24 lost) → 63 deals from those leads (1 qualified / 7 lost / 55 won).
+
+**Checks run:** `oxlint`/`tsc --noEmit`/`build` all clean. Numbers cross-checked against raw
+`data.json`/`hubspot.json` in Python (matches the numbers above exactly). Not yet verified in an
+actual browser this session (same sandbox limitation noted in earlier entries) — user is
+checking on their own local dev server.
+
 ## Pipeline page rebuilt as "Funnel": qualified/lost leads and deals (2026-07-31, branch `feat/funnel-qualified-lost`)
 
 **Why:** User wants to see qualified leads, lost leads, qualified deals, and lost deals — the
