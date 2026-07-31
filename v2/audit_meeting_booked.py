@@ -3,11 +3,14 @@
 booked meetings.
 
 Join key: `data.json` conversations carry a LinkedIn `profile_url` (near-universal) and
-sometimes an `email`; the HubSpot contacts export carries `LinkedIn Profile URL` and `Email`.
-Joining on the LinkedIn vanity slug is primary since it covers ~all conversations; email is a
-fallback for the export rows whose LinkedIn column holds a non-vanity `ACoAAB...` member id
-instead of a slug. Rows still unmatched after that fall back to fuzzy name+company, reusing
-`match_hubspot.py`'s scoring so the two audits behave consistently.
+sometimes an `email`; the HubSpot contacts export carries `LinkedIn Profile URL`, `Linkedin
+Public ID`, and `Email`. Joining on the LinkedIn vanity slug is primary since it covers ~all
+conversations — tried against both `LinkedIn Profile URL` and `Linkedin Public ID`, since either
+column can hold the real vanity slug while the other holds a non-matchable member id (see
+`is_vanity_slug`). Email is a fallback for rows where neither column has a slug. Rows still
+unmatched after that fall back to fuzzy name+company (or name-only when the conversation has no
+company on file), reusing `match_hubspot.py`'s name/company normalization so the two audits
+behave consistently.
 
 Ground truth for "a meeting was booked" is HubSpot's `First Meeting Date` or `Date of last
 meeting booked in meetings tool` being non-blank. Only replied conversations are in scope,
@@ -31,20 +34,35 @@ CONTACTS_CSV = "/Users/tobias/Downloads/260731-all-contacts-all-properties.csv"
 DATA_JSON = Path(__file__).parent / "data.json"
 
 SLUG_RE = re.compile(r"linkedin\.com/in/([^/?]+)")
-MEMBER_ID_RE = re.compile(r"^acoaa", re.IGNORECASE)
+VANITY_SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 FUZZY_MATCH_FLOOR = 0.90  # same bar match_hubspot.py uses for a company-less name match
 
 
+def is_vanity_slug(raw: str) -> bool:
+    """A real LinkedIn vanity slug is lowercase-only (LinkedIn enforces this at signup).
+    Member-id forms aren't: the `LinkedIn Profile URL` column's non-vanity fallback is an
+    `ACoAA...`-prefixed id, and the `Linkedin Public ID` column's is a mixed-case base64-ish
+    id (e.g. `AEEAABZwGNwB...`) — checking case on the *raw* string (before lowercasing)
+    catches both without hardcoding either prefix."""
+    return bool(VANITY_SLUG_RE.match(raw))
+
+
 def normalize_slug(url: str) -> str | None:
-    """Returns the lowercased, URL-decoded vanity slug, or None for a non-vanity
-    (`ACoAAB...` member-id) LinkedIn URL, which can't be matched against a vanity slug."""
+    """Returns the lowercased, URL-decoded vanity slug from a full LinkedIn URL, or None if
+    it's a non-vanity member-id URL."""
     match = SLUG_RE.search(url or "")
     if not match:
         return None
-    slug = unquote(match.group(1)).lower().rstrip("/")
-    if MEMBER_ID_RE.match(slug):
-        return None
-    return slug
+    raw = unquote(match.group(1)).rstrip("/")
+    return raw.lower() if is_vanity_slug(raw) else None
+
+
+def normalize_public_id(raw_id: str) -> str | None:
+    """Returns the lowercased public id if it's a real vanity slug, else None — the
+    `Linkedin Public ID` column holds a vanity slug for some rows and a non-vanity id for
+    others (see `is_vanity_slug`)."""
+    raw = unquote((raw_id or "").strip())
+    return raw.lower() if raw and is_vanity_slug(raw) else None
 
 
 def normalize_email(email: str) -> str:
@@ -67,23 +85,33 @@ def load_replied_conversations() -> list[dict]:
     return [c for c in data["conversations"] if c.get("replied")]
 
 
-def build_indexes(contacts: list[dict]) -> tuple[dict, dict]:
+def build_indexes(contacts: list[dict]) -> tuple[dict, dict, dict]:
     by_slug = defaultdict(list)
     by_email = defaultdict(list)
+    by_name = defaultdict(list)
     for row in contacts:
         slug = normalize_slug(row.get("LinkedIn Profile URL", ""))
         if slug:
             by_slug[slug].append(row)
+        public_id = normalize_public_id(row.get("Linkedin Public ID", ""))
+        if public_id:
+            by_slug[public_id].append(row)
         email = normalize_email(row.get("Email", ""))
         if email:
             by_email[email].append(row)
-    return by_slug, by_email
+        name = normalize_name(f"{row.get('First Name', '')} {row.get('Last Name', '')}")
+        if name:
+            by_name[name].append(row)
+    return by_slug, by_email, by_name
 
 
-def fuzzy_match(conv: dict, contacts_by_company: dict) -> dict | None:
+def fuzzy_match(conv: dict, contacts_by_company: dict, contacts_by_name: dict) -> dict | None:
+    """Company-blocked when the conversation has a company on file (narrows an otherwise
+    all-pairs scan); falls back to a name-blocked scan when it doesn't, rather than giving up —
+    a blank company must not make an otherwise-good name match unfindable."""
     conv_name = normalize_name(conv.get("full_name", ""))
     conv_company = normalize_company(conv.get("company", ""))
-    candidates = contacts_by_company.get(conv_company) if conv_company else None
+    candidates = contacts_by_company.get(conv_company) if conv_company else contacts_by_name.get(conv_name)
     if not candidates:
         return None
     best_score, best_row = 0.0, None
@@ -95,20 +123,22 @@ def fuzzy_match(conv: dict, contacts_by_company: dict) -> dict | None:
     return best_row if best_score >= FUZZY_MATCH_FLOOR else None
 
 
-def match_conversation(conv: dict, by_slug: dict, by_email: dict, contacts_by_company: dict) -> dict | None:
+def match_conversation(
+    conv: dict, by_slug: dict, by_email: dict, contacts_by_company: dict, contacts_by_name: dict
+) -> dict | None:
     slug = normalize_slug(conv.get("profile_url", ""))
     if slug and by_slug.get(slug):
         return by_slug[slug][0]
     email = normalize_email(conv.get("email", ""))
     if email and by_email.get(email):
         return by_email[email][0]
-    return fuzzy_match(conv, contacts_by_company)
+    return fuzzy_match(conv, contacts_by_company, contacts_by_name)
 
 
 def main() -> None:
     contacts = load_contacts()
     conversations = load_replied_conversations()
-    by_slug, by_email = build_indexes(contacts)
+    by_slug, by_email, contacts_by_name = build_indexes(contacts)
 
     contacts_by_company = defaultdict(list)
     for row in contacts:
@@ -120,7 +150,7 @@ def main() -> None:
     true_positives = true_negatives = 0
 
     for conv in conversations:
-        row = match_conversation(conv, by_slug, by_email, contacts_by_company)
+        row = match_conversation(conv, by_slug, by_email, contacts_by_company, contacts_by_name)
         tagged = "meeting_booked" in conv.get("tags", [])
         if row is None:
             if tagged:
