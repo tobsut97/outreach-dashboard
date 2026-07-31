@@ -497,3 +497,67 @@ All"; the `managed.length === 0` empty-state guard correctly short-circuiting be
   requires real forward motion (meeting booked, open to call, concrete named referral).
 - A PR-creation request was interrupted mid-session and never carried out — do not assume any
   outstanding changes have been pushed or a PR opened unless explicitly reconfirmed.
+
+## `meeting_booked` tag audit against HubSpot (2026-07-31)
+
+Built [audit_meeting_booked.py](audit_meeting_booked.py) to check the local classifier's
+`meeting_booked` tag against HubSpot's own record of booked meetings, using a HubSpot "all
+contacts, all properties" export (`LinkedIn Profile URL` / `Linkedin Public ID` / `Email` /
+`First Meeting Date` / `Date of last meeting booked in meetings tool`) as ground truth. Joins
+on LinkedIn vanity slug first, then email, then falls back to `match_hubspot.py`'s fuzzy
+name(+company) scoring.
+
+**First pass had a matching bug** (caught by the user spot-checking one of the "unmatched"
+names — Udo Gassner — directly in HubSpot and finding a real meeting date): the CSV sometimes
+puts the real vanity slug in `LinkedIn Profile URL` and sometimes in the separate `Linkedin
+Public ID` column (the other column holds a non-vanity member-id string instead), but the
+script only ever checked `LinkedIn Profile URL`. Separately, `fuzzy_match` gave up entirely
+whenever a conversation had no `company` on file instead of falling back to a name-only
+lookup — and most of the "unmatched" conversations had a blank company. Fixed both: slugs are
+now taken from either column (validated as lowercase-only via `is_vanity_slug`, since real
+LinkedIn vanity slugs are always lowercase and both columns' non-vanity forms aren't), and a
+`by_name` index backs the fuzzy match when company is blank.
+
+Result: match rate roughly tripled once the bug was fixed. Among conversations tagged
+`meeting_booked`, unmatched dropped from 70 to 32. Full picture after the fix, over all 1352
+replied conversations (not just tagged ones): 34 true positives, 823 true negatives, 18 false
+positives (tagged `meeting_booked` but HubSpot shows no meeting — mostly vague "sounds good,
+let's talk" replies that read more like `open_to_call`), 24 false negatives (HubSpot shows a
+booked meeting but the tag was missing or something else).
+
+**Second bug, found the same way** — user spot-checked another "unmatched" name (Marlene
+O'Sullivan) directly in HubSpot and found her too, with a real meeting date. Root cause this
+time: **92% of this CSV export's `Company Name` values are truncated to exactly 4 characters**
+(`badenova` → `bade`) — a HubSpot export artifact affecting the whole file, not one contact.
+The company-blocked fuzzy match bucketed by the *exact* normalized company string, so it almost
+never found the right bucket for anyone whose real company name was longer than 4 characters.
+Fixed by bucketing both sides on `company_bucket_key` (first 4 normalized characters, so a
+truncated CSV value and the full conversation company value land in the same bucket) and
+unioning those candidates with an exact-name-match bucket, rather than requiring company data to
+pick a bucket at all.
+
+Result: unmatched tagged conversations dropped from 32 to 8. Full picture over all 1352 replied
+conversations: 94 true positives, 1197 true negatives, 0 false positives, 2 false negatives.
+`meeting_booked` count: 84 → 102 (reverted the now-superseded 89-count correction back to the
+84 baseline first, then reapplied fresh from this fixed audit, to avoid compounding two
+different partial corrections).
+
+**Two residual cases left uncorrected, on purpose:**
+- Jennifer Bregenhorn has two separate conversations under different owners (Christine, Lara)
+  that happen to share one LinkedIn profile URL — a known cross-owner duplicate pattern (see
+  the Lara campaign backfill entry above). HubSpot resolves both to the same contact record, so
+  there's no way to tell which of the two outreach threads the meeting actually came from;
+  tagging both risked creating a new false positive, so neither was touched beyond whatever the
+  classifier already had.
+- Anja Benesch already carries 2 tags (`no_budget`, `future_timing`) — the cap blocks adding a
+  3rd without deciding which to drop, so she was left as a known false negative rather than
+  guessing.
+
+8 conversations tagged `meeting_booked` still have no HubSpot match at all (down from 70 → 32 →
+8 across the two bug fixes), so their correctness remains unverified — likely genuine cases of a
+prospect who never became a HubSpot contact, but not provable either way from this data.
+
+**Takeaway for next time:** both bugs were only found because the user manually spot-checked
+"unmatched" names directly in HubSpot rather than trusting the unmatched count — worth doing
+that spot-check again if this audit is ever re-run against a fresh export, since a new export
+could have its own undocumented quirks.
