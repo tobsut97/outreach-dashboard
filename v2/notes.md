@@ -3,6 +3,58 @@
 Running log of what changed and why, kept so this project can be picked up in a fresh chat
 without re-deriving context. Newest entries at the top.
 
+## match_hubspot.py: fix lead matching for company-primary leads (2026-07-31, branch `fix/company-primary-lead-matching`)
+
+**Why:** User manually found a contact ("Stefan Brenken") who has a real lead in HubSpot
+("(DE) Bank für Kirche und Diakonie") that our matcher had missed, and asked to investigate
+whether this was a bigger problem.
+
+**Root cause #1 — company-primary leads:** ~31% of lead rows (495 of 1599, blank "Primary
+Associated Contact Object ID") have their "Primary Associated Object" set to a Company rather
+than a Contact. For these, `Primary Associated Object Name` *is* the company name, not a
+person's name — Stefan Brenken's lead literally had no person name anywhere in the old CSV
+export. Fuzzy name matching was structurally incapable of ever finding these; this wasn't a
+tuning problem.
+
+**Fix, made possible by a new export the user supplied** (`270731-all-leads-v2.csv`, replacing
+`260730-all-leads.csv` in `SOURCES`): it has an `Associated Contact` column (`"Name
+(email@domain)"`) that HubSpot apparently didn't expose in the earlier export, giving the real
+contact's name and email regardless of which object is primary. `match_hubspot.py` now:
+- Parses `Associated Contact` (`parse_associated_contact`) for `lead_contact_name` /
+  `lead_contact_email`, falling back to the old `Primary Associated Object Name` only when the
+  column is blank (322 of 1598 rows).
+- Tries an **exact email match** first (via `by_email`, built from conversations' `email`
+  field) — always "high" confidence, since email is a unique identifier rather than a fuzzy
+  score. Only 12 conversations actually have a HubSpot-matching email on file (most
+  conversations have no email at all), but this is strictly additive.
+- Falls back to the existing fuzzy name+company match, now using the *corrected* contact name
+  for company-primary leads instead of the company name.
+
+**Root cause #2 — company-bucket fallback bug, found while debugging why Stefan Brenken still
+didn't match after fix #1:** the fuzzy-match blocking step falls back to a full scan across all
+conversations only when a company's bucket is *empty*. But Stefan's employer's bucket wasn't
+empty — a *different* person (Christian Müller) at the same company had their conversation's
+`company` field filled in and occupied the only slot in that bucket, so the real match
+candidate (Stefan's own conversation, which has a blank `company` field) was never considered.
+Fixed: if the best bucketed candidate doesn't even clear "medium" confidence, retry across every
+conversation before giving up, instead of accepting a bad bucketed match (or no match) as final.
+
+**Performance note:** re-normalizing every conversation's name/company on every pairwise
+comparison inside the matching loop (rather than once per conversation up front) made a full
+scan take several minutes once enough leads started hitting it — refactored to precompute
+normalized name/company once per conversation (`all_conv_norms`). Full run is still ~5-8
+minutes (large SequenceMatcher call volume when many leads fall through to a full scan), but
+that's now inherent to the fuzzy-matching approach at this data volume, not wasted repeat work.
+
+**Result:** total lead matches 64 → 103 (86 high, 17 medium) — a 61% increase. Meeting-booked
+funnel numbers improved sharply once this and the earlier `meeting_booked` tag fixes were both
+in place: of 102 meetings booked, leads found jumped from 38 → 70 (20 open / 12 qualified / 38
+lost), and the "no matching lead" drop-off shrank from 73 → 40. Deals from those leads: 67 total
+(2 qualified / 8 lost / 56 won).
+
+**Checks run:** `npm run build` clean (no TS changes, only `match_hubspot.py` + regenerated
+`hubspot.json`). Verified Stefan Brenken's lead now matches at high confidence by hand.
+
 ## Funnel page: custom visual redesign + meeting_booked audit merged (2026-07-31, branch `feat/funnel-visual-redesign`)
 
 **Why:** After the previous Funnel rebuild (below) shipped, the user was still unhappy: the
