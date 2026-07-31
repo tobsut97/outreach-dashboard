@@ -1,5 +1,5 @@
 import { format, parseISO } from 'date-fns'
-import { Handshake, TrendingUp, Users, Wallet } from 'lucide-react'
+import { Ban, Circle, CircleCheck, Handshake, MessageSquareHeart, TrendingUp, XCircle } from 'lucide-react'
 import { KpiCard } from '@/components/KpiCard'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -11,10 +11,21 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { BANT_TALLY_KEYS, deriveBantBreakdown, deriveHubspotFunnel, primaryDeal } from '@/lib/hubspot'
+import {
+  dealsInStage,
+  leadsFromMeetingBooked,
+  lostDeals,
+  lostLeads,
+  matchedLeads,
+  meetingBookedConversations,
+  openLeads,
+  qualifiedLeads,
+  wonDeals,
+  type MatchedDeal,
+} from '@/lib/hubspot'
 import type { Summary } from '@/lib/metrics'
 import { conversationKey, type ManagedConversation } from '@/lib/overrides'
-import type { BantTally, HubspotData, LeadMatch, MatchConfidence } from '@/types/hubspot'
+import type { LeadMatch, HubspotData } from '@/types/hubspot'
 
 const BANT_LABELS: Record<'authority' | 'budget' | 'need' | 'timeline', string> = {
   authority: 'Authority',
@@ -23,26 +34,20 @@ const BANT_LABELS: Record<'authority' | 'budget' | 'need' | 'timeline', string> 
   timeline: 'Timeline',
 }
 
-const BANT_VALUE_COLOR: Record<keyof BantTally, string> = {
-  Yes: 'bg-emerald-500',
-  Maybe: 'bg-amber-400',
-  No: 'bg-red-400',
-  TBD: 'bg-slate-300',
-  blank: 'bg-muted',
-}
-
-const CONFIDENCE_BADGE: Record<MatchConfidence, { variant: 'default' | 'secondary'; label: string }> = {
-  high: { variant: 'default', label: 'High confidence' },
-  medium: { variant: 'secondary', label: 'Medium confidence' },
-}
-
 const currency = (amount: number) =>
   amount.toLocaleString('en-US', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })
+
+const dealsAmount = (deals: MatchedDeal[]) => deals.reduce((sum, { deal }) => sum + deal.amount, 0)
+
+function bantChips(match: LeadMatch) {
+  return (['authority', 'budget', 'need', 'timeline'] as const)
+    .map((field) => ({ label: BANT_LABELS[field][0], value: match[field] }))
+    .filter((chip) => chip.value)
+}
 
 export function PipelinePage({
   hubspot,
   conversations,
-  summary,
   onOpenConversation,
 }: {
   hubspot: HubspotData
@@ -53,135 +58,140 @@ export function PipelinePage({
   const conversationByKey = new Map(
     conversations.map((conversation) => [conversationKey(conversation), conversation]),
   )
-  const keys = new Set(conversationByKey.keys())
-  const matched = hubspot.matches.filter((match) => keys.has(match.conversation_key))
-  const funnel = deriveHubspotFunnel(conversations, summary, hubspot)
-  const bant = deriveBantBreakdown(matched)
-  const rows = [...matched].sort((a, b) => b.match_score - a.match_score)
+  const matched = matchedLeads(conversations, hubspot)
+  const open = openLeads(matched)
+  const qualified = qualifiedLeads(matched)
+  const lost = lostLeads(matched)
+  const qualifiedDealRows = dealsInStage(matched, 'Qualified')
+  const lostDealRows = lostDeals(matched)
+  const wonDealRows = wonDeals(matched)
+
+  const meetingsBooked = meetingBookedConversations(conversations)
+  const leadsFromMeetings = leadsFromMeetingBooked(matched, conversations)
+  const qualifiedFromMeetings = qualifiedLeads(leadsFromMeetings)
+  const dealsFromMeetings = leadsFromMeetings.flatMap((lead) => lead.deals)
+  const wonFromMeetings = dealsFromMeetings.filter((deal) => deal.is_closed_won)
 
   return (
     <>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-foreground text-sm font-semibold">
+            Meeting booked → lead → deal
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-wrap items-center gap-2 text-sm">
+          <FunnelStep label="Meetings booked" value={meetingsBooked.length} />
+          <FunnelArrow />
+          <FunnelStep label="Became a lead" value={leadsFromMeetings.length} />
+          <FunnelArrow />
+          <FunnelStep label="Qualified" value={qualifiedFromMeetings.length} />
+          <FunnelArrow />
+          <FunnelStep label="Became a deal" value={dealsFromMeetings.length} />
+          <FunnelArrow />
+          <FunnelStep label="Won" value={wonFromMeetings.length} />
+        </CardContent>
+      </Card>
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard
-          label="Leads matched"
-          value={funnel.leadsMatchedHigh}
-          sub={funnel.leadsMatchedMedium > 0 ? `+${funnel.leadsMatchedMedium} medium-confidence` : null}
-          icon={Users}
+          label="Meetings booked"
+          value={meetingsBooked.length}
+          icon={MessageSquareHeart}
+          iconClassName="text-pink-500"
+          badgeClassName="bg-pink-500/10"
+        />
+        <KpiCard
+          label="Open leads"
+          value={open.length}
+          icon={Circle}
           iconClassName="text-sky-500"
           badgeClassName="bg-sky-500/10"
         />
         <KpiCard
-          label="Deals matched"
-          value={funnel.dealsMatched}
+          label="Qualified leads"
+          value={qualified.length}
+          icon={CircleCheck}
+          iconClassName="text-emerald-500"
+          badgeClassName="bg-emerald-500/10"
+        />
+        <KpiCard
+          label="Lost leads"
+          value={lost.length}
+          icon={XCircle}
+          iconClassName="text-red-500"
+          badgeClassName="bg-red-500/10"
+        />
+        <KpiCard
+          label="Qualified deals"
+          value={qualifiedDealRows.length}
+          sub={currency(dealsAmount(qualifiedDealRows))}
           icon={Handshake}
           iconClassName="text-violet-500"
           badgeClassName="bg-violet-500/10"
         />
         <KpiCard
-          label="Closed won"
-          value={funnel.closedWonCount}
-          sub={currency(funnel.closedWonAmount)}
+          label="Lost deals"
+          value={lostDealRows.length}
+          sub={currency(dealsAmount(lostDealRows))}
+          icon={Ban}
+          iconClassName="text-amber-500"
+          badgeClassName="bg-amber-500/10"
+        />
+        <KpiCard
+          label="Won deals"
+          value={wonDealRows.length}
+          sub={currency(dealsAmount(wonDealRows))}
           icon={TrendingUp}
           iconClassName="text-emerald-500"
           badgeClassName="bg-emerald-500/10"
         />
-        <KpiCard
-          label="Still open"
-          value={funnel.stillOpenCount}
-          sub={currency(funnel.stillOpenAmount)}
-          icon={Wallet}
-          iconClassName="text-amber-500"
-          badgeClassName="bg-amber-500/10"
-        />
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-foreground text-sm font-semibold">
-            Outreach → lead → deal funnel
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-wrap items-center gap-2 text-sm">
-          <FunnelStep label="Messaged" value={funnel.messaged} />
-          <FunnelArrow />
-          <FunnelStep label="Replied" value={funnel.replied} />
-          <FunnelArrow />
-          <FunnelStep label="Leads (high-confidence)" value={funnel.leadsMatchedHigh} />
-          <FunnelArrow />
-          <FunnelStep label="Deals" value={funnel.dealsMatched} />
-          <FunnelArrow />
-          <FunnelStep label="Closed won" value={funnel.closedWonCount} />
-        </CardContent>
-      </Card>
+      <LeadTable
+        title={`Open leads (${open.length})`}
+        leads={open}
+        conversationByKey={conversationByKey}
+        onOpenConversation={onOpenConversation}
+        showDisqualificationReason={false}
+      />
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-foreground text-sm font-semibold">
-            BANT breakdown (matched leads)
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-          {matched.length === 0 ? (
-            <p className="text-muted-foreground text-sm">No leads matched to outreach yet.</p>
-          ) : (
-            (Object.keys(bant) as (keyof typeof bant)[]).map((field) => (
-              <BantRow key={field} label={BANT_LABELS[field]} tally={bant[field]} />
-            ))
-          )}
-        </CardContent>
-      </Card>
+      <LeadTable
+        title={`Qualified leads (${qualified.length})`}
+        leads={qualified}
+        conversationByKey={conversationByKey}
+        onOpenConversation={onOpenConversation}
+        showDisqualificationReason={false}
+      />
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-foreground text-sm font-semibold">
-            Matched leads ({rows.length})
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {rows.length === 0 ? (
-            <p className="text-muted-foreground text-sm">No leads matched to outreach yet.</p>
-          ) : (
-            <Table className="table-fixed">
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[20%]">Contact</TableHead>
-                  <TableHead className="w-[10%]">Match</TableHead>
-                  <TableHead className="w-[20%]">BANT</TableHead>
-                  <TableHead className="w-[12%]">Lead stage</TableHead>
-                  <TableHead className="w-[38%]">Deal</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {rows.map((match) => (
-                  <LeadRow
-                    key={match.lead_record_id}
-                    match={match}
-                    conversation={conversationByKey.get(match.conversation_key)}
-                    onOpenConversation={onOpenConversation}
-                  />
-                ))}
-              </TableBody>
-            </Table>
-          )}
-        </CardContent>
-      </Card>
+      <LeadTable
+        title={`Lost leads (${lost.length})`}
+        leads={lost}
+        conversationByKey={conversationByKey}
+        onOpenConversation={onOpenConversation}
+        showDisqualificationReason
+      />
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-foreground text-sm font-semibold">
-            HubSpot pipeline totals (all leads/deals, independent of outreach match)
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm sm:grid-cols-4">
-          <TotalStat label="Total leads" value={hubspot.aggregate.total_leads} />
-          <TotalStat label="Total deals" value={hubspot.aggregate.total_deals} />
-          <TotalStat
-            label="Closed won"
-            value={`${hubspot.aggregate.deals_by_stage['Closed won']} · ${currency(hubspot.aggregate.deals_amount_by_stage['Closed won'])}`}
-          />
-          <TotalStat label="Closed lost" value={hubspot.aggregate.deals_by_stage['Closed lost']} />
-        </CardContent>
-      </Card>
+      <DealTable
+        title={`Qualified deals (${qualifiedDealRows.length})`}
+        rows={qualifiedDealRows}
+        conversationByKey={conversationByKey}
+        onOpenConversation={onOpenConversation}
+      />
+
+      <DealTable
+        title={`Lost deals (${lostDealRows.length})`}
+        rows={lostDealRows}
+        conversationByKey={conversationByKey}
+        onOpenConversation={onOpenConversation}
+      />
+
+      <DealTable
+        title={`Won deals (${wonDealRows.length})`}
+        rows={wonDealRows}
+        conversationByKey={conversationByKey}
+        onOpenConversation={onOpenConversation}
+      />
     </>
   )
 }
@@ -199,102 +209,139 @@ function FunnelArrow() {
   return <span className="text-muted-foreground text-lg">→</span>
 }
 
-function BantRow({ label, tally }: { label: string; tally: BantTally }) {
-  const total = BANT_TALLY_KEYS.reduce((sum, key) => sum + tally[key], 0)
+function LeadTable({
+  title,
+  leads,
+  conversationByKey,
+  onOpenConversation,
+  showDisqualificationReason,
+}: {
+  title: string
+  leads: LeadMatch[]
+  conversationByKey: Map<string, ManagedConversation>
+  onOpenConversation: (conversation: ManagedConversation) => void
+  showDisqualificationReason: boolean
+}) {
   return (
-    <div className="flex items-center gap-3">
-      <span className="w-20 shrink-0 text-sm">{label}</span>
-      <div className="bg-muted flex h-3 flex-1 overflow-hidden rounded-full">
-        {BANT_TALLY_KEYS.map((key) =>
-          tally[key] > 0 ? (
-            <div
-              key={key}
-              className={BANT_VALUE_COLOR[key]}
-              style={{ width: total ? `${(100 * tally[key]) / total}%` : 0 }}
-              title={`${key}: ${tally[key]}`}
-            />
-          ) : null,
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-foreground text-sm font-semibold">{title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {leads.length === 0 ? (
+          <p className="text-muted-foreground text-sm">None in the current filters.</p>
+        ) : (
+          <Table className="table-fixed">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[30%]">Contact</TableHead>
+                <TableHead className="w-[25%]">BANT</TableHead>
+                <TableHead className="w-[20%]">Lead owner</TableHead>
+                {showDisqualificationReason && <TableHead className="w-[25%]">Disqualified because</TableHead>}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {leads.map((match) => {
+                const conversation = conversationByKey.get(match.conversation_key)
+                const chips = bantChips(match)
+                return (
+                  <TableRow
+                    key={match.lead_record_id}
+                    onClick={conversation ? () => onOpenConversation(conversation) : undefined}
+                    className={conversation ? 'hover:bg-muted/60 cursor-pointer' : ''}
+                  >
+                    <TableCell className="align-top whitespace-normal">
+                      <div className="font-medium">{conversation?.full_name || '—'}</div>
+                      <div className="text-muted-foreground text-xs">{match.company || '—'}</div>
+                    </TableCell>
+                    <TableCell className="align-top whitespace-normal">
+                      {chips.length === 0 ? (
+                        <span className="text-muted-foreground text-xs">—</span>
+                      ) : (
+                        <div className="flex flex-wrap gap-1">
+                          {chips.map((chip) => (
+                            <Badge key={chip.label} variant="outline" className="text-xs font-normal">
+                              {chip.label}:{chip.value}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground align-top whitespace-normal">
+                      {match.lead_owner || '—'}
+                    </TableCell>
+                    {showDisqualificationReason && (
+                      <TableCell className="text-muted-foreground align-top whitespace-normal">
+                        {match.bant_disqualification_reasons || '—'}
+                      </TableCell>
+                    )}
+                  </TableRow>
+                )
+              })}
+            </TableBody>
+          </Table>
         )}
-      </div>
-      <span className="text-muted-foreground w-40 shrink-0 text-right text-xs">
-        {BANT_TALLY_KEYS.filter((key) => tally[key] > 0)
-          .map((key) => `${key} ${tally[key]}`)
-          .join(' · ')}
-      </span>
-    </div>
+      </CardContent>
+    </Card>
   )
 }
 
-function TotalStat({ label, value }: { label: string; value: string | number }) {
-  return (
-    <div className="flex flex-col gap-0.5">
-      <span className="text-muted-foreground text-xs">{label}</span>
-      <span className="font-kpi font-semibold tabular-nums">{value}</span>
-    </div>
-  )
-}
-
-function LeadRow({
-  match,
-  conversation,
+function DealTable({
+  title,
+  rows,
+  conversationByKey,
   onOpenConversation,
 }: {
-  match: LeadMatch
-  conversation: ManagedConversation | undefined
+  title: string
+  rows: MatchedDeal[]
+  conversationByKey: Map<string, ManagedConversation>
   onOpenConversation: (conversation: ManagedConversation) => void
 }) {
-  const badge = CONFIDENCE_BADGE[match.match_confidence]
-  const deal = primaryDeal(match.deals)
-  const bantChips = (['authority', 'budget', 'need', 'timeline'] as const)
-    .map((field) => ({ label: BANT_LABELS[field][0], value: match[field] }))
-    .filter((chip) => chip.value)
-
   return (
-    <TableRow
-      onClick={conversation ? () => onOpenConversation(conversation) : undefined}
-      className={conversation ? 'hover:bg-muted/60 cursor-pointer' : ''}
-    >
-      <TableCell className="align-top whitespace-normal">
-        <div className="font-medium">{conversation?.full_name || '—'}</div>
-        <div className="text-muted-foreground text-xs">{match.company || '—'}</div>
-      </TableCell>
-      <TableCell className="align-top">
-        <Badge variant={badge.variant}>{match.match_confidence}</Badge>
-      </TableCell>
-      <TableCell className="align-top whitespace-normal">
-        {bantChips.length === 0 ? (
-          <span className="text-muted-foreground text-xs">—</span>
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-foreground text-sm font-semibold">{title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {rows.length === 0 ? (
+          <p className="text-muted-foreground text-sm">None in the current filters.</p>
         ) : (
-          <div className="flex flex-wrap gap-1">
-            {bantChips.map((chip) => (
-              <Badge key={chip.label} variant="outline" className="text-xs font-normal">
-                {chip.label}:{chip.value}
-              </Badge>
-            ))}
-          </div>
+          <Table className="table-fixed">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[30%]">Contact</TableHead>
+                <TableHead className="w-[20%]">Amount</TableHead>
+                <TableHead className="w-[20%]">Close date</TableHead>
+                <TableHead className="w-[30%]">Deal owner</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {rows.map(({ lead, deal }) => {
+                const conversation = conversationByKey.get(lead.conversation_key)
+                return (
+                  <TableRow
+                    key={deal.deal_record_id}
+                    onClick={conversation ? () => onOpenConversation(conversation) : undefined}
+                    className={conversation ? 'hover:bg-muted/60 cursor-pointer' : ''}
+                  >
+                    <TableCell className="align-top whitespace-normal">
+                      <div className="font-medium">{conversation?.full_name || '—'}</div>
+                      <div className="text-muted-foreground text-xs">{lead.company || '—'}</div>
+                    </TableCell>
+                    <TableCell className="align-top whitespace-normal">{currency(deal.amount)}</TableCell>
+                    <TableCell className="text-muted-foreground align-top whitespace-normal">
+                      {deal.close_date ? format(parseISO(deal.close_date), 'MMM d, yyyy') : '—'}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground align-top whitespace-normal">
+                      {deal.deal_owner || '—'}
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
+            </TableBody>
+          </Table>
         )}
-      </TableCell>
-      <TableCell className="text-muted-foreground align-top whitespace-normal">
-        {match.lead_stage}
-      </TableCell>
-      <TableCell className="align-top whitespace-normal">
-        {!deal ? (
-          <span className="text-muted-foreground text-xs">No matched deal</span>
-        ) : (
-          <div className="flex items-center gap-2 text-xs">
-            <Badge variant="outline" className="font-normal">
-              {deal.deal_stage}
-            </Badge>
-            <span className="text-muted-foreground">{currency(deal.amount)}</span>
-            {deal.close_date && (
-              <span className="text-muted-foreground">{format(parseISO(deal.close_date), 'MMM d, yyyy')}</span>
-            )}
-            {match.deals.length > 1 && (
-              <span className="text-muted-foreground">+{match.deals.length - 1} more</span>
-            )}
-          </div>
-        )}
-      </TableCell>
-    </TableRow>
+      </CardContent>
+    </Card>
   )
 }

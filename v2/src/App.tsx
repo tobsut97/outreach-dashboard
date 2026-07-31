@@ -42,12 +42,12 @@ import type { HubspotData } from '@/types/hubspot'
 const data = rawData as unknown as DashboardData
 const hubspotData = rawHubspotData as unknown as HubspotData
 
-type View = { name: 'dashboard' } | { name: 'sentiment'; sentiment: Sentiment } | { name: 'pipeline' }
+type View = { name: 'dashboard' } | { name: 'sentiment'; sentiment: Sentiment } | { name: 'funnel' }
 
 /** Hash routing rather than a router dependency: three views, and it still works over file://,
  *  which the single-file dist build is meant to support. */
 function parseHash(): View {
-  if (window.location.hash === '#/pipeline') return { name: 'pipeline' }
+  if (window.location.hash === '#/funnel') return { name: 'funnel' }
   const match = /^#\/sentiment\/(positive|neutral|negative)$/.exec(window.location.hash)
   return match ? { name: 'sentiment', sentiment: match[1] as Sentiment } : { name: 'dashboard' }
 }
@@ -91,6 +91,9 @@ function App() {
     ? allConversations.filter((conversation) => conversation.owner === owner)
     : allConversations
   const managed = applyOverrides(scoped, overrides)
+  /** Funnel is deliberately unscoped by profile/date — it's outreach-wide pipeline health, not
+   *  a per-profile view. Filters may be introduced later, but for now it always shows everything. */
+  const allManaged = applyOverrides(allConversations, overrides)
 
   const { minDate, maxDate } = dateBounds(managed)
   const fromKey = range?.from ? toKey(range.from) : toKey(minDate)
@@ -129,21 +132,22 @@ function App() {
     navigate('#/')
   }
 
-  const trail: { label: string; hash?: string }[] = [{ label: 'Profiles', hash: '#/' }]
+  const trail: { label: string; hash?: string }[] =
+    view.name === 'funnel'
+      ? [{ label: 'Funnel' }]
+      : [{ label: 'Profiles', hash: '#/' }]
   if (view.name === 'sentiment') {
     trail.push({ label: profile, hash: '#/' })
     trail.push({ label: `${SENTIMENT_LABELS[view.sentiment]} answers` })
-  } else if (view.name === 'pipeline') {
-    trail.push({ label: 'HubSpot Pipeline' })
-  } else {
+  } else if (view.name === 'dashboard') {
     trail.push({ label: profile })
   }
 
   const headline =
     view.name === 'sentiment'
       ? `${SENTIMENT_LABELS[view.sentiment]} Answers`
-      : view.name === 'pipeline'
-        ? 'HubSpot Pipeline'
+      : view.name === 'funnel'
+        ? 'Funnel'
         : `Outreach Analytics ${profile}`
 
   return (
@@ -151,7 +155,7 @@ function App() {
       <AppSidebar
         profile={profile}
         onProfileChange={handleProfileChange}
-        pipelineActive={view.name === 'pipeline'}
+        funnelActive={view.name === 'funnel'}
       />
       {/* min-w-0: flex items default to min-width:auto, so the conversations table would
           otherwise widen the whole inset instead of scrolling inside its own container. */}
@@ -183,22 +187,24 @@ function App() {
         </header>
         <div className="flex flex-col gap-4 px-6 pt-4 pb-8">
           <h1 className="text-2xl font-semibold tracking-tight">{headline}</h1>
-          <div className="flex flex-wrap items-center gap-2">
-            <DateRangeFilter
-              range={range}
-              onRangeChange={setRange}
-              minDate={minDate}
-              maxDate={maxDate}
-              days={availableDays}
-            />
-          </div>
+          {view.name !== 'funnel' && (
+            <div className="flex flex-wrap items-center gap-2">
+              <DateRangeFilter
+                range={range}
+                onRangeChange={setRange}
+                minDate={minDate}
+                maxDate={maxDate}
+                days={availableDays}
+              />
+            </div>
+          )}
         </div>
         <Separator />
         <div className="flex min-w-0 flex-1 flex-col gap-4 p-4 pt-6">
-          {view.name === 'pipeline' ? (
+          {view.name === 'funnel' ? (
             <PipelinePage
               hubspot={hubspotData}
-              conversations={dateFiltered}
+              conversations={allManaged}
               summary={summary}
               onOpenConversation={openConversation}
             />
