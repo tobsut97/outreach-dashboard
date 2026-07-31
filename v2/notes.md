@@ -3,6 +3,47 @@
 Running log of what changed and why, kept so this project can be picked up in a fresh chat
 without re-deriving context. Newest entries at the top.
 
+## Pipeline page rebuilt as "Funnel": qualified/lost leads and deals (2026-07-31, branch `feat/funnel-qualified-lost`)
+
+**Why:** User wants to see qualified leads, lost leads, qualified deals, and lost deals — the
+existing `#/pipeline` page (funnel chain, BANT breakdown, matched-leads table, raw HubSpot
+totals) was replaced entirely with this, not extended, per explicit confirmation. User also
+asked to rename the page "Funnel" (label/route only — not a request to keep the funnel chain
+visualization, confirmed separately).
+
+**Terminology, confirmed with the user:** leads have no separate "lost" stage
+(`lead_stage` is `New`/`Qualified`/`Disqualified`), so lost lead = Disqualified. Deals do have a
+literal `Qualified` stage and a `Closed lost` stage, used as-is.
+
+**Data:** no new ingestion needed — `hubspot.json` (built by `match_hubspot.py` from
+`260730-all-leads.csv`/`260730-all-deals.csv`) was already newer than both CSVs, so it didn't
+need regenerating.
+
+**Changes:**
+- `src/lib/hubspot.ts`: removed `deriveHubspotFunnel`/`deriveBantBreakdown`/`primaryDeal` (all
+  now-dead code, confirmed via grep to have no other call sites) and `PipelineFunnel`. Added
+  `matchedLeads` (the date/profile-filtered join, factored out of what used to be inline in
+  `PipelinePage.tsx`), `qualifiedLeads`, `lostLeads`, `dealsInStage`, `lostDeals`.
+- `src/components/PipelinePage.tsx`: KPI row (Qualified Leads / Lost Leads / Qualified Deals +€ /
+  Lost Deals +€) followed by four `Card`+`Table` sections, one per bucket. Lead tables show
+  contact/BANT chips/owner (Lost Leads adds a "Disqualified because" column from
+  `bant_disqualification_reasons`, previously unused in the UI). Deal tables show
+  contact/amount/close date/owner. Row click still opens `ConversationSheet` via
+  `conversation_key`, same as before.
+- Renamed "HubSpot Pipeline" → "Funnel" throughout: `App.tsx`'s `View` union (`'pipeline'` →
+  `'funnel'`), hash route (`#/pipeline` → `#/funnel`), breadcrumb/headline text,
+  `AppSidebar.tsx`'s `pipelineActive` prop → `funnelActive`, sidebar group label and link text.
+  `PipelinePage.tsx`'s filename/component name were deliberately left as-is (rename would touch
+  more import sites for no user-visible benefit).
+
+**Checks run:** `oxlint`/`tsc --noEmit`/`build` all clean (no new warnings beyond the 3
+pre-existing unrelated ones). **Browser verification was not possible this session** — the
+preview tooling returned a navigation/policy error in this sandbox. Cross-checked the expected
+default-view counts against `hubspot.json` directly instead: 14 qualified leads, 44 lost leads,
+5 qualified deals (€621,200), 22 lost deals (€1,980,428). Still needs an actual browser check
+(page renders, row click opens the right conversation, profile/date filters re-scope the
+counts) before merging.
+
 ## Vercel deployment + CI prep (2026-07-30, branch `chore/vercel-ci-cd`)
 
 **Why:** User wants this dashboard published on Vercel with a CI/CD pipeline. Nothing existed

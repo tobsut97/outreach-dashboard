@@ -16,12 +16,12 @@ import { PROFILES, type ProfileName } from '@/filters'
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   profile: ProfileName
   onProfileChange: (profile: ProfileName) => void
-  pipelineActive: boolean
+  funnelActive: boolean
 }
 
 const ACTIVE_CLASSNAME = 'data-active:bg-neutral-300! data-active:hover:bg-neutral-300!'
 
-export function AppSidebar({ profile, onProfileChange, pipelineActive, ...props }: AppSidebarProps) {
+export function AppSidebar({ profile, onProfileChange, funnelActive, ...props }: AppSidebarProps) {
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -38,7 +38,7 @@ export function AppSidebar({ profile, onProfileChange, pipelineActive, ...props 
               {PROFILES.map((entry) => (
                 <SidebarMenuItem key={entry.name}>
                   <SidebarMenuButton
-                    isActive={!pipelineActive && profile === entry.name}
+                    isActive={!funnelActive && profile === entry.name}
                     onClick={() => onProfileChange(entry.name)}
                     className={ACTIVE_CLASSNAME}
                   >
@@ -50,14 +50,14 @@ export function AppSidebar({ profile, onProfileChange, pipelineActive, ...props 
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup>
-          <SidebarGroupLabel>Pipeline</SidebarGroupLabel>
+          <SidebarGroupLabel>Funnel</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton isActive={pipelineActive} className={ACTIVE_CLASSNAME} render={
-                  <a href="#/pipeline">
+                <SidebarMenuButton isActive={funnelActive} className={ACTIVE_CLASSNAME} render={
+                  <a href="#/funnel">
                     <Waypoints />
-                    HubSpot Pipeline
+                    Funnel
                   </a>
                 } />
               </SidebarMenuItem>

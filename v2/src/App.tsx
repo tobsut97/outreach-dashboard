@@ -42,12 +42,12 @@ import type { HubspotData } from '@/types/hubspot'
 const data = rawData as unknown as DashboardData
 const hubspotData = rawHubspotData as unknown as HubspotData
 
-type View = { name: 'dashboard' } | { name: 'sentiment'; sentiment: Sentiment } | { name: 'pipeline' }
+type View = { name: 'dashboard' } | { name: 'sentiment'; sentiment: Sentiment } | { name: 'funnel' }
 
 /** Hash routing rather than a router dependency: three views, and it still works over file://,
  *  which the single-file dist build is meant to support. */
 function parseHash(): View {
-  if (window.location.hash === '#/pipeline') return { name: 'pipeline' }
+  if (window.location.hash === '#/funnel') return { name: 'funnel' }
   const match = /^#\/sentiment\/(positive|neutral|negative)$/.exec(window.location.hash)
   return match ? { name: 'sentiment', sentiment: match[1] as Sentiment } : { name: 'dashboard' }
 }
@@ -133,8 +133,8 @@ function App() {
   if (view.name === 'sentiment') {
     trail.push({ label: profile, hash: '#/' })
     trail.push({ label: `${SENTIMENT_LABELS[view.sentiment]} answers` })
-  } else if (view.name === 'pipeline') {
-    trail.push({ label: 'HubSpot Pipeline' })
+  } else if (view.name === 'funnel') {
+    trail.push({ label: 'Funnel' })
   } else {
     trail.push({ label: profile })
   }
@@ -142,8 +142,8 @@ function App() {
   const headline =
     view.name === 'sentiment'
       ? `${SENTIMENT_LABELS[view.sentiment]} Answers`
-      : view.name === 'pipeline'
-        ? 'HubSpot Pipeline'
+      : view.name === 'funnel'
+        ? 'Funnel'
         : `Outreach Analytics ${profile}`
 
   return (
@@ -151,7 +151,7 @@ function App() {
       <AppSidebar
         profile={profile}
         onProfileChange={handleProfileChange}
-        pipelineActive={view.name === 'pipeline'}
+        funnelActive={view.name === 'funnel'}
       />
       {/* min-w-0: flex items default to min-width:auto, so the conversations table would
           otherwise widen the whole inset instead of scrolling inside its own container. */}
@@ -195,7 +195,7 @@ function App() {
         </div>
         <Separator />
         <div className="flex min-w-0 flex-1 flex-col gap-4 p-4 pt-6">
-          {view.name === 'pipeline' ? (
+          {view.name === 'funnel' ? (
             <PipelinePage
               hubspot={hubspotData}
               conversations={dateFiltered}
