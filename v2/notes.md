@@ -408,3 +408,31 @@ All"; the `managed.length === 0` empty-state guard correctly short-circuiting be
   requires real forward motion (meeting booked, open to call, concrete named referral).
 - A PR-creation request was interrupted mid-session and never carried out — do not assume any
   outstanding changes have been pushed or a PR opened unless explicitly reconfirmed.
+
+## `meeting_booked` tag audit against HubSpot (2026-07-31)
+
+Built [audit_meeting_booked.py](audit_meeting_booked.py) to check the local classifier's
+`meeting_booked` tag against HubSpot's own record of booked meetings, using a HubSpot "all
+contacts, all properties" export (`LinkedIn Profile URL` / `Email` / `First Meeting Date` /
+`Date of last meeting booked in meetings tool`) as ground truth. Joins on LinkedIn vanity slug
+first (decoding/lowercasing both sides, and treating `ACoAA...`-prefixed member-id URLs as
+non-matchable rather than real slugs), then email, then falls back to `match_hubspot.py`'s
+fuzzy name+company scoring.
+
+Only 278 of 1352 replied conversations matched to any HubSpot contact at all — most
+LinkedIn-only replies never became a HubSpot record, so this audit can only validate the tag
+where a HubSpot record exists, not systemically for everyone tagged. Among the 278 matched:
+6 true positives, 8 false positives (tagged `meeting_booked` but HubSpot shows no meeting —
+mostly vague "sounds good, let's talk" replies that read more like `open_to_call`), 3 false
+negatives (HubSpot shows a booked meeting but the tag was missing or something else). This
+confirms the earlier finding that the local classifier applies `meeting_booked` loosely,
+overlapping with `open_to_call`.
+
+**Corrected directly in `data.json`** per the hand-correction pattern above: removed
+`meeting_booked` from the 8 false positives (left with whatever other tag they had, or empty),
+added `meeting_booked` to the 3 false negatives. `meeting_booked` count: 84 → 79. Not ported
+back into `extract.py`/`classify_cache.json` — same caveat as other hand corrections.
+
+The other 70 conversations tagged `meeting_booked` have no HubSpot match at all, so their
+correctness is still unverified — this audit only closes the gap for contacts that made it
+into HubSpot.
