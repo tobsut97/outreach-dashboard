@@ -8,9 +8,9 @@ Public ID`, and `Email`. Joining on the LinkedIn vanity slug is primary since it
 conversations — tried against both `LinkedIn Profile URL` and `Linkedin Public ID`, since either
 column can hold the real vanity slug while the other holds a non-matchable member id (see
 `is_vanity_slug`). Email is a fallback for rows where neither column has a slug. Rows still
-unmatched after that fall back to fuzzy name+company (or name-only when the conversation has no
-company on file), reusing `match_hubspot.py`'s name/company normalization so the two audits
-behave consistently.
+unmatched after that fall back to a fuzzy match blocked by name and/or a truncated company
+prefix (see `company_bucket_key`), reusing `match_hubspot.py`'s name/company normalization so
+the two audits behave consistently.
 
 Ground truth for "a meeting was booked" is HubSpot's `First Meeting Date` or `Date of last
 meeting booked in meetings tool` being non-blank. Only replied conversations are in scope,
@@ -105,13 +105,26 @@ def build_indexes(contacts: list[dict]) -> tuple[dict, dict, dict]:
     return by_slug, by_email, by_name
 
 
+def company_bucket_key(company: str) -> str:
+    """92% of this CSV export's `Company Name` values are truncated to exactly 4 characters
+    (a HubSpot export artifact, not specific to any one contact — e.g. `badenova` becomes
+    `bade`). An exact-string company match therefore misses almost everyone with a company
+    name longer than 4 characters. Bucketing both sides by their own first-4-characters
+    prefix instead means a truncated CSV value and a full conversation company value still
+    land in the same bucket, while still meaningfully narrowing the search."""
+    return normalize_company(company)[:4]
+
+
 def fuzzy_match(conv: dict, contacts_by_company: dict, contacts_by_name: dict) -> dict | None:
-    """Company-blocked when the conversation has a company on file (narrows an otherwise
-    all-pairs scan); falls back to a name-blocked scan when it doesn't, rather than giving up —
-    a blank company must not make an otherwise-good name match unfindable."""
+    """Candidates are the union of the company-prefix bucket and the exact-name bucket — company
+    data is truncated (see `company_bucket_key`) and name data is occasionally missing/blank on
+    one side, so relying on either alone misses matches the other would catch."""
     conv_name = normalize_name(conv.get("full_name", ""))
     conv_company = normalize_company(conv.get("company", ""))
-    candidates = contacts_by_company.get(conv_company) if conv_company else contacts_by_name.get(conv_name)
+    candidates = list(contacts_by_name.get(conv_name, []))
+    if conv_company:
+        seen = {id(row) for row in candidates}
+        candidates += [row for row in contacts_by_company.get(company_bucket_key(conv_company), []) if id(row) not in seen]
     if not candidates:
         return None
     best_score, best_row = 0.0, None
@@ -142,9 +155,9 @@ def main() -> None:
 
     contacts_by_company = defaultdict(list)
     for row in contacts:
-        company = normalize_company(row.get("Company Name", ""))
-        if company:
-            contacts_by_company[company].append(row)
+        company = row.get("Company Name", "")
+        if company.strip():
+            contacts_by_company[company_bucket_key(company)].append(row)
 
     false_positives, false_negatives, unmatched = [], [], []
     true_positives = true_negatives = 0
