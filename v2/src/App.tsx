@@ -91,6 +91,9 @@ function App() {
     ? allConversations.filter((conversation) => conversation.owner === owner)
     : allConversations
   const managed = applyOverrides(scoped, overrides)
+  /** Funnel is deliberately unscoped by profile/date — it's outreach-wide pipeline health, not
+   *  a per-profile view. Filters may be introduced later, but for now it always shows everything. */
+  const allManaged = applyOverrides(allConversations, overrides)
 
   const { minDate, maxDate } = dateBounds(managed)
   const fromKey = range?.from ? toKey(range.from) : toKey(minDate)
@@ -129,13 +132,14 @@ function App() {
     navigate('#/')
   }
 
-  const trail: { label: string; hash?: string }[] = [{ label: 'Profiles', hash: '#/' }]
+  const trail: { label: string; hash?: string }[] =
+    view.name === 'funnel'
+      ? [{ label: 'Funnel' }]
+      : [{ label: 'Profiles', hash: '#/' }]
   if (view.name === 'sentiment') {
     trail.push({ label: profile, hash: '#/' })
     trail.push({ label: `${SENTIMENT_LABELS[view.sentiment]} answers` })
-  } else if (view.name === 'funnel') {
-    trail.push({ label: 'Funnel' })
-  } else {
+  } else if (view.name === 'dashboard') {
     trail.push({ label: profile })
   }
 
@@ -183,22 +187,24 @@ function App() {
         </header>
         <div className="flex flex-col gap-4 px-6 pt-4 pb-8">
           <h1 className="text-2xl font-semibold tracking-tight">{headline}</h1>
-          <div className="flex flex-wrap items-center gap-2">
-            <DateRangeFilter
-              range={range}
-              onRangeChange={setRange}
-              minDate={minDate}
-              maxDate={maxDate}
-              days={availableDays}
-            />
-          </div>
+          {view.name !== 'funnel' && (
+            <div className="flex flex-wrap items-center gap-2">
+              <DateRangeFilter
+                range={range}
+                onRangeChange={setRange}
+                minDate={minDate}
+                maxDate={maxDate}
+                days={availableDays}
+              />
+            </div>
+          )}
         </div>
         <Separator />
         <div className="flex min-w-0 flex-1 flex-col gap-4 p-4 pt-6">
           {view.name === 'funnel' ? (
             <PipelinePage
               hubspot={hubspotData}
-              conversations={dateFiltered}
+              conversations={allManaged}
               summary={summary}
               onOpenConversation={openConversation}
             />

@@ -8,12 +8,28 @@ export function matchedLeads(conversations: ManagedConversation[], hubspot: Hubs
   return hubspot.matches.filter((match) => keys.has(match.conversation_key))
 }
 
+export function meetingBookedConversations(conversations: ManagedConversation[]): ManagedConversation[] {
+  return conversations.filter((conversation) => conversation.tags.includes('meeting_booked'))
+}
+
+/** Leads whose outreach conversation was itself tagged meeting_booked — the subset of `matches`
+ *  that traces back to an actual booked meeting, as opposed to every matched lead regardless of
+ *  how the outreach conversation went. */
+export function leadsFromMeetingBooked(matches: LeadMatch[], conversations: ManagedConversation[]): LeadMatch[] {
+  const keys = new Set(meetingBookedConversations(conversations).map((conversation) => conversationKey(conversation)))
+  return matches.filter((match) => keys.has(match.conversation_key))
+}
+
 export function qualifiedLeads(matches: LeadMatch[]): LeadMatch[] {
   return matches.filter((match) => match.lead_stage === 'Qualified')
 }
 
 export function lostLeads(matches: LeadMatch[]): LeadMatch[] {
   return matches.filter((match) => match.lead_stage === 'Disqualified')
+}
+
+export function openLeads(matches: LeadMatch[]): LeadMatch[] {
+  return matches.filter((match) => match.is_open)
 }
 
 export interface MatchedDeal {
@@ -27,4 +43,8 @@ export function dealsInStage(matches: LeadMatch[], stage: DealStage): MatchedDea
 
 export function lostDeals(matches: LeadMatch[]): MatchedDeal[] {
   return matches.flatMap((lead) => lead.deals.filter((deal) => deal.is_closed_lost).map((deal) => ({ lead, deal })))
+}
+
+export function wonDeals(matches: LeadMatch[]): MatchedDeal[] {
+  return matches.flatMap((lead) => lead.deals.filter((deal) => deal.is_closed_won).map((deal) => ({ lead, deal })))
 }

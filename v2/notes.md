@@ -44,6 +44,54 @@ default-view counts against `hubspot.json` directly instead: 14 qualified leads,
 (page renders, row click opens the right conversation, profile/date filters re-scope the
 counts) before merging.
 
+### Follow-up round, from live feedback on the running dev server (same day, same branch)
+
+User looked at the page locally and gave four pieces of feedback:
+
+1. **Breadcrumb bug**: `App.tsx`'s `trail` always started with a `{label: 'Profiles', hash: '#/'}`
+   root crumb regardless of view, so Funnel rendered as "Profiles > Funnel" — implying it's a
+   child of Profiles. It isn't; they're sibling top-level sections in the sidebar. Fixed: the
+   trail only starts with "Profiles" for non-funnel views; Funnel gets its own single-crumb
+   trail (`[{ label: 'Funnel' }]`).
+2. **Profile-scoping bug**: navigating to Funnel from a profile page kept that profile's owner
+   filter applied — the page only showed that person's leads/deals. User: "Funnel should always
+   show, like, everything... maybe we can introduce filters later, but only later." Fixed:
+   `App.tsx` now computes a separate `allManaged` (overrides applied, but no owner/date
+   filtering) and passes that to `PipelinePage` instead of the profile/date-scoped
+   `dateFiltered`. The `DateRangeFilter` control is also hidden on the Funnel page now, since it
+   no longer does anything there — showing it would be misleading.
+3. **Match column removed**: the high/medium confidence badge column (how confident the
+   fuzzy conversation↔HubSpot-record join is) was confusing and not needed day-to-day — dropped
+   from every lead/deal table. `MatchConfidence`/`CONFIDENCE_BADGE` are gone from
+   `PipelinePage.tsx` as a result (only used there).
+4. **Meetings-booked → funnel disconnect**: user's mental model is
+   outreach → meeting booked → lead (qualified/lost) → deal (qualified/lost/won), and the page
+   didn't connect to the meeting-booked step at all. Added, in `src/lib/hubspot.ts`:
+   `meetingBookedConversations` (conversations tagged `meeting_booked`) and
+   `leadsFromMeetingBooked` (the subset of matched leads whose *own* outreach conversation was
+   tagged `meeting_booked` — not just any matched lead). `PipelinePage.tsx` now opens with a
+   "Meeting booked → lead → deal" funnel strip (reusing the old `FunnelStep`/`FunnelArrow` visual
+   from the pre-rebuild funnel chain) computed specifically along that meeting-booked lineage:
+   Meetings booked → Became a lead → Qualified → Became a deal → Won. Also added a "Won deals"
+   KPI + table (`wonDeals` in `lib/hubspot.ts`, `deal.is_closed_won`) — previously only
+   Qualified/Lost deals were shown, no won bucket at all.
+
+**Caveat surfaced while sanity-checking:** this branch was cut from `main`, which does not yet
+include the `meeting_booked` tag corrections from the (still unmerged) `chore/audit-meeting-booked`
+branch — so the funnel strip's "Meetings booked" count here is 84 (the original, uncorrected
+figure), not 102. Will self-correct once that branch merges too; not re-fixed here to avoid
+duplicating that unrelated branch's work.
+
+**Checks run:** `oxlint`/`tsc --noEmit`/`build` clean. Cross-checked the meeting-booked funnel
+chain against raw `data.json`/`hubspot.json` in Python: 84 meetings booked → 26 became a lead →
+6 qualified → 52 became a deal → 47 won. Still not verified in an actual browser this session
+(same sandbox limitation as above) — the user is checking on their own running dev server
+instead.
+
+**Not yet addressed:** user said they're "not happy with how it's displayed" overall (six
+full-width stacked Card+Table sections plus the funnel strip is a lot of scrolling) but wasn't
+sure what to change yet — asked to fix the above first and revisit layout separately.
+
 ## Vercel deployment + CI prep (2026-07-30, branch `chore/vercel-ci-cd`)
 
 **Why:** User wants this dashboard published on Vercel with a CI/CD pipeline. Nothing existed
