@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-31T13:13:03.004058+00:00",
+  "generated_at": "2026-08-03T08:07:42.821583+00:00",
   "matches": [
     {
       "conversation_key": "https://www.linkedin.com/in/christian-reipen-04437a86/",
@@ -20,15 +20,15 @@
       "deals": [
         {
           "deal_record_id": "281660997850",
-          "match_confidence": "medium",
-          "match_score": 0.8302,
           "deal_stage": "Closed lost",
           "amount": 695250.0,
           "close_date": "2024-09-30",
           "is_closed_won": false,
           "is_closed_lost": true,
           "is_open": false,
-          "deal_owner": "Maximilian Fargel (Deactivated User)"
+          "deal_owner": "Maximilian Fargel (Deactivated User)",
+          "match_confidence": "medium",
+          "match_score": 0.8302
         }
       ]
     },
@@ -141,39 +141,39 @@
       "deals": [
         {
           "deal_record_id": "483823606001",
-          "match_confidence": "medium",
-          "match_score": 0.8571,
           "deal_stage": "Qualified",
           "amount": 1562500.0,
           "close_date": "2027-08-31",
           "is_closed_won": false,
           "is_closed_lost": false,
           "is_open": true,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "medium",
+          "match_score": 0.8571
         },
         {
           "deal_record_id": "335784511721",
-          "match_confidence": "medium",
-          "match_score": 0.8571,
           "deal_stage": "Proposal",
           "amount": 1562500.0,
           "close_date": "2026-08-31",
           "is_closed_won": false,
           "is_closed_lost": false,
           "is_open": true,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "medium",
+          "match_score": 0.8571
         },
         {
           "deal_record_id": "281652068589",
-          "match_confidence": "medium",
-          "match_score": 0.8571,
           "deal_stage": "Closed won",
           "amount": 817799.4,
           "close_date": "2025-11-04",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "medium",
+          "match_score": 0.8571
         }
       ]
     },
@@ -304,15 +304,15 @@
       "deals": [
         {
           "deal_record_id": "503569980656",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed lost",
           "amount": 25000.0,
           "close_date": "2026-06-01",
           "is_closed_won": false,
           "is_closed_lost": true,
           "is_open": false,
-          "deal_owner": "Maximilian Venhofen"
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -587,15 +587,15 @@
       "deals": [
         {
           "deal_record_id": "281397145831",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 2500.08,
           "close_date": "2024-11-22",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -672,15 +672,15 @@
       "deals": [
         {
           "deal_record_id": "498500681926",
-          "match_confidence": "medium",
-          "match_score": 0.7925,
           "deal_stage": "Closed won",
           "amount": 669.7,
           "close_date": "2026-04-13",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "medium",
+          "match_score": 0.7925
         }
       ]
     },
@@ -718,7 +718,20 @@
       "lead_stage": "New",
       "is_open": true,
       "lead_owner": "Christian Lutz",
-      "deals": []
+      "deals": [
+        {
+          "deal_record_id": "280960943308",
+          "deal_stage": "Closed lost",
+          "amount": 0.0,
+          "close_date": "2024-09-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "high",
+          "match_score": 1.0
+        }
+      ]
     },
     {
       "conversation_key": "https://www.linkedin.com/in/paul-dunca-6648a784/",
@@ -738,52 +751,112 @@
       "lead_owner": "Maximilian Venhofen",
       "deals": [
         {
+          "deal_record_id": "514043244787",
+          "deal_stage": "Closed won",
+          "amount": 23364.0,
+          "close_date": "2026-07-30",
+          "is_closed_won": true,
+          "is_closed_lost": false,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
           "deal_record_id": "352206889202",
-          "match_confidence": "medium",
-          "match_score": 0.8,
           "deal_stage": "Closed won",
           "amount": 12272.0,
           "close_date": "2025-12-01",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Maximilian Venhofen"
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281657416893",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 22302.0,
           "close_date": "2025-05-28",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Josephine Meissner (Deactivated User)"
+          "deal_owner": "Josephine Meissner (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281556789452",
+          "deal_stage": "Closed lost",
+          "amount": 7080.0,
+          "close_date": "2025-07-31",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281546066156",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 11623.0,
           "close_date": "2024-09-25",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Josephine Meissner (Deactivated User)"
+          "deal_owner": "Josephine Meissner (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281562151158",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 17936.0,
           "close_date": "2024-06-04",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Josephine Meissner (Deactivated User)"
+          "deal_owner": "Josephine Meissner (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281534745814",
+          "deal_stage": "Closed lost",
+          "amount": 13790.0,
+          "close_date": "2024-06-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281655633091",
+          "deal_stage": "Closed lost",
+          "amount": 34475.0,
+          "close_date": "2024-06-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281546068187",
+          "deal_stage": "Closed lost",
+          "amount": 63500.0,
+          "close_date": "2024-06-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -842,15 +915,15 @@
       "deals": [
         {
           "deal_record_id": "510453296323",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed lost",
           "amount": 162195.0,
           "close_date": "2026-07-17",
           "is_closed_won": false,
           "is_closed_lost": true,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -1035,15 +1108,15 @@
       "deals": [
         {
           "deal_record_id": "510835311828",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Qualified",
           "amount": 48000.0,
           "close_date": "2026-08-31",
           "is_closed_won": false,
           "is_closed_lost": false,
           "is_open": true,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -1066,27 +1139,27 @@
       "deals": [
         {
           "deal_record_id": "397390217438",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed lost",
           "amount": 9169.0,
           "close_date": "2026-05-12",
           "is_closed_won": false,
           "is_closed_lost": true,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281531144412",
-          "match_confidence": "medium",
-          "match_score": 0.7805,
           "deal_stage": "Closed lost",
           "amount": 13337.6,
           "close_date": "2025-11-30",
           "is_closed_won": false,
           "is_closed_lost": true,
           "is_open": false,
-          "deal_owner": "Maximilian Fargel (Deactivated User)"
+          "deal_owner": "Maximilian Fargel (Deactivated User)",
+          "match_confidence": "medium",
+          "match_score": 0.7805
         }
       ]
     },
@@ -1127,15 +1200,15 @@
       "deals": [
         {
           "deal_record_id": "371268419804",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed lost",
           "amount": 10620.0,
           "close_date": "2026-03-04",
           "is_closed_won": false,
           "is_closed_lost": true,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -1193,52 +1266,112 @@
       "lead_owner": "Maximilian Venhofen",
       "deals": [
         {
+          "deal_record_id": "514043244787",
+          "deal_stage": "Closed won",
+          "amount": 23364.0,
+          "close_date": "2026-07-30",
+          "is_closed_won": true,
+          "is_closed_lost": false,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
           "deal_record_id": "352206889202",
-          "match_confidence": "medium",
-          "match_score": 0.8,
           "deal_stage": "Closed won",
           "amount": 12272.0,
           "close_date": "2025-12-01",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Maximilian Venhofen"
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281657416893",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 22302.0,
           "close_date": "2025-05-28",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Josephine Meissner (Deactivated User)"
+          "deal_owner": "Josephine Meissner (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281556789452",
+          "deal_stage": "Closed lost",
+          "amount": 7080.0,
+          "close_date": "2025-07-31",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281546066156",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 11623.0,
           "close_date": "2024-09-25",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Josephine Meissner (Deactivated User)"
+          "deal_owner": "Josephine Meissner (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281562151158",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 17936.0,
           "close_date": "2024-06-04",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Josephine Meissner (Deactivated User)"
+          "deal_owner": "Josephine Meissner (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281534745814",
+          "deal_stage": "Closed lost",
+          "amount": 13790.0,
+          "close_date": "2024-06-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281655633091",
+          "deal_stage": "Closed lost",
+          "amount": 34475.0,
+          "close_date": "2024-06-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281546068187",
+          "deal_stage": "Closed lost",
+          "amount": 63500.0,
+          "close_date": "2024-06-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -1260,52 +1393,112 @@
       "lead_owner": "Maximilian Venhofen",
       "deals": [
         {
+          "deal_record_id": "514043244787",
+          "deal_stage": "Closed won",
+          "amount": 23364.0,
+          "close_date": "2026-07-30",
+          "is_closed_won": true,
+          "is_closed_lost": false,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
           "deal_record_id": "352206889202",
-          "match_confidence": "medium",
-          "match_score": 0.8,
           "deal_stage": "Closed won",
           "amount": 12272.0,
           "close_date": "2025-12-01",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Maximilian Venhofen"
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281657416893",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 22302.0,
           "close_date": "2025-05-28",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Josephine Meissner (Deactivated User)"
+          "deal_owner": "Josephine Meissner (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281556789452",
+          "deal_stage": "Closed lost",
+          "amount": 7080.0,
+          "close_date": "2025-07-31",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281546066156",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 11623.0,
           "close_date": "2024-09-25",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Josephine Meissner (Deactivated User)"
+          "deal_owner": "Josephine Meissner (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281562151158",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 17936.0,
           "close_date": "2024-06-04",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Josephine Meissner (Deactivated User)"
+          "deal_owner": "Josephine Meissner (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281534745814",
+          "deal_stage": "Closed lost",
+          "amount": 13790.0,
+          "close_date": "2024-06-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281655633091",
+          "deal_stage": "Closed lost",
+          "amount": 34475.0,
+          "close_date": "2024-06-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281546068187",
+          "deal_stage": "Closed lost",
+          "amount": 63500.0,
+          "close_date": "2024-06-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -1327,52 +1520,112 @@
       "lead_owner": "Maximilian Venhofen",
       "deals": [
         {
+          "deal_record_id": "514043244787",
+          "deal_stage": "Closed won",
+          "amount": 23364.0,
+          "close_date": "2026-07-30",
+          "is_closed_won": true,
+          "is_closed_lost": false,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
           "deal_record_id": "352206889202",
-          "match_confidence": "medium",
-          "match_score": 0.8,
           "deal_stage": "Closed won",
           "amount": 12272.0,
           "close_date": "2025-12-01",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Maximilian Venhofen"
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281657416893",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 22302.0,
           "close_date": "2025-05-28",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Josephine Meissner (Deactivated User)"
+          "deal_owner": "Josephine Meissner (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281556789452",
+          "deal_stage": "Closed lost",
+          "amount": 7080.0,
+          "close_date": "2025-07-31",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281546066156",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 11623.0,
           "close_date": "2024-09-25",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Josephine Meissner (Deactivated User)"
+          "deal_owner": "Josephine Meissner (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281562151158",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 17936.0,
           "close_date": "2024-06-04",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Josephine Meissner (Deactivated User)"
+          "deal_owner": "Josephine Meissner (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281534745814",
+          "deal_stage": "Closed lost",
+          "amount": 13790.0,
+          "close_date": "2024-06-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281655633091",
+          "deal_stage": "Closed lost",
+          "amount": 34475.0,
+          "close_date": "2024-06-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281546068187",
+          "deal_stage": "Closed lost",
+          "amount": 63500.0,
+          "close_date": "2024-06-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -1395,51 +1648,51 @@
       "deals": [
         {
           "deal_record_id": "494471624919",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 1648.08,
           "close_date": "2026-03-20",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "469835211999",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 1649.0,
           "close_date": "2026-02-13",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281531144406",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 1635.0,
           "close_date": "2025-08-15",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "342771634411",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 1649.0,
           "close_date": "2025-04-24",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -1461,52 +1714,112 @@
       "lead_owner": "Maximilian Venhofen",
       "deals": [
         {
+          "deal_record_id": "514043244787",
+          "deal_stage": "Closed won",
+          "amount": 23364.0,
+          "close_date": "2026-07-30",
+          "is_closed_won": true,
+          "is_closed_lost": false,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
           "deal_record_id": "352206889202",
-          "match_confidence": "medium",
-          "match_score": 0.8,
           "deal_stage": "Closed won",
           "amount": 12272.0,
           "close_date": "2025-12-01",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Maximilian Venhofen"
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281657416893",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 22302.0,
           "close_date": "2025-05-28",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Josephine Meissner (Deactivated User)"
+          "deal_owner": "Josephine Meissner (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281556789452",
+          "deal_stage": "Closed lost",
+          "amount": 7080.0,
+          "close_date": "2025-07-31",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281546066156",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 11623.0,
           "close_date": "2024-09-25",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Josephine Meissner (Deactivated User)"
+          "deal_owner": "Josephine Meissner (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281562151158",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 17936.0,
           "close_date": "2024-06-04",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Josephine Meissner (Deactivated User)"
+          "deal_owner": "Josephine Meissner (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281534745814",
+          "deal_stage": "Closed lost",
+          "amount": 13790.0,
+          "close_date": "2024-06-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281655633091",
+          "deal_stage": "Closed lost",
+          "amount": 34475.0,
+          "close_date": "2024-06-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281546068187",
+          "deal_stage": "Closed lost",
+          "amount": 63500.0,
+          "close_date": "2024-06-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -1529,27 +1842,39 @@
       "deals": [
         {
           "deal_record_id": "492086616307",
-          "match_confidence": "high",
-          "match_score": 0.96,
           "deal_stage": "Closed won",
           "amount": 24000.0,
           "close_date": "2026-03-13",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Maximilian Venhofen"
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 0.96
         },
         {
           "deal_record_id": "281609437388",
-          "match_confidence": "high",
-          "match_score": 0.96,
           "deal_stage": "Closed won",
           "amount": 24000.0,
           "close_date": "2025-06-17",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Maximilian Venhofen"
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 0.96
+        },
+        {
+          "deal_record_id": "281655632094",
+          "deal_stage": "Closed lost",
+          "amount": 150000.0,
+          "close_date": "2024-10-31",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -1572,15 +1897,15 @@
       "deals": [
         {
           "deal_record_id": "281660998876",
-          "match_confidence": "medium",
-          "match_score": 0.8364,
           "deal_stage": "Closed lost",
           "amount": 0.0,
           "close_date": "2025-08-07",
           "is_closed_won": false,
           "is_closed_lost": true,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -1618,7 +1943,20 @@
       "lead_stage": "Disqualified",
       "is_open": false,
       "lead_owner": "Noah Pop (Deactivated User)",
-      "deals": []
+      "deals": [
+        {
+          "deal_record_id": "281397144802",
+          "deal_stage": "Closed lost",
+          "amount": 0.0,
+          "close_date": "2025-08-07",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "high",
+          "match_score": 1.0
+        }
+      ]
     },
     {
       "conversation_key": "https://www.linkedin.com/in/bmeller/",
@@ -1639,15 +1977,15 @@
       "deals": [
         {
           "deal_record_id": "281556789481",
-          "match_confidence": "medium",
-          "match_score": 0.75,
           "deal_stage": "Closed lost",
           "amount": 0.0,
           "close_date": "2025-08-07",
           "is_closed_won": false,
           "is_closed_lost": true,
           "is_open": false,
-          "deal_owner": "Maximilian Fargel (Deactivated User)"
+          "deal_owner": "Maximilian Fargel (Deactivated User)",
+          "match_confidence": "medium",
+          "match_score": 0.75
         }
       ]
     },
@@ -1667,7 +2005,20 @@
       "lead_stage": "Disqualified",
       "is_open": false,
       "lead_owner": "Leos Bloch",
-      "deals": []
+      "deals": [
+        {
+          "deal_record_id": "281402515691",
+          "deal_stage": "Closed lost",
+          "amount": 0.0,
+          "close_date": "2025-08-07",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "high",
+          "match_score": 1.0
+        }
+      ]
     },
     {
       "conversation_key": "https://www.linkedin.com/in/robert-lee-5833b317/",
@@ -1688,255 +2039,255 @@
       "deals": [
         {
           "deal_record_id": "499825104120",
-          "match_confidence": "medium",
-          "match_score": 0.8333,
           "deal_stage": "Closed won",
           "amount": 1435.2,
           "close_date": "2026-04-23",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "medium",
+          "match_score": 0.8333
         },
         {
           "deal_record_id": "499827238116",
-          "match_confidence": "medium",
-          "match_score": 0.8333,
           "deal_stage": "Closed won",
           "amount": 6219.2,
           "close_date": "2026-04-23",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "medium",
+          "match_score": 0.8333
         },
         {
           "deal_record_id": "496000259303",
-          "match_confidence": "medium",
-          "match_score": 0.8333,
           "deal_stage": "Qualified",
           "amount": 55000.0,
           "close_date": "2028-04-01",
           "is_closed_won": false,
           "is_closed_lost": false,
           "is_open": true,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "medium",
+          "match_score": 0.8333
         },
         {
           "deal_record_id": "496066574564",
-          "match_confidence": "medium",
-          "match_score": 0.8333,
           "deal_stage": "Qualified",
           "amount": 55000.0,
           "close_date": "2027-04-01",
           "is_closed_won": false,
           "is_closed_lost": false,
           "is_open": true,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "medium",
+          "match_score": 0.8333
         },
         {
           "deal_record_id": "397125149885",
-          "match_confidence": "medium",
-          "match_score": 0.8333,
           "deal_stage": "Closed lost",
           "amount": 50000.0,
           "close_date": "2026-02-02",
           "is_closed_won": false,
           "is_closed_lost": true,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "medium",
+          "match_score": 0.8333
         },
         {
           "deal_record_id": "347665038569",
-          "match_confidence": "medium",
-          "match_score": 0.8333,
           "deal_stage": "Closed won",
           "amount": 7137.6,
           "close_date": "2025-10-30",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "medium",
+          "match_score": 0.8333
         },
         {
           "deal_record_id": "335787069655",
-          "match_confidence": "medium",
-          "match_score": 0.8333,
           "deal_stage": "Closed won",
           "amount": 47250.0,
           "close_date": "2026-05-21",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "medium",
+          "match_score": 0.8333
         },
         {
           "deal_record_id": "281560359134",
-          "match_confidence": "medium",
-          "match_score": 0.8333,
           "deal_stage": "Closed won",
           "amount": 500.0,
           "close_date": "2025-09-12",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "medium",
+          "match_score": 0.8333
         },
         {
           "deal_record_id": "281536551137",
-          "match_confidence": "medium",
-          "match_score": 0.8333,
           "deal_stage": "Closed won",
           "amount": 455.0,
           "close_date": "2025-07-31",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "medium",
+          "match_score": 0.8333
         },
         {
           "deal_record_id": "281402515655",
-          "match_confidence": "medium",
-          "match_score": 0.8333,
           "deal_stage": "Closed won",
           "amount": 12636.0,
           "close_date": "2025-04-17",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "medium",
+          "match_score": 0.8333
         },
         {
           "deal_record_id": "281563913458",
-          "match_confidence": "medium",
-          "match_score": 0.8333,
           "deal_stage": "Closed lost",
           "amount": 60000.0,
           "close_date": "2025-07-31",
           "is_closed_won": false,
           "is_closed_lost": true,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "medium",
+          "match_score": 0.8333
         },
         {
           "deal_record_id": "281560359119",
-          "match_confidence": "medium",
-          "match_score": 0.8333,
           "deal_stage": "Closed won",
           "amount": 385.0,
           "close_date": "2024-12-23",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "medium",
+          "match_score": 0.8333
         },
         {
           "deal_record_id": "281641339126",
-          "match_confidence": "medium",
-          "match_score": 0.8333,
           "deal_stage": "Closed won",
           "amount": 60443.2,
           "close_date": "2025-09-24",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "medium",
+          "match_score": 0.8333
         },
         {
           "deal_record_id": "281560359112",
-          "match_confidence": "medium",
-          "match_score": 0.8333,
           "deal_stage": "Closed won",
           "amount": 59478.8,
           "close_date": "2024-12-09",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "medium",
+          "match_score": 0.8333
         },
         {
           "deal_record_id": "281565708485",
-          "match_confidence": "medium",
-          "match_score": 0.7568,
           "deal_stage": "Closed lost",
           "amount": 0.0,
           "close_date": "2024-12-31",
           "is_closed_won": false,
           "is_closed_lost": true,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281536551149",
-          "match_confidence": "medium",
-          "match_score": 0.8333,
           "deal_stage": "Closed won",
           "amount": 15300.0,
           "close_date": "2024-10-15",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "medium",
+          "match_score": 0.8333
         },
         {
           "deal_record_id": "281639554248",
-          "match_confidence": "medium",
-          "match_score": 0.8333,
           "deal_stage": "Closed won",
           "amount": 1836.0,
           "close_date": "2024-09-26",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "medium",
+          "match_score": 0.8333
         },
         {
           "deal_record_id": "281560359135",
-          "match_confidence": "medium",
-          "match_score": 0.8333,
           "deal_stage": "Closed lost",
           "amount": 0.0,
           "close_date": "2024-10-31",
           "is_closed_won": false,
           "is_closed_lost": true,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "medium",
+          "match_score": 0.8333
         },
         {
           "deal_record_id": "281657416898",
-          "match_confidence": "medium",
-          "match_score": 0.8333,
           "deal_stage": "Closed lost",
           "amount": 850000.0,
           "close_date": "2025-03-20",
           "is_closed_won": false,
           "is_closed_lost": true,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "medium",
+          "match_score": 0.8333
         },
         {
           "deal_record_id": "281560359141",
-          "match_confidence": "medium",
-          "match_score": 0.8333,
           "deal_stage": "Closed won",
           "amount": 55601.0,
           "close_date": "2024-01-29",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "medium",
+          "match_score": 0.8333
         },
         {
           "deal_record_id": "281655632081",
-          "match_confidence": "medium",
-          "match_score": 0.8333,
           "deal_stage": "Closed lost",
           "amount": 250000.0,
           "close_date": "2024-01-31",
           "is_closed_won": false,
           "is_closed_lost": true,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "medium",
+          "match_score": 0.8333
         }
       ]
     },
@@ -1959,27 +2310,27 @@
       "deals": [
         {
           "deal_record_id": "281660997865",
-          "match_confidence": "medium",
-          "match_score": 0.7692,
           "deal_stage": "Closed lost",
           "amount": 0.0,
           "close_date": "2025-08-31",
           "is_closed_won": false,
           "is_closed_lost": true,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281547096263",
-          "match_confidence": "medium",
-          "match_score": 0.7647,
           "deal_stage": "Closed lost",
           "amount": 200000.0,
           "close_date": "2025-10-13",
           "is_closed_won": false,
           "is_closed_lost": true,
           "is_open": false,
-          "deal_owner": "Christian Lutz"
+          "deal_owner": "Christian Lutz",
+          "match_confidence": "medium",
+          "match_score": 0.7647
         }
       ]
     },
@@ -2002,15 +2353,15 @@
       "deals": [
         {
           "deal_record_id": "281425816782",
-          "match_confidence": "medium",
-          "match_score": 0.8364,
           "deal_stage": "Closed lost",
           "amount": 0.0,
           "close_date": "2025-11-28",
           "is_closed_won": false,
           "is_closed_lost": true,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -2048,7 +2399,20 @@
       "lead_stage": "Disqualified",
       "is_open": false,
       "lead_owner": "Florian Fincke (Deactivated User)",
-      "deals": []
+      "deals": [
+        {
+          "deal_record_id": "281562151114",
+          "deal_stage": "Closed lost",
+          "amount": 0.0,
+          "close_date": "2025-08-07",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Fargel (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
+        }
+      ]
     },
     {
       "conversation_key": "https://www.linkedin.com/in/clementbuffard/",
@@ -2069,15 +2433,27 @@
       "deals": [
         {
           "deal_record_id": "307105965243",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed lost",
           "amount": 11000.0,
           "close_date": "2026-03-06",
           "is_closed_won": false,
           "is_closed_lost": true,
           "is_open": false,
-          "deal_owner": "Maximilian Venhofen"
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281536552183",
+          "deal_stage": "Closed lost",
+          "amount": 0.0,
+          "close_date": "2025-08-07",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -2097,7 +2473,20 @@
       "lead_stage": "Disqualified",
       "is_open": false,
       "lead_owner": "",
-      "deals": []
+      "deals": [
+        {
+          "deal_record_id": "281567502524",
+          "deal_stage": "Closed lost",
+          "amount": 0.0,
+          "close_date": "2025-07-31",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Fargel (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
+        }
+      ]
     },
     {
       "conversation_key": "https://www.linkedin.com/in/philipp-russ-741407114/",
@@ -2133,7 +2522,20 @@
       "lead_stage": "Disqualified",
       "is_open": false,
       "lead_owner": "Leos Bloch",
-      "deals": []
+      "deals": [
+        {
+          "deal_record_id": "283317650679",
+          "deal_stage": "Closed lost",
+          "amount": 0.0,
+          "close_date": "2025-08-31",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "high",
+          "match_score": 1.0
+        }
+      ]
     },
     {
       "conversation_key": "https://www.linkedin.com/in/jens-muerke/",
@@ -2151,7 +2553,20 @@
       "lead_stage": "Disqualified",
       "is_open": false,
       "lead_owner": "Maximilian Fargel (Deactivated User)",
-      "deals": []
+      "deals": [
+        {
+          "deal_record_id": "281556789480",
+          "deal_stage": "Closed lost",
+          "amount": 0.0,
+          "close_date": "2025-09-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Fargel (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
+        }
+      ]
     },
     {
       "conversation_key": "https://www.linkedin.com/in/david-radermacher-0a196814/",
@@ -2172,39 +2587,51 @@
       "deals": [
         {
           "deal_record_id": "439248250093",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Qualified",
           "amount": 231600.0,
           "close_date": "2026-12-31",
           "is_closed_won": false,
           "is_closed_lost": false,
           "is_open": true,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "439464784106",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Qualified",
           "amount": 231600.0,
           "close_date": "2026-12-31",
           "is_closed_won": false,
           "is_closed_lost": false,
           "is_open": true,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "388156399808",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed lost",
           "amount": 231600.0,
           "close_date": "2026-05-01",
           "is_closed_won": false,
           "is_closed_lost": true,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281556790470",
+          "deal_stage": "Closed lost",
+          "amount": 0.0,
+          "close_date": "2025-12-31",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -2227,15 +2654,15 @@
       "deals": [
         {
           "deal_record_id": "281397144822",
-          "match_confidence": "medium",
-          "match_score": 0.8615,
           "deal_stage": "Closed lost",
           "amount": 0.0,
           "close_date": "2025-08-07",
           "is_closed_won": false,
           "is_closed_lost": true,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -2312,63 +2739,87 @@
       "deals": [
         {
           "deal_record_id": "403979546869",
-          "match_confidence": "medium",
-          "match_score": 0.7778,
           "deal_stage": "Closed won",
           "amount": 15857.6,
           "close_date": "2025-12-10",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "medium",
+          "match_score": 0.7778
         },
         {
           "deal_record_id": "373918745839",
-          "match_confidence": "medium",
-          "match_score": 0.7778,
           "deal_stage": "Closed won",
           "amount": 14960.0,
           "close_date": "2025-12-10",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "medium",
+          "match_score": 0.7778
         },
         {
           "deal_record_id": "301193673945",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 2750.0,
           "close_date": "2025-09-03",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Maximilian Venhofen"
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "283317649616",
+          "deal_stage": "Closed lost",
+          "amount": 39050.0,
+          "close_date": "2025-09-12",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281648513266",
-          "match_confidence": "medium",
-          "match_score": 0.7826,
           "deal_stage": "Closed won",
           "amount": 61.0,
           "close_date": "2025-07-02",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Maximilian Venhofen"
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "medium",
+          "match_score": 0.7826
         },
         {
           "deal_record_id": "281531145406",
-          "match_confidence": "medium",
-          "match_score": 0.7778,
           "deal_stage": "Closed won",
           "amount": 15042.0,
           "close_date": "2025-03-20",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "medium",
+          "match_score": 0.7778
+        },
+        {
+          "deal_record_id": "281652070603",
+          "deal_stage": "Closed lost",
+          "amount": 277500.0,
+          "close_date": "2025-03-11",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -2391,15 +2842,15 @@
       "deals": [
         {
           "deal_record_id": "281397145831",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 2500.08,
           "close_date": "2024-11-22",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -2419,7 +2870,20 @@
       "lead_stage": "Qualified",
       "is_open": false,
       "lead_owner": "Maximilian Fargel (Deactivated User)",
-      "deals": []
+      "deals": [
+        {
+          "deal_record_id": "281397144813",
+          "deal_stage": "Closed won",
+          "amount": 4993.8,
+          "close_date": "2024-03-06",
+          "is_closed_won": true,
+          "is_closed_lost": false,
+          "is_open": false,
+          "deal_owner": "Fabian Matern",
+          "match_confidence": "high",
+          "match_score": 1.0
+        }
+      ]
     },
     {
       "conversation_key": "https://www.linkedin.com/in/paul-dunca-6648a784/",
@@ -2439,52 +2903,112 @@
       "lead_owner": "Maximilian Venhofen",
       "deals": [
         {
+          "deal_record_id": "514043244787",
+          "deal_stage": "Closed won",
+          "amount": 23364.0,
+          "close_date": "2026-07-30",
+          "is_closed_won": true,
+          "is_closed_lost": false,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
           "deal_record_id": "352206889202",
-          "match_confidence": "medium",
-          "match_score": 0.8,
           "deal_stage": "Closed won",
           "amount": 12272.0,
           "close_date": "2025-12-01",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Maximilian Venhofen"
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281657416893",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 22302.0,
           "close_date": "2025-05-28",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Josephine Meissner (Deactivated User)"
+          "deal_owner": "Josephine Meissner (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281556789452",
+          "deal_stage": "Closed lost",
+          "amount": 7080.0,
+          "close_date": "2025-07-31",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281546066156",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 11623.0,
           "close_date": "2024-09-25",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Josephine Meissner (Deactivated User)"
+          "deal_owner": "Josephine Meissner (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281562151158",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 17936.0,
           "close_date": "2024-06-04",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Josephine Meissner (Deactivated User)"
+          "deal_owner": "Josephine Meissner (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281534745814",
+          "deal_stage": "Closed lost",
+          "amount": 13790.0,
+          "close_date": "2024-06-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281655633091",
+          "deal_stage": "Closed lost",
+          "amount": 34475.0,
+          "close_date": "2024-06-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281546068187",
+          "deal_stage": "Closed lost",
+          "amount": 63500.0,
+          "close_date": "2024-06-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -2506,52 +3030,112 @@
       "lead_owner": "Maximilian Venhofen",
       "deals": [
         {
+          "deal_record_id": "514043244787",
+          "deal_stage": "Closed won",
+          "amount": 23364.0,
+          "close_date": "2026-07-30",
+          "is_closed_won": true,
+          "is_closed_lost": false,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
           "deal_record_id": "352206889202",
-          "match_confidence": "medium",
-          "match_score": 0.8,
           "deal_stage": "Closed won",
           "amount": 12272.0,
           "close_date": "2025-12-01",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Maximilian Venhofen"
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281657416893",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 22302.0,
           "close_date": "2025-05-28",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Josephine Meissner (Deactivated User)"
+          "deal_owner": "Josephine Meissner (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281556789452",
+          "deal_stage": "Closed lost",
+          "amount": 7080.0,
+          "close_date": "2025-07-31",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281546066156",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 11623.0,
           "close_date": "2024-09-25",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Josephine Meissner (Deactivated User)"
+          "deal_owner": "Josephine Meissner (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281562151158",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 17936.0,
           "close_date": "2024-06-04",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Josephine Meissner (Deactivated User)"
+          "deal_owner": "Josephine Meissner (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281534745814",
+          "deal_stage": "Closed lost",
+          "amount": 13790.0,
+          "close_date": "2024-06-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281655633091",
+          "deal_stage": "Closed lost",
+          "amount": 34475.0,
+          "close_date": "2024-06-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281546068187",
+          "deal_stage": "Closed lost",
+          "amount": 63500.0,
+          "close_date": "2024-06-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -2573,52 +3157,112 @@
       "lead_owner": "Maximilian Venhofen",
       "deals": [
         {
+          "deal_record_id": "514043244787",
+          "deal_stage": "Closed won",
+          "amount": 23364.0,
+          "close_date": "2026-07-30",
+          "is_closed_won": true,
+          "is_closed_lost": false,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
           "deal_record_id": "352206889202",
-          "match_confidence": "medium",
-          "match_score": 0.8,
           "deal_stage": "Closed won",
           "amount": 12272.0,
           "close_date": "2025-12-01",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Maximilian Venhofen"
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281657416893",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 22302.0,
           "close_date": "2025-05-28",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Josephine Meissner (Deactivated User)"
+          "deal_owner": "Josephine Meissner (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281556789452",
+          "deal_stage": "Closed lost",
+          "amount": 7080.0,
+          "close_date": "2025-07-31",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281546066156",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 11623.0,
           "close_date": "2024-09-25",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Josephine Meissner (Deactivated User)"
+          "deal_owner": "Josephine Meissner (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281562151158",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 17936.0,
           "close_date": "2024-06-04",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Josephine Meissner (Deactivated User)"
+          "deal_owner": "Josephine Meissner (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281534745814",
+          "deal_stage": "Closed lost",
+          "amount": 13790.0,
+          "close_date": "2024-06-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281655633091",
+          "deal_stage": "Closed lost",
+          "amount": 34475.0,
+          "close_date": "2024-06-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "281546068187",
+          "deal_stage": "Closed lost",
+          "amount": 63500.0,
+          "close_date": "2024-06-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -2641,27 +3285,27 @@
       "deals": [
         {
           "deal_record_id": "406329343198",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 3695.0,
           "close_date": "2025-12-15",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281425815793",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 3600.0,
           "close_date": "2024-12-09",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -2681,7 +3325,20 @@
       "lead_stage": "Disqualified",
       "is_open": false,
       "lead_owner": "Leos Bloch",
-      "deals": []
+      "deals": [
+        {
+          "deal_record_id": "280960943308",
+          "deal_stage": "Closed lost",
+          "amount": 0.0,
+          "close_date": "2024-09-30",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "high",
+          "match_score": 1.0
+        }
+      ]
     },
     {
       "conversation_key": "https://www.linkedin.com/in/irene-schönreiter/",
@@ -2699,7 +3356,20 @@
       "lead_stage": "Disqualified",
       "is_open": false,
       "lead_owner": "Maximilian Fargel (Deactivated User)",
-      "deals": []
+      "deals": [
+        {
+          "deal_record_id": "281534746869",
+          "deal_stage": "Closed lost",
+          "amount": 27500.0,
+          "close_date": "2024-07-31",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Maximilian Fargel (Deactivated User)",
+          "match_confidence": "high",
+          "match_score": 1.0
+        }
+      ]
     },
     {
       "conversation_key": "https://www.linkedin.com/in/leo-stein-a3146919b/",
@@ -2720,15 +3390,15 @@
       "deals": [
         {
           "deal_record_id": "283343175876",
-          "match_confidence": "medium",
-          "match_score": 0.8916,
           "deal_stage": "Closed lost",
           "amount": 75000.0,
           "close_date": "2025-12-31",
           "is_closed_won": false,
           "is_closed_lost": true,
           "is_open": false,
-          "deal_owner": "Leos Bloch"
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -2748,7 +3418,20 @@
       "lead_stage": "Disqualified",
       "is_open": false,
       "lead_owner": "Leos Bloch",
-      "deals": []
+      "deals": [
+        {
+          "deal_record_id": "281648514276",
+          "deal_stage": "Closed lost",
+          "amount": 125000.0,
+          "close_date": "2025-03-31",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "high",
+          "match_score": 1.0
+        }
+      ]
     },
     {
       "conversation_key": "https://www.linkedin.com/in/friederschuetz/",
@@ -2769,63 +3452,87 @@
       "deals": [
         {
           "deal_record_id": "403979546869",
-          "match_confidence": "medium",
-          "match_score": 0.7778,
           "deal_stage": "Closed won",
           "amount": 15857.6,
           "close_date": "2025-12-10",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "medium",
+          "match_score": 0.7778
         },
         {
           "deal_record_id": "373918745839",
-          "match_confidence": "medium",
-          "match_score": 0.7778,
           "deal_stage": "Closed won",
           "amount": 14960.0,
           "close_date": "2025-12-10",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "medium",
+          "match_score": 0.7778
         },
         {
           "deal_record_id": "301193673945",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 2750.0,
           "close_date": "2025-09-03",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Maximilian Venhofen"
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "283317649616",
+          "deal_stage": "Closed lost",
+          "amount": 39050.0,
+          "close_date": "2025-09-12",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281648513266",
-          "match_confidence": "medium",
-          "match_score": 0.7826,
           "deal_stage": "Closed won",
           "amount": 61.0,
           "close_date": "2025-07-02",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Maximilian Venhofen"
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "medium",
+          "match_score": 0.7826
         },
         {
           "deal_record_id": "281531145406",
-          "match_confidence": "medium",
-          "match_score": 0.7778,
           "deal_stage": "Closed won",
           "amount": 15042.0,
           "close_date": "2025-03-20",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "medium",
+          "match_score": 0.7778
+        },
+        {
+          "deal_record_id": "281652070603",
+          "deal_stage": "Closed lost",
+          "amount": 277500.0,
+          "close_date": "2025-03-11",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -2848,63 +3555,87 @@
       "deals": [
         {
           "deal_record_id": "403979546869",
-          "match_confidence": "medium",
-          "match_score": 0.7778,
           "deal_stage": "Closed won",
           "amount": 15857.6,
           "close_date": "2025-12-10",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "medium",
+          "match_score": 0.7778
         },
         {
           "deal_record_id": "373918745839",
-          "match_confidence": "medium",
-          "match_score": 0.7778,
           "deal_stage": "Closed won",
           "amount": 14960.0,
           "close_date": "2025-12-10",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "medium",
+          "match_score": 0.7778
         },
         {
           "deal_record_id": "301193673945",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 2750.0,
           "close_date": "2025-09-03",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Maximilian Venhofen"
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
+        },
+        {
+          "deal_record_id": "283317649616",
+          "deal_stage": "Closed lost",
+          "amount": 39050.0,
+          "close_date": "2025-09-12",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281648513266",
-          "match_confidence": "medium",
-          "match_score": 0.7826,
           "deal_stage": "Closed won",
           "amount": 61.0,
           "close_date": "2025-07-02",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Maximilian Venhofen"
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "medium",
+          "match_score": 0.7826
         },
         {
           "deal_record_id": "281531145406",
-          "match_confidence": "medium",
-          "match_score": 0.7778,
           "deal_stage": "Closed won",
           "amount": 15042.0,
           "close_date": "2025-03-20",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "medium",
+          "match_score": 0.7778
+        },
+        {
+          "deal_record_id": "281652070603",
+          "deal_stage": "Closed lost",
+          "amount": 277500.0,
+          "close_date": "2025-03-11",
+          "is_closed_won": false,
+          "is_closed_lost": true,
+          "is_open": false,
+          "deal_owner": "Leos Bloch",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -2927,27 +3658,27 @@
       "deals": [
         {
           "deal_record_id": "397390217438",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed lost",
           "amount": 9169.0,
           "close_date": "2026-05-12",
           "is_closed_won": false,
           "is_closed_lost": true,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281531144412",
-          "match_confidence": "medium",
-          "match_score": 0.7805,
           "deal_stage": "Closed lost",
           "amount": 13337.6,
           "close_date": "2025-11-30",
           "is_closed_won": false,
           "is_closed_lost": true,
           "is_open": false,
-          "deal_owner": "Maximilian Fargel (Deactivated User)"
+          "deal_owner": "Maximilian Fargel (Deactivated User)",
+          "match_confidence": "medium",
+          "match_score": 0.7805
         }
       ]
     },
@@ -2970,51 +3701,51 @@
       "deals": [
         {
           "deal_record_id": "494471624919",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 1648.08,
           "close_date": "2026-03-20",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "469835211999",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 1649.0,
           "close_date": "2026-02-13",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "281531144406",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 1635.0,
           "close_date": "2025-08-15",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "high",
+          "match_score": 1.0
         },
         {
           "deal_record_id": "342771634411",
-          "match_confidence": "high",
-          "match_score": 1.0,
           "deal_stage": "Closed won",
           "amount": 1649.0,
           "close_date": "2025-04-24",
           "is_closed_won": true,
           "is_closed_lost": false,
           "is_open": false,
-          "deal_owner": "Lara C. Ebert"
+          "deal_owner": "Lara C. Ebert",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -3037,15 +3768,15 @@
       "deals": [
         {
           "deal_record_id": "327260525768",
-          "match_confidence": "high",
-          "match_score": 0.9,
           "deal_stage": "Closed lost",
           "amount": 35000.0,
           "close_date": "2026-03-03",
           "is_closed_won": false,
           "is_closed_lost": true,
           "is_open": false,
-          "deal_owner": "Maximilian Venhofen"
+          "deal_owner": "Maximilian Venhofen",
+          "match_confidence": "high",
+          "match_score": 1.0
         }
       ]
     },
@@ -3221,19 +3952,19 @@
     },
     "deals_by_stage": {
       "Closed lost": 1052,
-      "Closed won": 368,
+      "Closed won": 369,
       "Qualified": 27,
-      "Proposal": 22,
-      "Negotiation": 21
+      "Proposal": 21,
+      "Negotiation": 22
     },
     "deals_amount_by_stage": {
       "Closed lost": 263050908.24,
-      "Closed won": 14330491.2,
+      "Closed won": 14353855.2,
       "Qualified": 10842323.2,
-      "Proposal": 3598492.1,
-      "Negotiation": 872132.5
+      "Proposal": 3179612.1,
+      "Negotiation": 928332.5
     },
     "total_leads": 1598,
-    "total_deals": 1490
+    "total_deals": 1491
   }
 }

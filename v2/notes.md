@@ -3,6 +3,35 @@
 Running log of what changed and why, kept so this project can be picked up in a fresh chat
 without re-deriving context. Newest entries at the top.
 
+## match_hubspot.py: match deals directly by contact identity too (2026-07-31, same branch as the lead-matching fix above)
+
+**Why:** After fixing lead matching, the user supplied a fresh deals export
+(`270731-all-deals-v2.csv`) and asked whether it helped. It has the same `Associated
+Contact`/`Primary Contact` column (`"Name (email@domain)"`) that fixed lead matching —
+1257 of 1491 deals have it. Deals previously had no identity-based join at all: they were
+only ever attached to a lead by fuzzy-matching a deal's company name (parsed from "Deal
+Name" or "Invoice name of Company") against a lead's company — weak, and prone to
+attaching a deal to the wrong lead when several people at the same company each have
+their own lead/deal.
+
+**Fix:** `match_deals_to_leads` now tries an identity link first: parse the deal's
+`Associated Contact` (falling back to `Primary Contact`) the same way leads' `Associated
+Contact` is parsed, resolve it to a conversation via exact email or an unambiguous exact
+name match (`resolve_contact_conversation` — deliberately not fuzzy, since this is meant
+to be a precise corroborating link, not another scored guess), then check whether that's
+the *same* conversation the deal's candidate lead already matched to
+(`conv_key_to_lead_ids`, built from `lead_conv_matches`). Only falls back to the old
+fuzzy company-name matching for deals whose contact doesn't resolve to anything.
+
+**Result:** total deal attachments 107 → 167 (+56%). The meetings-booked funnel's deal
+numbers shifted accordingly: total deals from booked-meeting leads 67 → 117, mostly more
+correctly-attributed **lost** deals (8 → 50) rather than won ones (56 → 64) — the earlier
+company-fuzzy approach was apparently missing a lot of lost deals specifically, not just
+undercounting deals generally.
+
+**Checks run:** `npm run build` clean (no TS changes, only `match_hubspot.py` +
+regenerated `hubspot.json`).
+
 ## match_hubspot.py: fix lead matching for company-primary leads (2026-07-31, branch `fix/company-primary-lead-matching`)
 
 **Why:** User manually found a contact ("Stefan Brenken") who has a real lead in HubSpot

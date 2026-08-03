@@ -4,9 +4,11 @@
 The primary join for leads is now email, via the "Associated Contact" column (format
 "Name (email@domain)"), matched against each conversation's `email` field. Falls back to
 the original fuzzy name+company match (name from "Associated Contact" when parseable,
-else "Primary Associated Object Name") when no email match is found. Deals carry no
-foreign key back to a lead at all, so a deal's company (parsed from "Deal Name" or
-"Invoice name of Company") is fuzzy-matched against each lead's "Company" field.
+else "Primary Associated Object Name") when no email match is found. Deals also carry an
+"Associated Contact"/"Primary Contact" column in the same format — attached to a lead by
+checking whether that contact resolves to the same conversation the lead itself matched
+(a precise identity link, not a fuzzy score), falling back to fuzzy company-name matching
+(a deal's company vs a lead's company) only when the contact doesn't resolve to anything.
 
 **Why the switch to email**: ~31% of lead rows (blank "Primary Associated Contact Object
 ID") have their "Primary Associated Object" set to a Company rather than a Contact — for
@@ -37,7 +39,7 @@ from pathlib import Path
 
 SOURCES = {
     "leads": "/Users/tobias/Downloads/270731-all-leads-v2.csv",
-    "deals": "/Users/tobias/Downloads/260730-all-deals.csv",
+    "deals": "/Users/tobias/Downloads/270731-all-deals-v2.csv",
 }
 
 ASSOCIATED_CONTACT_RE = re.compile(r"^(?P<name>.*?)\s*\((?P<email>[^()]+)\)$")
@@ -108,6 +110,33 @@ def lead_contact_name(lead: dict) -> str:
 def lead_contact_email(lead: dict) -> str:
     _, email = parse_associated_contact(lead.get("Associated Contact", ""))
     return email.strip().lower()
+
+
+def index_conversations_by_identity(conversations: list[dict]) -> tuple[dict, dict]:
+    by_email = defaultdict(list)
+    by_name = defaultdict(list)
+    for conv in conversations:
+        email = (conv.get("email") or "").strip().lower()
+        if email:
+            by_email[email].append(conv)
+        name = normalize_name(conv.get("full_name", ""))
+        if name:
+            by_name[name].append(conv)
+    return by_email, by_name
+
+
+def resolve_contact_conversation(raw_associated_contact: str, by_email: dict, by_name: dict) -> str | None:
+    """Exact identity match only (email, or an unambiguous exact name) — no fuzzy score, used
+    to link a deal straight to a conversation via its own contact rather than via company."""
+    name, email = parse_associated_contact(raw_associated_contact)
+    email = email.strip().lower()
+    if email and by_email.get(email):
+        return conversation_key(by_email[email][0])
+    norm_name = normalize_name(name)
+    candidates = by_name.get(norm_name) if norm_name else None
+    if candidates and len(candidates) == 1:
+        return conversation_key(candidates[0])
+    return None
 
 
 def ratio(a: str, b: str) -> float:
@@ -258,11 +287,44 @@ def match_leads_to_conversations(leads: list[dict], conversations: list[dict]) -
     return result
 
 
-def match_deals_to_leads(deals: list[dict], leads: list[dict]) -> dict[str, list[dict]]:
-    """All deals scoring >= medium against a lead's company (a company can have several
-    deals over time), keyed by lead Record ID."""
+def match_deals_to_leads(
+    deals: list[dict],
+    leads: list[dict],
+    lead_conv_matches: dict[str, dict],
+    by_email: dict,
+    by_name: dict,
+) -> dict[str, list[dict]]:
+    """All deals attached to a lead, keyed by lead Record ID. Prefers an identity match: if a
+    deal's own "Associated Contact"/"Primary Contact" resolves to the same conversation a lead
+    already matched to, that's a precise, non-fuzzy link — added once the same "Associated
+    Contact" column that fixed lead matching turned out to exist on deals too. Falls back to
+    fuzzy company-name matching (a deal's company vs a lead's company, scoring >= medium,
+    possibly against several leads at once) for deals with no resolvable contact."""
+    conv_key_to_lead_ids = defaultdict(list)
+    for lead_id, m in lead_conv_matches.items():
+        conv_key_to_lead_ids[m["conversation_key"]].append(lead_id)
+
     result = defaultdict(list)
     for deal in deals:
+        deal_info = {
+            "deal_record_id": deal["Record ID"],
+            "deal_stage": deal.get("Deal Stage", ""),
+            "amount": float(deal.get("Amount") or 0),
+            "close_date": (deal.get("Close Date") or "")[:10] or None,
+            "is_closed_won": deal.get("Is Closed Won", "").lower() == "true",
+            "is_closed_lost": deal.get("Is closed lost", "").lower() == "true",
+            "is_open": deal.get("Is Open (numeric)", "0") == "1.0",
+            "deal_owner": deal.get("Deal owner", ""),
+        }
+
+        raw_contact = deal.get("Associated Contact") or deal.get("Primary Contact") or ""
+        contact_conv_key = resolve_contact_conversation(raw_contact, by_email, by_name)
+        lead_ids = conv_key_to_lead_ids.get(contact_conv_key, []) if contact_conv_key else []
+        if lead_ids:
+            for lead_id in lead_ids:
+                result[lead_id].append({**deal_info, "match_confidence": "high", "match_score": 1.0})
+            continue
+
         invoice_name = deal.get("Invoice name of Company", "").strip()
         deal_company = invoice_name if invoice_name else parse_deal_company(deal.get("Deal Name", ""))
         norm_deal_company = normalize_company(deal_company)
@@ -272,18 +334,9 @@ def match_deals_to_leads(deals: list[dict], leads: list[dict]) -> dict[str, list
             company_score = ratio(norm_deal_company, normalize_company(lead.get("Company", "")))
             confidence = confidence_for(company_score, company_score)
             if confidence:
-                result[lead["Record ID"]].append({
-                    "deal_record_id": deal["Record ID"],
-                    "match_confidence": confidence,
-                    "match_score": round(company_score, 4),
-                    "deal_stage": deal.get("Deal Stage", ""),
-                    "amount": float(deal.get("Amount") or 0),
-                    "close_date": (deal.get("Close Date") or "")[:10] or None,
-                    "is_closed_won": deal.get("Is Closed Won", "").lower() == "true",
-                    "is_closed_lost": deal.get("Is closed lost", "").lower() == "true",
-                    "is_open": deal.get("Is Open (numeric)", "0") == "1.0",
-                    "deal_owner": deal.get("Deal owner", ""),
-                })
+                result[lead["Record ID"]].append(
+                    {**deal_info, "match_confidence": confidence, "match_score": round(company_score, 4)}
+                )
     return result
 
 
@@ -318,7 +371,8 @@ def main() -> None:
     deals = load_csv(SOURCES["deals"])
 
     lead_conv_matches = match_leads_to_conversations(leads, conversations)
-    lead_deal_matches = match_deals_to_leads(deals, leads)
+    by_email, by_name = index_conversations_by_identity(conversations)
+    lead_deal_matches = match_deals_to_leads(deals, leads, lead_conv_matches, by_email, by_name)
 
     matches = []
     for lead in leads:
