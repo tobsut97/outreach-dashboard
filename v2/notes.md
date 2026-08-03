@@ -3,6 +3,51 @@
 Running log of what changed and why, kept so this project can be picked up in a fresh chat
 without re-deriving context. Newest entries at the top.
 
+## match_hubspot.py: fix phantom deals and duplicate leads (2026-08-03, branch `fix/company-primary-lead-matching`)
+
+**Why:** the user spotted a "qualified deal" for Udo Gassner / "SWAP", €1,562,500, that doesn't
+exist for him in HubSpot at all, and many duplicate covolution GmbH rows in Won Deals. Traced
+both to distinct bugs, verified against the raw CSV export (`270731-all-deals-v2.csv`) rather
+than guessed at:
+
+1. **Fuzzy company-name fallback in `match_deals_to_leads`** (used when a deal's own contact
+   doesn't resolve to a conversation) accepted any `SequenceMatcher` ratio ≥ "medium" (0.75)
+   between a deal's company and a lead's company. Checked all 32 unique deals attached this
+   way — **29 (91%) were wrong**: Udo Gassner/"SWAP" had 3 of SAP's real deals attached
+   (€1.56M + €1.56M + €818K), Robert Lee/"Catona Climate" had all 20 of ConClimate's deals,
+   Natalie Kraemer/"Carlsberg Group" had a Caritas deal, Friederschütz/"ClimateGrid" had
+   ClimAid's and ClimateTrade's deals. Short/similar company names ("SWAP"/"SAP", "Catona
+   Climate"/"ConClimate") score deceptively high on a fuzzy ratio. The 3 correct fuzzy matches
+   were all exact strings after normalization anyway. **Fix:** replaced the ratio scoring with a
+   direct `normalize_company(deal) == normalize_company(lead)` equality check — no more guessing
+   at similar-looking names, consistent with this file's existing "don't guess" approach to
+   leads.
+
+2. **Duplicate HubSpot Lead records per contact** — 6 contacts have more than one Lead record
+   for the same person in HubSpot itself (confirmed: duplicate rows share the identical
+   "Associated Contact" email — a HubSpot data-hygiene issue, not a matching bug). Paul
+   Dunca/Furthr alone has 8. `match_hubspot.py` emitted one `matches[]` entry per Lead record,
+   so the same identity-matched deals got flattened and counted once per duplicate downstream —
+   85 of 167 deal attachments (51%) were pure duplicates from this, which is why covolution GmbH
+   kept appearing multiple times in Won Deals. **Fix:** added `collapse_duplicate_leads`, called
+   at the end of `main()` — groups `matches` by `conversation_key`, keeps the group member whose
+   stage ranks highest by `Qualified > Disqualified > New` (a lead that was ever qualified
+   should count as qualified, not hidden behind a stale duplicate — the pattern seen in every
+   group), and unions each group's deals de-duplicated by `deal_record_id`.
+
+**Result:** `matches` 103 → 90 (one entry per real contact). Qualified leads 17 → 12, lost leads
+61 → 54. Deal totals dropped sharply, as expected since both fixes only remove
+phantom/duplicated attributions, never add any: qualified deals €2.18M → €511K (6 → 3 deals),
+lost deals €4.90M → €1.30M (75 → 31), won deals €2.01M → €112K (85 → 14) — the won-deal drop is
+dominated by Robert Lee's 20 phantom ConClimate deals and the duplicate-lead multiplication
+(Paul Dunca ×8, Friederschütz ×3, covolution GmbH ×2) both going away.
+
+**Checks run:** re-ran `match_hubspot.py`, spot-checked Udo Gassner (0 deals now, correct — he
+has none in HubSpot), Paul Dunca/Furthr (1 entry, 9 unique deals, was 8×9=72), covolution
+GmbH/Michael Müller (1 entry, 4 unique deals, was 2×4=8), Robert Lee/Catona Climate (1 real deal
+left, was 20 ConClimate phantoms) — all against the raw CSV. `npx tsc --noEmit`, `npx oxlint
+src/`, `npm run build` all clean.
+
 ## match_hubspot.py: match deals directly by contact identity too (2026-07-31, same branch as the lead-matching fix above)
 
 **Why:** After fixing lead matching, the user supplied a fresh deals export
