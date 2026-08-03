@@ -297,9 +297,12 @@ def match_deals_to_leads(
     """All deals attached to a lead, keyed by lead Record ID. Prefers an identity match: if a
     deal's own "Associated Contact"/"Primary Contact" resolves to the same conversation a lead
     already matched to, that's a precise, non-fuzzy link — added once the same "Associated
-    Contact" column that fixed lead matching turned out to exist on deals too. Falls back to
-    fuzzy company-name matching (a deal's company vs a lead's company, scoring >= medium,
-    possibly against several leads at once) for deals with no resolvable contact."""
+    Contact" column that fixed lead matching turned out to exist on deals too. Falls back to an
+    *exact* normalized-company-name match (not a fuzzy ratio) for deals with no resolvable
+    contact. Fuzzy ratio-matching short company names ("SWAP"/"SAP", "Catona Climate"/
+    "ConClimate") produced false positives on ~91% of its matches when audited against the raw
+    CSV, misattributing real revenue to the wrong contact — exact-match-only trades a few missed
+    attachments for zero wrong ones, consistent with this file's "don't guess" approach to leads."""
     conv_key_to_lead_ids = defaultdict(list)
     for lead_id, m in lead_conv_matches.items():
         conv_key_to_lead_ids[m["conversation_key"]].append(lead_id)
@@ -331,13 +334,43 @@ def match_deals_to_leads(
         if not norm_deal_company:
             continue
         for lead in leads:
-            company_score = ratio(norm_deal_company, normalize_company(lead.get("Company", "")))
-            confidence = confidence_for(company_score, company_score)
-            if confidence:
+            if norm_deal_company == normalize_company(lead.get("Company", "")):
                 result[lead["Record ID"]].append(
-                    {**deal_info, "match_confidence": confidence, "match_score": round(company_score, 4)}
+                    {**deal_info, "match_confidence": "medium", "match_score": 1.0}
                 )
     return result
+
+
+LEAD_STAGE_PRIORITY = {"Qualified": 0, "Disqualified": 1, "New": 2}
+
+
+def collapse_duplicate_leads(matches: list[dict]) -> list[dict]:
+    """Collapses multiple Lead records that matched the same conversation into one entry.
+    HubSpot itself has duplicate Lead records for some contacts (same "Associated Contact"
+    email on more than one Lead row, confirmed against the raw CSV — a HubSpot data-hygiene
+    issue, not a matching bug: one contact, Paul Dunca/Furthr, has 8 separate Lead records).
+    Without this, `matches` carries one entry per duplicate, and every deal identity-matched to
+    that contact gets flattened and counted once per duplicate downstream, inflating deal totals.
+
+    Keeps the group member whose stage ranks highest by LEAD_STAGE_PRIORITY — a lead that was
+    ever Qualified should count as qualified rather than being hidden behind a stale duplicate
+    still sitting at Disqualified/New, the pattern seen in every duplicate group found. Ties
+    broken by lowest lead_record_id for determinism. Unions every group member's deals,
+    de-duplicated by deal_record_id, so a real-world deal counts once per contact regardless of
+    how many duplicate lead records reference it."""
+    groups = defaultdict(list)
+    for m in matches:
+        groups[m["conversation_key"]].append(m)
+
+    collapsed = []
+    for group in groups.values():
+        primary = min(group, key=lambda m: (LEAD_STAGE_PRIORITY.get(m["lead_stage"], 3), m["lead_record_id"]))
+        deals_by_id = {}
+        for member in group:
+            for deal in member["deals"]:
+                deals_by_id.setdefault(deal["deal_record_id"], deal)
+        collapsed.append({**primary, "deals": list(deals_by_id.values())})
+    return collapsed
 
 
 def build_aggregate(leads: list[dict], deals: list[dict]) -> dict:
@@ -420,13 +453,16 @@ def main() -> None:
     for m in medium[:15]:
         print(describe(m))
 
+    unmatched_leads_count = len(leads) - len(matches)
     for m in matches:
         del m["_debug_lead_name"], m["_debug_conv_name"]
+    matches = collapse_duplicate_leads(matches)
+    print(f"collapsed to {len(matches)} unique contacts after merging duplicate lead records")
 
     output = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "matches": matches,
-        "unmatched_leads_count": len(leads) - len(matches),
+        "unmatched_leads_count": unmatched_leads_count,
         "aggregate": build_aggregate(leads, deals),
     }
     OUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2))
