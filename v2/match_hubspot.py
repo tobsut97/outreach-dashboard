@@ -1,17 +1,32 @@
 #!/usr/bin/env python3
 """Match HubSpot lead/deal CSV exports onto data.json's LinkedIn conversations.
 
-Neither HubSpot export carries an email or LinkedIn URL, so the join is a fuzzy
-name+company match: leads carry the contact's full name in "Primary Associated
-Object Name", scored against each conversation's full_name/company. Deals carry no
-foreign key back to a lead at all, so a deal's company (parsed from "Deal Name" or
-"Invoice name of Company") is fuzzy-matched against each lead's "Company" field.
+The primary join for leads is now email, via the "Associated Contact" column (format
+"Name (email@domain)"), matched against each conversation's `email` field. Falls back to
+the original fuzzy name+company match (name from "Associated Contact" when parseable,
+else "Primary Associated Object Name") when no email match is found. Deals also carry an
+"Associated Contact"/"Primary Contact" column in the same format — attached to a lead by
+checking whether that contact resolves to the same conversation the lead itself matched
+(a precise identity link, not a fuzzy score), falling back to fuzzy company-name matching
+(a deal's company vs a lead's company) only when the contact doesn't resolve to anything.
+
+**Why the switch to email**: ~31% of lead rows (blank "Primary Associated Contact Object
+ID") have their "Primary Associated Object" set to a Company rather than a Contact — for
+these, "Primary Associated Object Name" *is* the company name, not a person's name at
+all, so fuzzy name matching was structurally incapable of ever finding them. Found by the
+user manually checking a lead in HubSpot that our matcher had missed: "Stefan Brenken" ↔
+lead "(DE) Bank für Kirche und Diakonie", whose `Primary Associated Object Name` was just
+the company. The user then supplied a fresh leads export with an "Associated Contact"
+column HubSpot apparently didn't expose before, which carries the actual contact's name
+and email regardless of which object is primary — a much stronger join key than fuzzy
+name matching ever was, for every lead, not just company-primary ones.
 
 Every match is tagged "high" or "medium" confidence; low-scoring pairs are left
-unmatched rather than guessed at. Unmatched leads/deals still count in `aggregate`,
-which totals every CSV row regardless of match — only `matches` is the
-conversation-attributable subset. Re-run whenever fresh CSVs are exported; this is
-independent of extract.py's slower LinkedIn/Ollama pipeline.
+unmatched rather than guessed at. An exact email match is always "high" — it's a unique
+identifier, not a fuzzy score. Unmatched leads/deals still count in `aggregate`, which
+totals every CSV row regardless of match — only `matches` is the conversation-attributable
+subset. Re-run whenever fresh CSVs are exported; this is independent of extract.py's
+slower LinkedIn/Ollama pipeline.
 """
 import csv
 import json
@@ -23,9 +38,11 @@ from difflib import SequenceMatcher
 from pathlib import Path
 
 SOURCES = {
-    "leads": "/Users/tobias/Downloads/260730-all-leads.csv",
-    "deals": "/Users/tobias/Downloads/260730-all-deals.csv",
+    "leads": "/Users/tobias/Downloads/270731-all-leads-v2.csv",
+    "deals": "/Users/tobias/Downloads/270731-all-deals-v2.csv",
 }
+
+ASSOCIATED_CONTACT_RE = re.compile(r"^(?P<name>.*?)\s*\((?P<email>[^()]+)\)$")
 
 DATA_JSON = Path(__file__).parent / "data.json"
 OUT_PATH = Path(__file__).parent / "hubspot.json"
@@ -70,6 +87,56 @@ def parse_deal_company(deal_name: str) -> str:
     s = (deal_name or "").strip().lower()
     s = DEAL_PREFIX_RE.sub("", s)
     return s.split(" - ")[0].strip()
+
+
+def parse_associated_contact(value: str) -> tuple[str, str]:
+    """Returns (name, email) from HubSpot's "Name (email@domain)" format. Either half is
+    blank if the value doesn't carry it — some rows are a bare name (no email on file) or a
+    bare mailbox address (no named contact, e.g. "info@hotel-luecke.de")."""
+    value = (value or "").strip()
+    if not value:
+        return "", ""
+    match = ASSOCIATED_CONTACT_RE.match(value)
+    if match:
+        return match.group("name").strip(), match.group("email").strip()
+    return ("", value) if "@" in value else (value, "")
+
+
+def lead_contact_name(lead: dict) -> str:
+    name, _ = parse_associated_contact(lead.get("Associated Contact", ""))
+    return name or lead.get("Primary Associated Object Name", "")
+
+
+def lead_contact_email(lead: dict) -> str:
+    _, email = parse_associated_contact(lead.get("Associated Contact", ""))
+    return email.strip().lower()
+
+
+def index_conversations_by_identity(conversations: list[dict]) -> tuple[dict, dict]:
+    by_email = defaultdict(list)
+    by_name = defaultdict(list)
+    for conv in conversations:
+        email = (conv.get("email") or "").strip().lower()
+        if email:
+            by_email[email].append(conv)
+        name = normalize_name(conv.get("full_name", ""))
+        if name:
+            by_name[name].append(conv)
+    return by_email, by_name
+
+
+def resolve_contact_conversation(raw_associated_contact: str, by_email: dict, by_name: dict) -> str | None:
+    """Exact identity match only (email, or an unambiguous exact name) — no fuzzy score, used
+    to link a deal straight to a conversation via its own contact rather than via company."""
+    name, email = parse_associated_contact(raw_associated_contact)
+    email = email.strip().lower()
+    if email and by_email.get(email):
+        return conversation_key(by_email[email][0])
+    norm_name = normalize_name(name)
+    candidates = by_name.get(norm_name) if norm_name else None
+    if candidates and len(candidates) == 1:
+        return conversation_key(candidates[0])
+    return None
 
 
 def ratio(a: str, b: str) -> float:
@@ -136,30 +203,74 @@ def load_csv(path: str) -> list[dict]:
 
 
 def match_leads_to_conversations(leads: list[dict], conversations: list[dict]) -> dict[str, dict]:
-    """Best-scoring conversation per lead, blocked by normalized company to avoid an
-    all-pairs scan. Returns {lead_record_id: {"conversation_key", "confidence", "score"}}."""
+    """Best conversation per lead: an exact email match (via "Associated Contact") first,
+    since it's a unique identifier rather than a fuzzy score; falls back to the
+    company-blocked fuzzy name+company match otherwise. Returns
+    {lead_record_id: {"conversation_key", "confidence", "score"}}.
+
+    Normalizes each conversation's name/company once up front rather than inside the
+    matching loop — with company-blocking regularly falling back to a full scan across all
+    ~4000 conversations per lead, re-normalizing (accent-stripping, unicodedata) on every
+    pairwise comparison instead of once per conversation made this take several minutes."""
+    by_email = defaultdict(list)
     by_company = defaultdict(list)
+    all_conv_norms = []
     for conv in conversations:
-        by_company[normalize_company(conv.get("company", ""))].append(conv)
+        norm_name = normalize_name(conv.get("full_name", ""))
+        norm_company = normalize_company(conv.get("company", ""))
+        entry = (conv, norm_name, norm_company)
+        all_conv_norms.append(entry)
+        by_company[norm_company].append(entry)
+        email = (conv.get("email") or "").strip().lower()
+        if email:
+            by_email[email].append(conv)
 
     result = {}
     for lead in leads:
-        lead_name = lead.get("Primary Associated Object Name", "")
+        lead_name = lead_contact_name(lead)
+        lead_email = lead_contact_email(lead)
         lead_company = lead.get("Company", "")
-        norm_company = normalize_company(lead_company)
-        # Company-blocked candidates when the normalized company lands in an existing
-        # bucket; otherwise fall back to a full scan — a blank lead company (~3.5% of
-        # leads) or a company spelled differently on each side both need this, since a
-        # narrower fuzzy match must still be found by name even without an exact bucket hit.
-        candidates = (by_company.get(norm_company) or conversations) if norm_company else conversations
 
-        best = None
-        for conv in candidates:
-            combined, company_score = match_score(
-                lead_name, lead_company, conv.get("full_name", ""), conv.get("company", "")
-            )
-            if best is None or combined > best[0]:
-                best = (combined, company_score, conv)
+        email_matches = by_email.get(lead_email) if lead_email else None
+        if email_matches:
+            conv = email_matches[0]
+            result[lead["Record ID"]] = {
+                "conversation_key": conversation_key(conv),
+                "confidence": "high",
+                "score": 1.0,
+                "lead_name": lead_name,
+                "conv_name": conv.get("full_name", ""),
+            }
+            continue
+
+        norm_lead_name = normalize_name(lead_name)
+        norm_lead_company = normalize_company(lead_company)
+
+        def best_match(candidates):
+            best = None
+            for conv, conv_norm_name, conv_norm_company in candidates:
+                name_score = ratio(norm_lead_name, conv_norm_name)
+                if norm_lead_company and conv_norm_company:
+                    company_score = ratio(norm_lead_company, conv_norm_company)
+                    combined = NAME_WEIGHT * name_score + COMPANY_WEIGHT * company_score
+                else:
+                    company_score = None
+                    combined = name_score
+                if best is None or combined > best[0]:
+                    best = (combined, company_score, conv)
+            return best
+
+        # Company-blocked first to avoid an all-pairs scan for the common case. But a bucket
+        # existing doesn't mean it holds the *right* candidate — only some employees at a
+        # company may have their own conversation's company field filled in (e.g. one match
+        # was missed entirely because a colleague's conversation, not theirs, occupied the
+        # only bucket for their employer) — so a bucketed match that doesn't even clear
+        # "medium" confidence retries against every conversation before giving up, same as
+        # when the bucket was empty to begin with.
+        candidates = by_company.get(norm_lead_company, []) if norm_lead_company else all_conv_norms
+        best = best_match(candidates)
+        if best is None or confidence_for(best[0], best[1]) is None:
+            best = best_match(all_conv_norms)
 
         if best is None:
             continue
@@ -176,11 +287,44 @@ def match_leads_to_conversations(leads: list[dict], conversations: list[dict]) -
     return result
 
 
-def match_deals_to_leads(deals: list[dict], leads: list[dict]) -> dict[str, list[dict]]:
-    """All deals scoring >= medium against a lead's company (a company can have several
-    deals over time), keyed by lead Record ID."""
+def match_deals_to_leads(
+    deals: list[dict],
+    leads: list[dict],
+    lead_conv_matches: dict[str, dict],
+    by_email: dict,
+    by_name: dict,
+) -> dict[str, list[dict]]:
+    """All deals attached to a lead, keyed by lead Record ID. Prefers an identity match: if a
+    deal's own "Associated Contact"/"Primary Contact" resolves to the same conversation a lead
+    already matched to, that's a precise, non-fuzzy link — added once the same "Associated
+    Contact" column that fixed lead matching turned out to exist on deals too. Falls back to
+    fuzzy company-name matching (a deal's company vs a lead's company, scoring >= medium,
+    possibly against several leads at once) for deals with no resolvable contact."""
+    conv_key_to_lead_ids = defaultdict(list)
+    for lead_id, m in lead_conv_matches.items():
+        conv_key_to_lead_ids[m["conversation_key"]].append(lead_id)
+
     result = defaultdict(list)
     for deal in deals:
+        deal_info = {
+            "deal_record_id": deal["Record ID"],
+            "deal_stage": deal.get("Deal Stage", ""),
+            "amount": float(deal.get("Amount") or 0),
+            "close_date": (deal.get("Close Date") or "")[:10] or None,
+            "is_closed_won": deal.get("Is Closed Won", "").lower() == "true",
+            "is_closed_lost": deal.get("Is closed lost", "").lower() == "true",
+            "is_open": deal.get("Is Open (numeric)", "0") == "1.0",
+            "deal_owner": deal.get("Deal owner", ""),
+        }
+
+        raw_contact = deal.get("Associated Contact") or deal.get("Primary Contact") or ""
+        contact_conv_key = resolve_contact_conversation(raw_contact, by_email, by_name)
+        lead_ids = conv_key_to_lead_ids.get(contact_conv_key, []) if contact_conv_key else []
+        if lead_ids:
+            for lead_id in lead_ids:
+                result[lead_id].append({**deal_info, "match_confidence": "high", "match_score": 1.0})
+            continue
+
         invoice_name = deal.get("Invoice name of Company", "").strip()
         deal_company = invoice_name if invoice_name else parse_deal_company(deal.get("Deal Name", ""))
         norm_deal_company = normalize_company(deal_company)
@@ -190,18 +334,9 @@ def match_deals_to_leads(deals: list[dict], leads: list[dict]) -> dict[str, list
             company_score = ratio(norm_deal_company, normalize_company(lead.get("Company", "")))
             confidence = confidence_for(company_score, company_score)
             if confidence:
-                result[lead["Record ID"]].append({
-                    "deal_record_id": deal["Record ID"],
-                    "match_confidence": confidence,
-                    "match_score": round(company_score, 4),
-                    "deal_stage": deal.get("Deal Stage", ""),
-                    "amount": float(deal.get("Amount") or 0),
-                    "close_date": (deal.get("Close Date") or "")[:10] or None,
-                    "is_closed_won": deal.get("Is Closed Won", "").lower() == "true",
-                    "is_closed_lost": deal.get("Is closed lost", "").lower() == "true",
-                    "is_open": deal.get("Is Open (numeric)", "0") == "1.0",
-                    "deal_owner": deal.get("Deal owner", ""),
-                })
+                result[lead["Record ID"]].append(
+                    {**deal_info, "match_confidence": confidence, "match_score": round(company_score, 4)}
+                )
     return result
 
 
@@ -236,7 +371,8 @@ def main() -> None:
     deals = load_csv(SOURCES["deals"])
 
     lead_conv_matches = match_leads_to_conversations(leads, conversations)
-    lead_deal_matches = match_deals_to_leads(deals, leads)
+    by_email, by_name = index_conversations_by_identity(conversations)
+    lead_deal_matches = match_deals_to_leads(deals, leads, lead_conv_matches, by_email, by_name)
 
     matches = []
     for lead in leads:

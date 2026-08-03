@@ -3,6 +3,87 @@
 Running log of what changed and why, kept so this project can be picked up in a fresh chat
 without re-deriving context. Newest entries at the top.
 
+## match_hubspot.py: match deals directly by contact identity too (2026-07-31, same branch as the lead-matching fix above)
+
+**Why:** After fixing lead matching, the user supplied a fresh deals export
+(`270731-all-deals-v2.csv`) and asked whether it helped. It has the same `Associated
+Contact`/`Primary Contact` column (`"Name (email@domain)"`) that fixed lead matching —
+1257 of 1491 deals have it. Deals previously had no identity-based join at all: they were
+only ever attached to a lead by fuzzy-matching a deal's company name (parsed from "Deal
+Name" or "Invoice name of Company") against a lead's company — weak, and prone to
+attaching a deal to the wrong lead when several people at the same company each have
+their own lead/deal.
+
+**Fix:** `match_deals_to_leads` now tries an identity link first: parse the deal's
+`Associated Contact` (falling back to `Primary Contact`) the same way leads' `Associated
+Contact` is parsed, resolve it to a conversation via exact email or an unambiguous exact
+name match (`resolve_contact_conversation` — deliberately not fuzzy, since this is meant
+to be a precise corroborating link, not another scored guess), then check whether that's
+the *same* conversation the deal's candidate lead already matched to
+(`conv_key_to_lead_ids`, built from `lead_conv_matches`). Only falls back to the old
+fuzzy company-name matching for deals whose contact doesn't resolve to anything.
+
+**Result:** total deal attachments 107 → 167 (+56%). The meetings-booked funnel's deal
+numbers shifted accordingly: total deals from booked-meeting leads 67 → 117, mostly more
+correctly-attributed **lost** deals (8 → 50) rather than won ones (56 → 64) — the earlier
+company-fuzzy approach was apparently missing a lot of lost deals specifically, not just
+undercounting deals generally.
+
+**Checks run:** `npm run build` clean (no TS changes, only `match_hubspot.py` +
+regenerated `hubspot.json`).
+
+## match_hubspot.py: fix lead matching for company-primary leads (2026-07-31, branch `fix/company-primary-lead-matching`)
+
+**Why:** User manually found a contact ("Stefan Brenken") who has a real lead in HubSpot
+("(DE) Bank für Kirche und Diakonie") that our matcher had missed, and asked to investigate
+whether this was a bigger problem.
+
+**Root cause #1 — company-primary leads:** ~31% of lead rows (495 of 1599, blank "Primary
+Associated Contact Object ID") have their "Primary Associated Object" set to a Company rather
+than a Contact. For these, `Primary Associated Object Name` *is* the company name, not a
+person's name — Stefan Brenken's lead literally had no person name anywhere in the old CSV
+export. Fuzzy name matching was structurally incapable of ever finding these; this wasn't a
+tuning problem.
+
+**Fix, made possible by a new export the user supplied** (`270731-all-leads-v2.csv`, replacing
+`260730-all-leads.csv` in `SOURCES`): it has an `Associated Contact` column (`"Name
+(email@domain)"`) that HubSpot apparently didn't expose in the earlier export, giving the real
+contact's name and email regardless of which object is primary. `match_hubspot.py` now:
+- Parses `Associated Contact` (`parse_associated_contact`) for `lead_contact_name` /
+  `lead_contact_email`, falling back to the old `Primary Associated Object Name` only when the
+  column is blank (322 of 1598 rows).
+- Tries an **exact email match** first (via `by_email`, built from conversations' `email`
+  field) — always "high" confidence, since email is a unique identifier rather than a fuzzy
+  score. Only 12 conversations actually have a HubSpot-matching email on file (most
+  conversations have no email at all), but this is strictly additive.
+- Falls back to the existing fuzzy name+company match, now using the *corrected* contact name
+  for company-primary leads instead of the company name.
+
+**Root cause #2 — company-bucket fallback bug, found while debugging why Stefan Brenken still
+didn't match after fix #1:** the fuzzy-match blocking step falls back to a full scan across all
+conversations only when a company's bucket is *empty*. But Stefan's employer's bucket wasn't
+empty — a *different* person (Christian Müller) at the same company had their conversation's
+`company` field filled in and occupied the only slot in that bucket, so the real match
+candidate (Stefan's own conversation, which has a blank `company` field) was never considered.
+Fixed: if the best bucketed candidate doesn't even clear "medium" confidence, retry across every
+conversation before giving up, instead of accepting a bad bucketed match (or no match) as final.
+
+**Performance note:** re-normalizing every conversation's name/company on every pairwise
+comparison inside the matching loop (rather than once per conversation up front) made a full
+scan take several minutes once enough leads started hitting it — refactored to precompute
+normalized name/company once per conversation (`all_conv_norms`). Full run is still ~5-8
+minutes (large SequenceMatcher call volume when many leads fall through to a full scan), but
+that's now inherent to the fuzzy-matching approach at this data volume, not wasted repeat work.
+
+**Result:** total lead matches 64 → 103 (86 high, 17 medium) — a 61% increase. Meeting-booked
+funnel numbers improved sharply once this and the earlier `meeting_booked` tag fixes were both
+in place: of 102 meetings booked, leads found jumped from 38 → 70 (20 open / 12 qualified / 38
+lost), and the "no matching lead" drop-off shrank from 73 → 40. Deals from those leads: 67 total
+(2 qualified / 8 lost / 56 won).
+
+**Checks run:** `npm run build` clean (no TS changes, only `match_hubspot.py` + regenerated
+`hubspot.json`). Verified Stefan Brenken's lead now matches at high confidence by hand.
+
 ## Funnel page: custom visual redesign + meeting_booked audit merged (2026-07-31, branch `feat/funnel-visual-redesign`)
 
 **Why:** After the previous Funnel rebuild (below) shipped, the user was still unhappy: the
