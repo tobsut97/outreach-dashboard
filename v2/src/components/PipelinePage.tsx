@@ -89,7 +89,7 @@ export function PipelinePage({
           <FunnelCategory label="Leads" total={leads.length}>
             <FunnelNode label="Open" value={open.length} dotClassName="bg-sky-500" />
             <FunnelNode label="Qualified" value={qualified.length} dotClassName="bg-emerald-500" />
-            <FunnelNode label="Lost" value={lost.length} dotClassName="bg-red-500" />
+            <FunnelNode label="Disqualified" value={lost.length} dotClassName="bg-red-500" />
           </FunnelCategory>
 
           <FunnelConnector />
@@ -134,7 +134,7 @@ export function PipelinePage({
       />
 
       <LeadTable
-        title={`Lost leads (${lost.length})`}
+        title={`Disqualified leads (${lost.length})`}
         leads={lost}
         conversationByKey={conversationByKey}
         onOpenConversation={onOpenConversation}
