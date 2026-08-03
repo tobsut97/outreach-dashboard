@@ -1,4 +1,5 @@
 import { format, parseISO } from 'date-fns'
+import { SortableTableHead } from '@/components/SortableTableHead'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -24,6 +25,7 @@ import {
 } from '@/lib/hubspot'
 import type { Summary } from '@/lib/metrics'
 import { conversationKey, type ManagedConversation } from '@/lib/overrides'
+import { sortRows, useSort } from '@/lib/sort'
 import type { LeadMatch, HubspotData } from '@/types/hubspot'
 
 const BANT_LABELS: Record<'authority' | 'budget' | 'need' | 'timeline', string> = {
@@ -241,6 +243,13 @@ function LeadTable({
   onOpenConversation: (conversation: ManagedConversation) => void
   showDisqualificationReason: boolean
 }) {
+  const [sort, toggleSort] = useSort<'contact' | 'owner'>()
+  const sortedLeads = sortRows(leads, sort, (match, key) =>
+    key === 'contact'
+      ? conversationByKey.get(match.conversation_key)?.full_name || null
+      : match.lead_owner || null,
+  )
+
   return (
     <Card>
       <CardHeader>
@@ -253,14 +262,14 @@ function LeadTable({
           <Table className="table-fixed">
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[30%]">Contact</TableHead>
+                <SortableTableHead label="Contact" sortKey="contact" sort={sort} onToggle={toggleSort} className="w-[30%]" />
                 <TableHead className="w-[25%]">BANT</TableHead>
-                <TableHead className="w-[20%]">Lead owner</TableHead>
+                <SortableTableHead label="Lead owner" sortKey="owner" sort={sort} onToggle={toggleSort} className="w-[20%]" />
                 {showDisqualificationReason && <TableHead className="w-[25%]">Disqualified because</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
-              {leads.map((match) => {
+              {sortedLeads.map((match) => {
                 const conversation = conversationByKey.get(match.conversation_key)
                 const chips = bantChips(match)
                 return (
@@ -316,6 +325,20 @@ function DealTable({
   conversationByKey: Map<string, ManagedConversation>
   onOpenConversation: (conversation: ManagedConversation) => void
 }) {
+  const [sort, toggleSort] = useSort<'contact' | 'amount' | 'closeDate' | 'owner'>()
+  const sortedRows = sortRows(rows, sort, ({ lead, deal }, key) => {
+    switch (key) {
+      case 'contact':
+        return conversationByKey.get(lead.conversation_key)?.full_name || null
+      case 'amount':
+        return deal.amount
+      case 'closeDate':
+        return deal.close_date ?? null
+      case 'owner':
+        return deal.deal_owner || null
+    }
+  })
+
   return (
     <Card>
       <CardHeader>
@@ -328,14 +351,20 @@ function DealTable({
           <Table className="table-fixed">
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[30%]">Contact</TableHead>
-                <TableHead className="w-[20%]">Amount</TableHead>
-                <TableHead className="w-[20%]">Close date</TableHead>
-                <TableHead className="w-[30%]">Deal owner</TableHead>
+                <SortableTableHead label="Contact" sortKey="contact" sort={sort} onToggle={toggleSort} className="w-[30%]" />
+                <SortableTableHead label="Amount" sortKey="amount" sort={sort} onToggle={toggleSort} className="w-[20%]" />
+                <SortableTableHead
+                  label="Close date"
+                  sortKey="closeDate"
+                  sort={sort}
+                  onToggle={toggleSort}
+                  className="w-[20%]"
+                />
+                <SortableTableHead label="Deal owner" sortKey="owner" sort={sort} onToggle={toggleSort} className="w-[30%]" />
               </TableRow>
             </TableHeader>
             <TableBody>
-              {rows.map(({ lead, deal }) => {
+              {sortedRows.map(({ lead, deal }) => {
                 const conversation = conversationByKey.get(lead.conversation_key)
                 return (
                   <TableRow
@@ -372,6 +401,18 @@ function MeetingsWithoutLeadTable({
   meetings: ManagedConversation[]
   onOpenConversation: (conversation: ManagedConversation) => void
 }) {
+  const [sort, toggleSort] = useSort<'contact' | 'company' | 'owner'>()
+  const sortedMeetings = sortRows(meetings, sort, (conversation, key) => {
+    switch (key) {
+      case 'contact':
+        return conversation.full_name || null
+      case 'company':
+        return conversation.company || null
+      case 'owner':
+        return conversation.owner || null
+    }
+  })
+
   return (
     <Card>
       <CardHeader>
@@ -386,13 +427,13 @@ function MeetingsWithoutLeadTable({
           <Table className="table-fixed">
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[35%]">Contact</TableHead>
-                <TableHead className="w-[35%]">Company</TableHead>
-                <TableHead className="w-[30%]">Owner</TableHead>
+                <SortableTableHead label="Contact" sortKey="contact" sort={sort} onToggle={toggleSort} className="w-[35%]" />
+                <SortableTableHead label="Company" sortKey="company" sort={sort} onToggle={toggleSort} className="w-[35%]" />
+                <SortableTableHead label="Owner" sortKey="owner" sort={sort} onToggle={toggleSort} className="w-[30%]" />
               </TableRow>
             </TableHeader>
             <TableBody>
-              {meetings.map((conversation) => (
+              {sortedMeetings.map((conversation) => (
                 <TableRow
                   key={conversationKey(conversation)}
                   onClick={() => onOpenConversation(conversation)}

@@ -10,6 +10,7 @@ import { PipelinePage } from '@/components/PipelinePage'
 import { PositionBreakdown } from '@/components/PositionBreakdown'
 import { SentimentBreakdown } from '@/components/SentimentBreakdown'
 import { SentimentDetail } from '@/components/SentimentDetail'
+import { SentimentThemeDetail } from '@/components/SentimentThemeDetail'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -33,6 +34,7 @@ import {
   type ManagedConversation,
   type Overrides,
 } from '@/lib/overrides'
+import { replyThemeLabel } from '@/lib/replyThemes'
 import { SENTIMENT_LABELS } from '@/lib/sentiment'
 import rawData from '../data.json'
 import rawHubspotData from '../hubspot.json'
@@ -42,12 +44,22 @@ import type { HubspotData } from '@/types/hubspot'
 const data = rawData as unknown as DashboardData
 const hubspotData = rawHubspotData as unknown as HubspotData
 
-type View = { name: 'dashboard' } | { name: 'sentiment'; sentiment: Sentiment } | { name: 'funnel' }
+type View =
+  | { name: 'dashboard' }
+  | { name: 'sentiment'; sentiment: Sentiment }
+  | { name: 'sentiment-theme'; sentiment: Sentiment; theme: string }
+  | { name: 'funnel' }
 
-/** Hash routing rather than a router dependency: three views, and it still works over file://,
- *  which the single-file dist build is meant to support. */
+/** Hash routing rather than a router dependency, and it still works over file://, which the
+ *  single-file dist build is meant to support. */
 function parseHash(): View {
   if (window.location.hash === '#/funnel') return { name: 'funnel' }
+  const themeMatch = /^#\/sentiment\/(positive|neutral|negative)\/theme\/([a-z_]+)$/.exec(
+    window.location.hash,
+  )
+  if (themeMatch) {
+    return { name: 'sentiment-theme', sentiment: themeMatch[1] as Sentiment, theme: themeMatch[2] }
+  }
   const match = /^#\/sentiment\/(positive|neutral|negative)$/.exec(window.location.hash)
   return match ? { name: 'sentiment', sentiment: match[1] as Sentiment } : { name: 'dashboard' }
 }
@@ -139,6 +151,13 @@ function App() {
   if (view.name === 'sentiment') {
     trail.push({ label: profile, hash: '#/' })
     trail.push({ label: `${SENTIMENT_LABELS[view.sentiment]} answers` })
+  } else if (view.name === 'sentiment-theme') {
+    trail.push({ label: profile, hash: '#/' })
+    trail.push({
+      label: `${SENTIMENT_LABELS[view.sentiment]} answers`,
+      hash: `#/sentiment/${view.sentiment}`,
+    })
+    trail.push({ label: replyThemeLabel(view.theme) })
   } else if (view.name === 'dashboard') {
     trail.push({ label: profile })
   }
@@ -146,9 +165,11 @@ function App() {
   const headline =
     view.name === 'sentiment'
       ? `${SENTIMENT_LABELS[view.sentiment]} Answers`
-      : view.name === 'funnel'
-        ? 'Funnel'
-        : `Outreach Analytics ${profile}`
+      : view.name === 'sentiment-theme'
+        ? replyThemeLabel(view.theme)
+        : view.name === 'funnel'
+          ? 'Funnel'
+          : `Outreach Analytics ${profile}`
 
   return (
     <SidebarProvider>
@@ -222,15 +243,21 @@ function App() {
               conversations={dateFiltered}
               summary={summary}
               onOpenConversation={openConversation}
+              onSelectTheme={(theme) => navigate(`#/sentiment/${view.sentiment}/theme/${theme}`)}
+            />
+          ) : view.name === 'sentiment-theme' ? (
+            <SentimentThemeDetail
+              sentiment={view.sentiment}
+              theme={view.theme}
+              conversations={dateFiltered}
+              onOpenConversation={openConversation}
             />
           ) : (
             <>
               <KpiStrip summary={summary} />
               <SentimentBreakdown
                 summary={summary}
-                conversations={metricsInput}
                 onSelect={(sentiment) => navigate(`#/sentiment/${sentiment}`)}
-                onOpenConversation={openConversation}
               />
               <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                 <PositionBreakdown conversations={metricsInput} />

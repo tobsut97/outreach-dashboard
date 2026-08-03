@@ -10,16 +10,27 @@ const HEIGHT = 320
 const LABEL_MIN_WIDTH = 70
 const LABEL_MIN_HEIGHT = 34
 
+// Same hue each sentiment page already uses for its dot/bar (DOT_COLOR/BAR_COLOR in
+// sentiment.ts), as a real CSS color rather than a Tailwind class — needed for color-mix().
+const HUE_VAR: Record<Sentiment, string> = {
+  positive: 'var(--color-emerald-500)',
+  neutral: 'var(--color-slate-400)',
+  negative: 'var(--color-red-400)',
+}
+
+// Leaves rank-ordered dark(most saturated)->light(palest, mixed toward the card surface) so
+// adjacent similarly-sized leaves stay visually separable without drawing a border around them.
+const MIX_MAX = 95
+const MIX_MIN = 22
+
 export function ReplyThemeTreemap({
   sentiment,
   conversations,
-  selectedTheme,
   onSelectTheme,
 }: {
   sentiment: Sentiment
   conversations: ManagedConversation[]
-  selectedTheme: string | null
-  onSelectTheme: (theme: string | null) => void
+  onSelectTheme: (theme: string) => void
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [width, setWidth] = useState(0)
@@ -47,8 +58,16 @@ export function ReplyThemeTreemap({
   }, [conversations])
 
   const total = counts.reduce((sum, item) => sum + item.value, 0)
+  // squarify() sorts its input descending by value and peels off contiguous rows in that order,
+  // so `leaves[i]`'s rank is just its index — no need to re-sort here.
   const leaves = useMemo(() => (width === 0 ? [] : squarify(counts, width, HEIGHT)), [counts, width])
-  const fill = TAG_BAR_COLOR[sentiment]
+  const hue = HUE_VAR[sentiment]
+
+  const leafFill = (rank: number, rankCount: number) => {
+    const t = rankCount > 1 ? rank / (rankCount - 1) : 0
+    const mixPercent = MIX_MAX - t * (MIX_MAX - MIX_MIN)
+    return `color-mix(in oklch, ${hue} ${mixPercent}%, var(--color-card))`
+  }
 
   return (
     <Card>
@@ -61,25 +80,21 @@ export function ReplyThemeTreemap({
         ) : (
           <>
             <div ref={containerRef} className="relative w-full" style={{ height: HEIGHT }}>
-              {leaves.map((leaf) => {
+              {leaves.map((leaf, rank) => {
                 const fits = leaf.width >= LABEL_MIN_WIDTH && leaf.height >= LABEL_MIN_HEIGHT
-                const isSelected = selectedTheme === leaf.id
-                const dimmed = selectedTheme !== null && !isSelected
                 const share = total ? Math.round((1000 * leaf.value) / total) / 10 : 0
                 return (
                   <button
                     key={leaf.id}
                     type="button"
-                    onClick={() => onSelectTheme(isSelected ? null : leaf.id)}
-                    className={`absolute overflow-hidden text-left transition-opacity duration-150 focus-visible:ring-2 focus-visible:ring-foreground focus-visible:outline-none ${fill} ${
-                      isSelected ? 'ring-2 ring-foreground ring-inset' : 'hover:ring-1 hover:ring-foreground/40 hover:ring-inset'
-                    }`}
+                    onClick={() => onSelectTheme(leaf.id)}
+                    className="absolute overflow-hidden text-left transition-[filter] duration-150 hover:brightness-95 focus-visible:ring-2 focus-visible:ring-foreground focus-visible:outline-none"
                     style={{
                       left: leaf.x + 1,
                       top: leaf.y + 1,
                       width: Math.max(leaf.width - 2, 0),
                       height: Math.max(leaf.height - 2, 0),
-                      opacity: dimmed ? 0.35 : 1,
+                      backgroundColor: leafFill(rank, leaves.length),
                     }}
                     title={`${leaf.value} replies (${share}%) — ${replyThemeLabel(leaf.id)}`}
                   >
@@ -98,21 +113,21 @@ export function ReplyThemeTreemap({
               <p className="text-muted-foreground text-xs">Same data as a ranked list:</p>
               {counts.map(({ id, value }) => {
                 const share = total ? Math.round((1000 * value) / total) / 10 : 0
-                const isSelected = selectedTheme === id
                 return (
                   <button
                     key={id}
                     type="button"
-                    onClick={() => onSelectTheme(isSelected ? null : id)}
-                    className={`hover:bg-muted flex items-center gap-3 rounded-md px-2 py-1.5 text-left ${
-                      isSelected ? 'bg-muted' : ''
-                    }`}
+                    onClick={() => onSelectTheme(id)}
+                    className="hover:bg-muted flex items-center gap-3 rounded-md px-2 py-1.5 text-left"
                   >
                     <span className="w-56 shrink-0 truncate text-sm" title={replyThemeLabel(id)}>
                       {replyThemeLabel(id)}
                     </span>
                     <div className="bg-muted h-1.5 flex-1 overflow-hidden rounded-full">
-                      <div className={`h-full rounded-full ${fill}`} style={{ width: `${share}%` }} />
+                      <div
+                        className={`h-full rounded-full ${TAG_BAR_COLOR[sentiment]}`}
+                        style={{ width: `${share}%` }}
+                      />
                     </div>
                     <span className="text-muted-foreground w-10 shrink-0 text-right text-sm tabular-nums">
                       {value}
