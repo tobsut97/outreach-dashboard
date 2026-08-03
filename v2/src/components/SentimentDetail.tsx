@@ -1,7 +1,8 @@
 import { format, parseISO } from 'date-fns'
-import { ChevronDown, ExternalLink, MessageSquareReply, Percent, Search, Tags } from 'lucide-react'
+import { ChevronDown, ExternalLink, MessageSquareReply, Percent, Search, Tags, X } from 'lucide-react'
 import { useState } from 'react'
 import { KpiCard } from '@/components/KpiCard'
+import { ReplyThemeTreemap } from '@/components/ReplyThemeTreemap'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -25,6 +26,7 @@ import {
 } from '@/components/ui/table'
 import { oneDecimal, type Summary } from '@/lib/metrics'
 import type { ManagedConversation } from '@/lib/overrides'
+import { replyThemeLabel } from '@/lib/replyThemes'
 import {
   SENTIMENT_BADGE_COLOR,
   SENTIMENT_ICON_COLOR,
@@ -51,6 +53,7 @@ export function SentimentDetail({
   onOpenConversation: (conversation: ManagedConversation) => void
 }) {
   const [selectedReasons, setSelectedReasons] = useState<Set<string>>(new Set())
+  const [selectedTheme, setSelectedTheme] = useState<string | null>(null)
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
 
@@ -67,6 +70,9 @@ export function SentimentDetail({
   const searchTerm = search.trim().toLowerCase()
   const filteredRows = rows.filter((conversation) => {
     if (selectedReasons.size > 0 && !conversation.tags.some((tag) => selectedReasons.has(tag))) {
+      return false
+    }
+    if (selectedTheme && conversation.reply_theme !== selectedTheme) {
       return false
     }
     if (!searchTerm) return true
@@ -100,6 +106,11 @@ export function SentimentDetail({
       : selectedReasons.size === 1
         ? tagLabel([...selectedReasons][0])
         : `${selectedReasons.size} reasons`
+
+  const handleSelectTheme = (theme: string | null) => {
+    setSelectedTheme(theme)
+    setPage(1)
+  }
 
   return (
     <>
@@ -164,6 +175,15 @@ export function SentimentDetail({
         </CardContent>
       </Card>
 
+      {sentiment !== 'positive' && (
+        <ReplyThemeTreemap
+          sentiment={sentiment}
+          conversations={rows}
+          selectedTheme={selectedTheme}
+          onSelectTheme={handleSelectTheme}
+        />
+      )}
+
       <Card>
         <CardHeader>
           <CardTitle className="text-foreground text-sm font-semibold">
@@ -214,6 +234,19 @@ export function SentimentDetail({
                   </div>
                 </PopoverContent>
               </Popover>
+            )}
+            {selectedTheme && (
+              <Badge variant="secondary" className="gap-1.5 py-1.5">
+                {replyThemeLabel(selectedTheme)}
+                <button
+                  type="button"
+                  onClick={() => handleSelectTheme(null)}
+                  aria-label="Clear theme filter"
+                  className="hover:text-foreground -mr-0.5"
+                >
+                  <X className="size-3.5" />
+                </button>
+              </Badge>
             )}
           </div>
 
