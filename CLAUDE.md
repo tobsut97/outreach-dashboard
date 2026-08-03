@@ -61,3 +61,8 @@ Some data corrections (see [v2/notes.md](v2/notes.md)'s reply-rate audit) were a
 hand directly to `data.json` and `classify_cache.json`, not by patching `extract.py`. If the
 pipeline is ever re-run from raw CSVs, those fixes need to be re-applied or ported into
 `extract.py` first — otherwise they'll silently disappear.
+
+Every conversation's `reply_theme` field (fine-grained categorization of negative/neutral
+reply content, see notes.md's "Fine-grained reply-theme categorization" entry) was
+classified directly by Claude in-conversation, batched across parallel subagents — not by
+`extract.py`/Ollama. Re-running `extract.py` from raw CSVs won't reproduce this field either.

@@ -3,6 +3,125 @@
 Running log of what changed and why, kept so this project can be picked up in a fresh chat
 without re-deriving context. Newest entries at the top.
 
+## Overview pie chart, treemap consolidation, per-theme drill-through, sortable tables (2026-08-03, branch `feat/reply-theme-clusters`)
+
+**Why:** follow-up feedback on the reply-theme work above. The Overview page's "Answer
+sentiment" card had an expandable row (5 most recent replies) that wasn't useful. The
+sentiment subpage's "Why" card (old coarse tags) was now redundant with the treemap added
+above — same ground, coarser. Clicking a treemap leaf only filtered the table further down the
+same page, when the user wanted a dedicated drill-through page. And none of the tables in the
+app could be sorted.
+
+**Overview card (`SentimentBreakdown.tsx`):** replaced the expandable rows with a split layout —
+a recharts `Pie`/`PieChart` on the left (3 sentiment slices), the sentiment rows as directly
+clickable buttons on the right (no more expand-then-"Show all X" two-step). `Pie`/`Cell` need
+real CSS colors, not `DOT_COLOR`'s Tailwind classes — resolved via `var(--color-emerald-500)`
+etc., which Tailwind v4 exposes globally for every default-palette shade, so the pie stays in
+sync with the existing dot/bar colors for free. **Hit a rendering bug along the way**: wrapping
+the pie in the shadcn `ChartContainer`/`ResponsiveContainer` pattern (`DailyChart.tsx`'s
+pattern) rendered an empty `<g class="recharts-pie">` with zero sectors in this environment,
+even once the container had correct non-zero pixel dimensions — a fixed-size `PieChart` (no
+`ResponsiveContainer`) rendered correctly immediately. Since the fill color also needs
+`ChartContainer`'s injected CSS vars to resolve, dropping it meant resolving colors directly
+too (`HUE_VAR` map) instead of through `chartConfig`'s indirection.
+
+**Sentiment subpage (`SentimentDetail.tsx`):** forks by sentiment now. Positive is untouched
+(still the old "Why" card, tags column, reason-filter popover — there's no `reply_theme` data
+for positive to replace it with). Negative/neutral: "Why" card removed, replaced by the
+treemap; reason-filter popover removed (filtering by theme now means navigating to the new
+per-theme page, not two competing inline filters); the Conversations table's "Reasons" column
+shows the single `reply_theme` badge instead of the `tags` array; "Reasons identified" KPI
+counts distinct `reply_theme` values instead of `tag_counts`.
+
+**Treemap (`ReplyThemeTreemap.tsx`):** leaves were a single flat fill — replaced with a
+per-leaf `color-mix()` ramp, biggest leaf closest to the sentiment's own hue, smallest mixed
+toward the card surface, so adjacent similarly-sized leaves stay visually separable without a
+border. Clicking a leaf (or a ranked-list row) now calls `onSelectTheme` to navigate to a new
+page instead of toggling local filter state — dropped the dimming/selected-state styling since
+a click always navigates away now.
+
+**Per-theme drill-through:** new `SentimentThemeDetail.tsx` page + `View` variant in `App.tsx`
+(`#/sentiment/:sentiment/theme/:themeId`), added to the breadcrumb. Extracted the ~120-line
+conversations table/search/pagination block out of `SentimentDetail.tsx` into a shared
+`ConversationsCard.tsx` (title+count, search, an optional extra-controls slot, table,
+pagination) so both pages reuse it instead of duplicating it.
+
+**Sortable tables:** checked shadcn's own data-table pattern first — it requires
+`@tanstack/react-table` plus a full rewrite into a `ColumnDef`/`useReactTable` architecture,
+disproportionate for these small, plain tables. Hand-rolled instead: `lib/sort.ts`
+(`useSort`/`sortRows`, none→asc→desc→none on repeated clicks) + `SortableTableHead.tsx` (same
+Button+arrow-icon convention shadcn's demo uses, no new dependency). Wired into
+`ConversationsCard.tsx` (Name/Company/Replied/Reasons) and all three Funnel table shapes in
+`PipelinePage.tsx` (leads: Contact/Lead owner; deals: Contact/Amount/Close date/Deal owner;
+meetings-without-lead: Contact/Company/Owner).
+
+**Checks run:** `npx tsc --noEmit`, `npx oxlint src/`, `npm run build` all clean. Browser-
+verified the pie renders and rows navigate; user confirmed the rest live via HMR in their own
+browser.
+
+## Fine-grained reply-theme categorization + treemap (2026-08-03, branch `feat/reply-theme-clusters`)
+
+**Why:** the user wanted to know what negative/neutral contacts actually wrote, beyond the
+existing 11 coarse tags (`ALLOWED_TAGS`) — categorized more specifically, and classified by
+Claude directly rather than the local Ollama pipeline in `extract.py`.
+
+**Taxonomy:** sampled negative/neutral replies stratified across the existing coarse tags to
+see what more specific content each one was hiding, then drafted 20 named categories + an
+`other_unclear` catch-all (`v2/src/lib/replyThemes.ts`) — e.g. `generic_decline`,
+`reduction_not_offsetting`, `own_climate_project`, `not_the_decision_maker`,
+`leaving_company`, `already_in_contact_with_colleague`. Confirmed with the user before mass-
+classifying. These cut across the old coarse tags rather than mirroring them — e.g. the old
+`not_relevant` bucket (295 conversations) splits into `generic_decline`,
+`no_own_footprint_to_offset`, and others; `has_existing_solution` (207) splits into
+`reduction_not_offsetting`, `own_climate_project`, `works_with_competitor`,
+`already_certified_reported`.
+
+**Classification:** all 1101 negative/neutral conversations (669 negative + 432 neutral), split
+into 8 batches of ~140, each classified by an independent `Agent`-tool subagent (Claude reading
+the batch directly, not Ollama/an API) reading the prospect's reply text against the taxonomy.
+Merged results back positionally (batch order, not by `profile_url` — 15 conversations share a
+duplicate `profile_url` with another conversation, a known cross-owner-duplicate pattern per
+the meeting_booked audit above, so a profile_url-keyed merge would have collapsed them). Added
+as a new, additive `reply_theme: string | null` field per conversation — `sentiment` and `tags`
+untouched.
+
+**Result:** `other_unclear` came out to only 5.0% overall (3.0% negative, 8.1% neutral) — well
+under the ~10-15% threshold that would've signaled the taxonomy needed another split. Top
+negative themes: `generic_decline` (27.8%), `revisit_later` (13.3%), `too_busy_no_capacity`
+(6.9%). Top neutral themes: `not_the_decision_maker` (14.8%), `referred_named_contact` (13.2%),
+`leaving_company` (10.9%) — neutral replies skew toward "not my call/not my job anymore" rather
+than an actual stance on the pitch. Spot-checked 14 random assignments against the source text:
+12-13 solid, 1-2 defensible near-misses (e.g. one reply saying "we ourselves offer similar
+consulting services" landed in `other_unclear` when `works_with_competitor` fit better) — no
+systematic failure pattern, didn't warrant a re-run.
+
+**Visualization:** ran treemap/sunburst/circle-packing/word-cloud/bar-list through this
+project's `dataviz` skill rules before picking. Governing constraint: ~15-20 leaf categories is
+past the skill's ~7-8-color categorical ceiling, so a single chart combining negative+neutral
+with one hue per category was never on the table. Fix: don't combine sentiments in one chart —
+`SentimentDetail.tsx` already renders once per sentiment, so each page's module only needs its
+own categories, all sharing that page's existing single sentiment color. Zero categorical color
+decisions needed, and no value-ramp on the leaves either (skill flags ramping nominal/unordered
+categories as double-encoding, since area already carries magnitude). Picked treemap over
+sunburst (arc area reads worse than rectangle area) and circle-packing (nested circles waste
+space and viewers underestimate circle-area differences) and word-cloud (font-size is the
+least accurate magnitude encoding, and it isn't in the skill's job→form table at all). recharts
+3.x has no `Treemap`/`Sunburst`, so none of the four options came for free regardless of pick —
+hand-rolled a squarified-treemap layout (`v2/src/lib/treemap.ts`, ~90 lines, no new dependency)
+rather than add d3.
+
+**New component:** `v2/src/components/ReplyThemeTreemap.tsx` — single flat fill (that page's
+`TAG_BAR_COLOR`), leaves sized by count, labels only where they measure-fit, native `title`
+tooltip as the hover fallback, a ranked-list "table view" twin underneath (required by the
+skill — every chart needs an accessible twin), and click-to-filter wired into
+`SentimentDetail.tsx`'s existing conversations table via a new `selectedTheme` state
+(parallel to the existing `selectedReasons` tag filter, single-select, clearable via a badge).
+
+**Checks run:** `npx tsc --noEmit`, `npx oxlint src/`, `npm run build` all clean. Browser-
+verified on `#/sentiment/negative` and `#/sentiment/neutral`: treemap renders with correct
+counts, clicking a leaf filters the table (651 → 181 for `generic_decline`), clearing the badge
+restores the full set; confirmed hidden on `#/sentiment/positive`.
+
 ## match_hubspot.py: fix phantom deals and duplicate leads (2026-08-03, branch `fix/company-primary-lead-matching`)
 
 **Why:** the user spotted a "qualified deal" for Udo Gassner / "SWAP", €1,562,500, that doesn't

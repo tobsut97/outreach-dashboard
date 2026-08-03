@@ -19,6 +19,7 @@ export interface Conversation {
   replied: boolean
   sentiment: Sentiment | null
   tags: string[]
+  reply_theme: string | null
 }
 
 export interface DashboardData {
