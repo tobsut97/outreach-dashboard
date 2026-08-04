@@ -1,5 +1,10 @@
 import { get, put } from '@vercel/blob'
 
+// Edge runtime, not the default Node serverless runtime, so this handler receives a Fetch API
+// Request (with .json()) rather than a classic Node (req, res) pair — the Node runtime's req
+// has no .json() method and PUT/POST would 500 on request.json().
+export const config = { runtime: 'edge' }
+
 const BLOB_PATHNAME = 'overrides.json'
 
 interface ConversationOverride {
