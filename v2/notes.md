@@ -984,3 +984,38 @@ found by manual review against HubSpot directly (the automated fuzzy matcher in
 
 Net result: **31 → 21** meetings without a lead. Verified against the app directly (zero
 overrides, fresh load): Funnel shows `87 booked / 21 never matched a HubSpot lead / Leads · 59`.
+
+## Second pass on the 21 unmatched, by manual review (2026-08-04)
+
+Went through the remaining 21 one by one against HubSpot directly. Three kinds of corrections,
+none touching `unmatched_leads_count`'s underlying leads dataset or the aggregate (which reflects
+the whole CRM, not just matched conversations):
+
+- **11 conversations never actually booked a meeting** — the `meeting_booked` tag was wrong.
+  Removed it: Nathalie Eßer, Thomas Fischer, Louisa Häußler, Christoph Musik, Jannik Ohle, Niklas
+  Meyer-Breitkreutz, Dr. Fabienne Beez, Andrea Prudenti, Christian Mlinar, Harald Schmidt, Yvonne
+  Zwick. This is a genuine correction to "meetings booked" itself (87 → 76), not just the
+  unmatched count.
+- **5 more manual HubSpot matches**: Isabelle Bock (`731588759768`), Natasha Conchita Ramgulam
+  (`731588759795`), Jessica Stölzle (`774525910242`), Olga Sokolova (`774586470590`), Norbert
+  Wölbl (`878283221214`) — same minimal-fields approach as the first batch (real
+  `conversation_key`/`lead_record_id`, no fabricated BANT/stage/deal data).
+- **1 correction is actually a closed-won deal**: Andrea Gut, record `493808714972` — added as a
+  match with `lead_stage: "Qualified"`, `is_open: false`, and one `deals` entry
+  (`deal_stage: "Closed won"`, `is_closed_won: true`). No real amount/close date available, so
+  both are placeholder (`0` / `null`) — this nudges the Won deals count but not the total amount.
+- **2 more excluded from lead matching** (`excluded_from_lead_matching: true`, same mechanism as
+  the IETA carve-out above): Eilís O'Keefe (also an IETA conference meeting — the earlier IETA
+  audit's text search for "IETA" missed her because her own message text/company field never
+  says it literally) and Hartmut Fach (booked a real meeting, but isn't a relevant lead).
+- **Jennifer Bregenhorn** — confirmed as a genuine gap (booked a meeting, lead really is
+  missing), left as-is. Note: she has two conversation records under different owners
+  (Christine Rzepka's copy has no `meeting_booked` tag; Lara Ebert's copy does — a known
+  cross-owner-duplicate case, see the "meeting_booked tag audit" entry above) — the correction
+  applies to the Lara Ebert copy, the one that actually carries the tag.
+- **Philipp Lehner** — not mentioned in this pass, left unmatched deliberately (pending, not a
+  confirmed gap either way).
+
+Net result: **21 → 2** meetings without a lead (Philipp Lehner, Jennifer Bregenhorn). Verified
+directly against the files (same restrictToDataYears-aware script as before): `booked: 76`,
+`without lead: 2`.
