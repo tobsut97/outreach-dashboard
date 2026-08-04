@@ -1,4 +1,4 @@
-import { head, put } from '@vercel/blob'
+import { get, put } from '@vercel/blob'
 
 const BLOB_PATHNAME = 'overrides.json'
 
@@ -26,9 +26,9 @@ function isValidOverrides(value: unknown): value is Overrides {
 export default async function handler(request: Request): Promise<Response> {
   if (request.method === 'GET') {
     try {
-      const blob = await head(BLOB_PATHNAME)
-      const response = await fetch(blob.url)
-      const overrides = await response.json()
+      const blob = await get(BLOB_PATHNAME, { access: 'private' })
+      if (!blob) return Response.json({})
+      const overrides = await new Response(blob.stream).json()
       return Response.json(overrides)
     } catch {
       // No blob written yet — nothing overridden so far.
@@ -42,7 +42,7 @@ export default async function handler(request: Request): Promise<Response> {
       return new Response('Invalid overrides payload', { status: 400 })
     }
     await put(BLOB_PATHNAME, JSON.stringify(body), {
-      access: 'public',
+      access: 'private',
       contentType: 'application/json',
       addRandomSuffix: false,
       allowOverwrite: true,
