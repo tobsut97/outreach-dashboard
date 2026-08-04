@@ -1019,3 +1019,8 @@ the whole CRM, not just matched conversations):
 Net result: **21 → 2** meetings without a lead (Philipp Lehner, Jennifer Bregenhorn). Verified
 directly against the files (same restrictToDataYears-aware script as before): `booked: 76`,
 `without lead: 2`.
+
+**Correction**: Philipp Lehner never booked a meeting either — removed his `meeting_booked` tag
+too. Final: **booked 75**, **1 meeting without a lead** (Jennifer Bregenhorn only, a genuine gap).
+Leads/deals tied to booked meetings unaffected (65 / 13) since he wasn't matched to a lead
+anyway.
