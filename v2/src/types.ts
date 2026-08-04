@@ -20,6 +20,10 @@ export interface Conversation {
   sentiment: Sentiment | null
   tags: string[]
   reply_theme: string | null
+  /** Booked meetings that were never going to have a HubSpot lead in the first place (e.g.
+   *  conference/event meetings), so the funnel's "never matched a HubSpot lead" count shouldn't
+   *  treat them as a matching failure. */
+  excluded_from_lead_matching?: boolean
 }
 
 export interface DashboardData {

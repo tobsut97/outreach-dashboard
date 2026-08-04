@@ -54105,7 +54105,8 @@
         "open_to_call",
         "meeting_booked"
       ],
-      "reply_theme": null
+      "reply_theme": null,
+      "excluded_from_lead_matching": true
     },
     {
       "profile_url": "https://www.linkedin.com/in/jens-olejak-4a29b94/",
@@ -54141,7 +54142,8 @@
         "open_to_call",
         "meeting_booked"
       ],
-      "reply_theme": null
+      "reply_theme": null,
+      "excluded_from_lead_matching": true
     },
     {
       "profile_url": "https://www.linkedin.com/in/douglasgreenwell/",
@@ -54313,7 +54315,8 @@
         "open_to_call",
         "meeting_booked"
       ],
-      "reply_theme": null
+      "reply_theme": null,
+      "excluded_from_lead_matching": true
     },
     {
       "profile_url": "https://www.linkedin.com/in/jerome-le-page-6601711b/",
@@ -54458,7 +54461,8 @@
         "open_to_call",
         "meeting_booked"
       ],
-      "reply_theme": null
+      "reply_theme": null,
+      "excluded_from_lead_matching": true
     },
     {
       "profile_url": "https://www.linkedin.com/in/dr-heike-henn-79236518/",
@@ -54630,7 +54634,8 @@
         "open_to_call",
         "meeting_booked"
       ],
-      "reply_theme": null
+      "reply_theme": null,
+      "excluded_from_lead_matching": true
     },
     {
       "profile_url": "https://www.linkedin.com/in/leecaplen/",
@@ -54808,7 +54813,8 @@
       "tags": [
         "meeting_booked"
       ],
-      "reply_theme": null
+      "reply_theme": null,
+      "excluded_from_lead_matching": true
     },
     {
       "profile_url": "https://www.linkedin.com/in/ACoAAABcldEBb0yVkHaEHj9ouoAcaNzOgKH8L0I/",

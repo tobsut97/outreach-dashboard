@@ -22,14 +22,16 @@ export function leadsFromMeetingBooked(matches: LeadMatch[], conversations: Mana
 
 /** Meeting-booked conversations with no matching HubSpot lead at all — the funnel's biggest
  *  drop-off point, worth surfacing explicitly rather than letting it disappear as a gap between
- *  two numbers. */
+ *  two numbers. Excludes conversations flagged excluded_from_lead_matching (e.g. conference/
+ *  event meetings that were never going to produce a HubSpot lead), since those aren't a
+ *  matching failure. */
 export function meetingsWithoutLead(
   matches: LeadMatch[],
   conversations: ManagedConversation[],
 ): ManagedConversation[] {
   const leadKeys = new Set(matches.map((match) => match.conversation_key))
   return meetingBookedConversations(conversations).filter(
-    (conversation) => !leadKeys.has(conversationKey(conversation)),
+    (conversation) => !conversation.excluded_from_lead_matching && !leadKeys.has(conversationKey(conversation)),
   )
 }
 

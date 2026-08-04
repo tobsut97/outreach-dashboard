@@ -942,3 +942,45 @@ requires `vercel login`/project link) to exercise the real API route.
 Deliberately not done: no migration of anyone's existing localStorage overrides into the new
 store (they were exactly the untracked, per-browser state this change removes — re-apply through
 the UI if still wanted) and no changes to `data.json`/`hubspot.json`/the Python pipeline scripts.
+
+**Follow-up fix**: the Blob store was created with **private** access (the override data carries
+emails/LinkedIn URLs), so `api/overrides.ts` reads via `get(pathname, { access: 'private' })`
+instead of a plain `fetch(blob.url)` (which only works for public blobs), and writes with
+`access: 'private'`. Also went through two wrong turns on the *runtime*: first tried
+`export const config = { runtime: 'edge' }` because `PUT` was 500ing with an empty body (guessed:
+Node's classic `(req, res)` handler doesn't have `request.json()`) — but Vercel's build rejected
+the Edge Function outright, since `@vercel/blob` pulls in Node built-ins (`node:stream`,
+`node:net`, `node:tls`, etc.) that Edge can't bundle. Reverted: Vercel's Node.js Functions already
+accept the Web-standard Request/Response signature this handler uses, no runtime override needed.
+Also wrapped `put()`/`get()` in try/catch so a real failure returns the actual error message
+instead of an opaque 500, and logs it server-side — needed since the client had no way to tell
+*why* a save failed.
+
+## Manual HubSpot match corrections + IETA meeting exclusion (2026-08-04)
+
+Two data corrections to the Funnel's "meetings booked with no matching HubSpot lead" count,
+found by manual review against HubSpot directly (the automated fuzzy matcher in
+`match_hubspot.py` missed these):
+
+- **4 conversations manually matched** to real HubSpot lead records the matcher missed: Nick
+  Zippel (`1170955081916`), Dr. Kai-Uwe Ostheim (`1061534456010`), Silke Conrad
+  (`731588760776`), Marcus Zinn (`1063770282171`). Added as new entries in `hubspot.json`'s
+  `matches` array with real `conversation_key`/`lead_record_id`, but *not* fabricated BANT/deal
+  data — I don't have HubSpot API access in this environment (the connected HubSpot MCP tool
+  returned "User does not have permissions to view leads"), so `lead_stage` is set to `"New"`,
+  `is_open: true`, no BANT, no deals, `lead_owner` filled in only where an exact HubSpot-spelled
+  owner name was already confirmed elsewhere in the file (blank otherwise) — accurate enough to
+  drop them out of "no lead" without inventing stage/pipeline data that would corrupt the
+  Open/Qualified/Disqualified or deals breakdowns. `unmatched_leads_count` decremented by 4 to
+  match.
+- **6 conference meetings excluded from lead matching entirely**: booked by Maximilian Venhofen
+  for IETA (an emissions-trading conference) — these were never going to produce a HubSpot lead,
+  so counting them as a matching failure was wrong. Rather than deleting them from `data.json`
+  (which would also drop them from "meetings booked" everywhere else, 87 → 81), added a new
+  `excluded_from_lead_matching?: boolean` field on `Conversation` (`src/types.ts`), set `true` on
+  those 6 conversations in `data.json`, and `meetingsWithoutLead()` (`src/lib/hubspot.ts`) now
+  filters them out explicitly — a visible, reversible carve-out in code rather than a silent data
+  edit.
+
+Net result: **31 → 21** meetings without a lead. Verified against the app directly (zero
+overrides, fresh load): Funnel shows `87 booked / 21 never matched a HubSpot lead / Leads · 59`.
