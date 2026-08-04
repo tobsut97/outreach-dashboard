@@ -28,8 +28,8 @@ import { deriveMetrics } from '@/lib/metrics'
 import {
   applyOverrides,
   conversationKey,
-  loadOverrides,
-  persistOverrides,
+  fetchOverrides,
+  saveOverrides,
   type ConversationOverride,
   type ManagedConversation,
   type Overrides,
@@ -87,7 +87,8 @@ const allConversations = restrictToDataYears(data.conversations)
 function App() {
   const [profile, setProfile] = useState<ProfileName>('Overview')
   const [view, setView] = useState<View>(parseHash)
-  const [overrides, setOverrides] = useState<Overrides>(loadOverrides)
+  const [overrides, setOverrides] = useState<Overrides>({})
+  const [saveError, setSaveError] = useState<string | null>(null)
   const [range, setRange] = useState<DateRange | undefined>(undefined)
   const [selected, setSelected] = useState<ManagedConversation | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -96,6 +97,10 @@ function App() {
     const onHashChange = () => setView(parseHash())
     window.addEventListener('hashchange', onHashChange)
     return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
+
+  useEffect(() => {
+    fetchOverrides().then(setOverrides)
   }, [])
 
   const owner = profileOwner(profile)
@@ -124,10 +129,13 @@ function App() {
   const trimmedDaily = trimDaily(daily, fromKey, toKeyValue)
 
   const saveOverride = (key: string, override: ConversationOverride) => {
-    setOverrides((current) => {
-      const next: Overrides = { ...current, [key]: override }
-      persistOverrides(next)
-      return next
+    const previous = overrides
+    const next: Overrides = { ...previous, [key]: override }
+    setOverrides(next)
+    setSaveError(null)
+    saveOverrides(next).catch(() => {
+      setOverrides(previous)
+      setSaveError('Failed to save — the edit was not applied. Check your connection and try again.')
     })
   }
 
@@ -272,6 +280,7 @@ function App() {
         conversation={selected}
         open={drawerOpen}
         onOpenChange={setDrawerOpen}
+        saveError={saveError}
         onSave={(override) => {
           if (selected) saveOverride(conversationKey(selected), override)
         }}

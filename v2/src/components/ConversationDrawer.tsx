@@ -27,11 +27,13 @@ export function ConversationDrawer({
   open,
   onOpenChange,
   onSave,
+  saveError,
 }: {
   conversation: ManagedConversation | null
   open: boolean
   onOpenChange: (open: boolean) => void
   onSave: (override: ConversationOverride) => void
+  saveError?: string | null
 }) {
   const [editing, setEditing] = useState(false)
   const [sentiment, setSentiment] = useState<Sentiment | null>(null)
@@ -237,6 +239,7 @@ export function ConversationDrawer({
           </div>
 
           <div className="mt-auto flex flex-col gap-2 p-4">
+            {saveError && <p className="text-destructive text-sm">{saveError}</p>}
             {editing ? (
               <div className="flex gap-2">
                 <Button onClick={save}>Save changes</Button>

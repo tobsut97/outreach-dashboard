@@ -905,3 +905,40 @@ pattern automatically) was also planned but blocked by the same safety classifie
 "instruction poisoning" — writing agent-instruction content sourced from an external page into a
 location future sessions read as instructions. Skipped; this note is the only durable record of
 the convention for now.
+
+## Overrides moved from localStorage to a shared Blob store (2026-08-04)
+
+Manual edits (sentiment corrections, tag changes, the "irrelevant" flag) used to live in
+`localStorage`, per browser. This caused a real discrepancy: the Funnel page's "meetings booked"
+and "never matched a HubSpot lead" counts differed between two browsers on the same machine (79/23
+vs. 87/31) because one had accumulated edits the other never saw — and neither number was
+reproducible from the checked-in `data.json`/`hubspot.json` alone. Root cause investigation also
+turned up that a Node script computing "unmatched meetings" directly against `data.json` gave yet
+a third number (102/40) because it skipped `restrictToDataYears` (`src/lib/dateRange.ts:47`), the
+hard 2025–2026 cutoff the app applies everywhere — a reminder that any one-off script against
+these files needs to replicate that filter too, or it isn't comparable to what the app shows.
+
+The dashboard turned out not to be `file://`-only in practice — it's deployed on Vercel (see the
+"Vercel deployment" entry below), which makes a small serverless function available without a
+real backend. Overrides are now stored server-side as one JSON blob via Vercel Blob:
+
+- `v2/api/overrides.ts` — a serverless function, `GET` reads the current `overrides.json` blob
+  (empty object if none exists yet), `PUT`/`POST` validates and overwrites it.
+- `v2/src/lib/overrides.ts` — `loadOverrides`/`persistOverrides` (localStorage) replaced with
+  `fetchOverrides`/`saveOverrides` (fetch against `/api/overrides`). `applyOverrides` and
+  `conversationKey` are unchanged.
+- `v2/src/App.tsx` — overrides now load asynchronously on mount; `saveOverride` optimistically
+  updates local state, calls `saveOverrides`, and rolls back with a visible error (surfaced in
+  `ConversationDrawer`) if the save fails, so a failed save is never silent.
+
+**Requires one-time manual setup**: a Blob store must be attached to the Vercel project (Storage
+tab → Create → Blob) to provision `BLOB_READ_WRITE_TOKEN`. Without it, `GET /api/overrides` just
+returns `{}` (no crash) and saves will fail with a visible error in the drawer.
+
+**Local dev caveat**: plain `vite dev` (`npm run dev`) has no serverless runtime, so
+`/api/overrides` 404s and edits won't persist locally — use `npm run dev:vercel` (`vercel dev`,
+requires `vercel login`/project link) to exercise the real API route.
+
+Deliberately not done: no migration of anyone's existing localStorage overrides into the new
+store (they were exactly the untracked, per-browser state this change removes — re-apply through
+the UI if still wanted) and no changes to `data.json`/`hubspot.json`/the Python pipeline scripts.
