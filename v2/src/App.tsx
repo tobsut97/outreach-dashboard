@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from 'react'
 import type { DateRange } from 'react-day-picker'
 import { AppSidebar } from '@/components/AppSidebar'
-import { ConversationSheet } from '@/components/ConversationSheet'
+import { ConversationDrawer } from '@/components/ConversationDrawer'
 import { DailyChart } from '@/components/DailyChart'
 import { DateRangeFilter } from '@/components/DateRangeFilter'
 import { KpiStrip } from '@/components/KpiStrip'
@@ -90,7 +90,7 @@ function App() {
   const [overrides, setOverrides] = useState<Overrides>(loadOverrides)
   const [range, setRange] = useState<DateRange | undefined>(undefined)
   const [selected, setSelected] = useState<ManagedConversation | null>(null)
-  const [sheetOpen, setSheetOpen] = useState(false)
+  const [drawerOpen, setDrawerOpen] = useState(false)
 
   useEffect(() => {
     const onHashChange = () => setView(parseHash())
@@ -133,7 +133,7 @@ function App() {
 
   const openConversation = (conversation: ManagedConversation) => {
     setSelected(conversation)
-    setSheetOpen(true)
+    setDrawerOpen(true)
   }
 
   /** Profiles are pages, not a filter layered on top of whatever's open — clicking one always
@@ -268,10 +268,10 @@ function App() {
           )}
         </div>
       </SidebarInset>
-      <ConversationSheet
+      <ConversationDrawer
         conversation={selected}
-        open={sheetOpen}
-        onOpenChange={setSheetOpen}
+        open={drawerOpen}
+        onOpenChange={setDrawerOpen}
         onSave={(override) => {
           if (selected) saveOverride(conversationKey(selected), override)
         }}

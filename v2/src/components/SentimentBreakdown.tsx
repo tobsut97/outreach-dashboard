@@ -1,5 +1,6 @@
 import { ChevronRight } from 'lucide-react'
-import { Cell, Pie, PieChart } from 'recharts'
+import type { TooltipContentProps } from 'recharts'
+import { Cell, Pie, PieChart, Tooltip } from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { Summary } from '@/lib/metrics'
 import { DOT_COLOR, SENTIMENT_LABELS, SENTIMENT_ORDER } from '@/lib/sentiment'
@@ -16,6 +17,26 @@ const HUE_VAR: Record<Sentiment, string> = {
 
 const PIE_SIZE = 280
 
+type SliceDatum = { sentiment: Sentiment; value: number }
+
+function PieTooltip({
+  active,
+  payload,
+  summary,
+}: Partial<TooltipContentProps<number, string>> & { summary: Summary }) {
+  const entry = payload?.[0]?.payload as SliceDatum | undefined
+  if (!active || !entry) return null
+  const share = summary.sentiment_share[entry.sentiment] ?? 0
+  return (
+    <div className="smooth-shadow-ring-xl flex items-center gap-2 rounded-lg bg-background px-2.5 py-1.5 text-xs">
+      <span className={`h-2 w-2 shrink-0 rounded-full ${DOT_COLOR[entry.sentiment]}`} />
+      <span className="font-medium">{SENTIMENT_LABELS[entry.sentiment]}</span>
+      <span className="text-muted-foreground tabular-nums">{entry.value}</span>
+      <span className="font-semibold tabular-nums">{share}%</span>
+    </div>
+  )
+}
+
 export function SentimentBreakdown({
   summary,
   onSelect,
@@ -24,7 +45,7 @@ export function SentimentBreakdown({
   onSelect: (sentiment: Sentiment) => void
 }) {
   const total = Object.values(summary.sentiment_counts).reduce((a, b) => a + (b ?? 0), 0)
-  const data = SENTIMENT_ORDER.map((sentiment) => ({
+  const data: SliceDatum[] = SENTIMENT_ORDER.map((sentiment) => ({
     sentiment,
     value: summary.sentiment_counts[sentiment] ?? 0,
   }))
@@ -39,22 +60,29 @@ export function SentimentBreakdown({
           <p className="text-muted-foreground text-sm">No replies classified yet.</p>
         ) : (
           <div className="grid grid-cols-1 items-center gap-6 sm:grid-cols-2">
-            <PieChart width={PIE_SIZE} height={PIE_SIZE} className="mx-auto">
-              <Pie
-                data={data}
-                dataKey="value"
-                nameKey="sentiment"
-                innerRadius={55}
-                outerRadius={90}
-                strokeWidth={2}
-                stroke="var(--color-card)"
-                isAnimationActive={false}
-              >
-                {data.map((entry) => (
-                  <Cell key={entry.sentiment} fill={HUE_VAR[entry.sentiment]} />
-                ))}
-              </Pie>
-            </PieChart>
+            <div className="relative mx-auto" style={{ width: PIE_SIZE, height: PIE_SIZE }}>
+              <PieChart width={PIE_SIZE} height={PIE_SIZE}>
+                <Pie
+                  data={data}
+                  dataKey="value"
+                  nameKey="sentiment"
+                  innerRadius={55}
+                  outerRadius={90}
+                  strokeWidth={2}
+                  stroke="var(--color-card)"
+                  isAnimationActive={false}
+                >
+                  {data.map((entry) => (
+                    <Cell key={entry.sentiment} fill={HUE_VAR[entry.sentiment]} />
+                  ))}
+                </Pie>
+                <Tooltip content={<PieTooltip summary={summary} />} />
+              </PieChart>
+              <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+                <span className="text-2xl font-semibold tabular-nums">{total}</span>
+                <span className="text-muted-foreground text-xs">answers</span>
+              </div>
+            </div>
 
             <div className="flex flex-col gap-1">
               {SENTIMENT_ORDER.map((sentiment) => {

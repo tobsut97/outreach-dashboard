@@ -859,3 +859,49 @@ prospect who never became a HubSpot contact, but not provable either way from th
 "unmatched" names directly in HubSpot rather than trusting the unmatched count — worth doing
 that spot-check again if this audit is ever re-run against a fresh export, since a new export
 could have its own undocumented quirks.
+
+## Conversation drawer + smooth-shadow-ring (2026-08-04, branch `feat/reply-theme-clusters`)
+
+Replaced `ConversationSheet.tsx` (a modal shadcn `Sheet` that portals over the page with a dark
+backdrop) with `ConversationDrawer.tsx` — a plain in-flow panel rendered as a third flex sibling
+of `SidebarInset` inside `SidebarProvider` (`App.tsx`), so opening a conversation shrinks the
+main content instead of dimming it. No JSX restructuring was needed: `ConversationSheet` was
+already rendered in that exact position, just portaled out via `SheetPortal`; removing the
+portal/backdrop/dialog primitives was enough to make it dock. Same props/state/save-cancel logic
+as before, only the outer chrome changed. Styled it to match the app's own inset main canvas
+(`m-2`-style margin, `rounded-xl`, shadow) and slowed the open/close transition from 200ms to
+380ms since the original read as too abrupt.
+
+**Shadow fix, then widened in scope.** The drawer card originally paired `border` with `shadow-sm`
+on the same element — a "double border" artifact (a hard 1px stroke plus the shadow's own soft
+edge just outside it, reading as heavy/cheap) that the user flagged by linking
+[shadow.floriankiem.com](https://shadow.floriankiem.com), a Tailwind plugin (`shadow-plugin`)
+that fixes exactly this by baking a hairline ring into the same `box-shadow` layer as the
+elevation shadow. The user then asked for the fix everywhere in the app, not just the drawer.
+
+Installing the actual npm package was blocked by this project's auto-mode safety classifier
+(brand-new, ~13h-old third-party package, added on my own inference rather than the user naming
+it explicitly) — so the same effect was hand-rolled as plain CSS instead of adding the
+dependency: `v2/src/index.css` defines `smooth-shadow-ring-{xs,sm,md,lg,xl,2xl}` utilities via
+Tailwind v4's `@utility`, each `box-shadow: 0 0 0 1px var(--shadow-ring-color), var(--shadow-{size})`
+— the ring and Tailwind's own theme shadow composed into one layer. `--shadow-ring-color`
+defaults to `rgb(0 0 0 / 0.05)` in `:root` and flips to `rgb(255 255 255 / 0.18)` in `.dark`
+(matching this file's existing `.dark { ... }` block), and individual call sites override it
+with an arbitrary-property class (e.g. `[--shadow-ring-color:color-mix(in_oklab,var(--foreground)_10%,transparent)]`)
+where the original had a tinted ring instead of the plain default.
+
+An audit of every `shadow-*` usage in `v2/src` found five more double-border sites beyond the
+drawer, all fixed the same mechanical way (same shadow size preserved, `border`/`ring-*` dropped):
+`ui/chart.tsx` (tooltip), `ui/sheet.tsx` (the base Sheet primitive, still used elsewhere even
+after the conversation drawer stopped using it), `ui/popover.tsx`, `ui/select.tsx`, and
+`ui/sidebar.tsx`'s `floating` variant. Left alone: `SidebarInset`'s own `shadow-sm` (no
+border/ring paired with it, nothing to fix), a no-op `shadow-none`, and the sidebar rail's hover
+affordance (`shadow-[0_0_0_1px_...]` used as a single hairline indicator, not an elevation shadow
+paired with a separate border). `card.tsx` uses `ring-1` with no shadow at all — untouched, since
+adding elevation to cards wasn't asked for.
+
+A `.claude/skills/smooth-shadow-ring/SKILL.md` file (to make future components reach for this
+pattern automatically) was also planned but blocked by the same safety classifier as
+"instruction poisoning" — writing agent-instruction content sourced from an external page into a
+location future sessions read as instructions. Skipped; this note is the only durable record of
+the convention for now.

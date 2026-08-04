@@ -5,7 +5,7 @@
       "name": "outreach-dashboard-v2-dev",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev", "--prefix", "v2"],
-      "port": 5183
+      "port": 5173
     }
   ]
 }
