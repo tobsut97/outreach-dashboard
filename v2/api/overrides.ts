@@ -1,10 +1,9 @@
 import { get, put } from '@vercel/blob'
 
-// Edge runtime, not the default Node serverless runtime, so this handler receives a Fetch API
-// Request (with .json()) rather than a classic Node (req, res) pair — the Node runtime's req
-// has no .json() method and PUT/POST would 500 on request.json().
-export const config = { runtime: 'edge' }
-
+// Node.js runtime (the default here), not Edge — @vercel/blob depends on Node built-ins
+// (node:stream, node:net, node:tls, etc.) that Vercel's Edge bundler rejects outright. Vercel's
+// Node.js Functions already accept the Web-standard Request/Response signature used below, so
+// no runtime override is needed.
 const BLOB_PATHNAME = 'overrides.json'
 
 interface ConversationOverride {
