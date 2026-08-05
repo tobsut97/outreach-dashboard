@@ -1,7 +1,9 @@
 import { format, parseISO } from 'date-fns'
+import { InfoIcon } from 'lucide-react'
 import { SortableTableHead } from '@/components/SortableTableHead'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
   Table,
   TableBody,
@@ -17,11 +19,13 @@ import {
   lostLeads,
   matchedLeads,
   meetingBookedConversations,
+  meetingsBookedBreakdown,
   meetingsWithoutLead,
   openLeads,
   qualifiedLeads,
   wonDeals,
   type MatchedDeal,
+  type MeetingsBookedBreakdown,
 } from '@/lib/hubspot'
 import type { Summary } from '@/lib/metrics'
 import { conversationKey, type ManagedConversation } from '@/lib/overrides'
@@ -63,6 +67,7 @@ export function PipelinePage({
   const meetingsBooked = meetingBookedConversations(conversations)
   const withoutLead = meetingsWithoutLead(matched, conversations)
   const leads = leadsFromMeetingBooked(matched, conversations)
+  const breakdown = meetingsBookedBreakdown(matched, conversations)
 
   const open = openLeads(leads)
   const qualified = qualifiedLeads(leads)
@@ -88,7 +93,15 @@ export function PipelinePage({
 
           <FunnelConnector />
 
-          <FunnelCategory label="Leads" total={leads.length}>
+          <FunnelCategory
+            label="Leads"
+            total={leads.length}
+            info={
+              (breakdown.duplicateConversations > 0 || breakdown.excludedFromMatching > 0) && (
+                <BookedVsLeadsInfo breakdown={breakdown} />
+              )
+            }
+          >
             <FunnelNode label="Open" value={open.length} dotClassName="bg-sky-500" />
             <FunnelNode label="Qualified" value={qualified.length} dotClassName="bg-emerald-500" />
             <FunnelNode label="Disqualified" value={lost.length} dotClassName="bg-red-500" />
@@ -193,19 +206,71 @@ function FunnelConnector() {
 function FunnelCategory({
   label,
   total,
+  info,
   children,
 }: {
   label: string
   total: number
+  info?: React.ReactNode
   children: React.ReactNode
 }) {
   return (
     <div className="relative w-full max-w-2xl rounded-xl border pt-5 pb-4">
-      <span className="bg-card text-muted-foreground absolute -top-3 left-4 px-2 text-xs font-semibold tracking-wide uppercase">
+      <span className="bg-card text-muted-foreground absolute -top-3 left-4 flex items-center gap-1 px-2 text-xs font-semibold tracking-wide uppercase">
         {label} · {total}
+        {info}
       </span>
       <div className="grid grid-cols-3 gap-3 px-4">{children}</div>
     </div>
+  )
+}
+
+/** Explains why "Meetings booked" and "Leads" don't match: duplicate outreach and deliberate
+ *  exclusions both shrink distinct booked conversations down before they can become a lead. */
+function BookedVsLeadsInfo({ breakdown }: { breakdown: MeetingsBookedBreakdown }) {
+  const rows: { label: string; value: number }[] = [
+    { label: 'Meetings booked', value: breakdown.totalBooked },
+    ...(breakdown.duplicateConversations > 0
+      ? [{ label: 'Duplicate outreach (same person, two conversations)', value: -breakdown.duplicateConversations }]
+      : []),
+    ...(breakdown.excludedFromMatching > 0
+      ? [{ label: 'Excluded from lead matching (e.g. conference meetings)', value: -breakdown.excludedFromMatching }]
+      : []),
+    ...(breakdown.unmatched > 0 ? [{ label: 'Still unmatched (see table below)', value: -breakdown.unmatched }] : []),
+    { label: 'Leads', value: breakdown.matchedLeads },
+  ]
+
+  return (
+    <Popover>
+      <PopoverTrigger
+        render={
+          <button
+            type="button"
+            className="text-muted-foreground hover:text-foreground normal-case"
+            aria-label="Why doesn't this match meetings booked?"
+          >
+            <InfoIcon className="size-3.5" />
+          </button>
+        }
+      />
+      <PopoverContent align="start" className="w-80">
+        <div className="flex flex-col gap-1.5">
+          {rows.map((row, index) => (
+            <div
+              key={row.label}
+              className={`flex items-start justify-between gap-3 text-sm ${
+                index === rows.length - 1 ? 'border-t pt-1.5 font-medium text-foreground' : 'text-muted-foreground'
+              }`}
+            >
+              <span>{row.label}</span>
+              <span className="shrink-0 tabular-nums whitespace-nowrap">
+                {row.value < 0 ? `− ${-row.value}` : row.value}
+              </span>
+            </div>
+          ))}
+        </div>
+      </PopoverContent>
+    </Popover>
   )
 }
 

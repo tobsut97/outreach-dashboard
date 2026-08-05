@@ -1024,3 +1024,29 @@ directly against the files (same restrictToDataYears-aware script as before): `b
 too. Final: **booked 75**, **1 meeting without a lead** (Jennifer Bregenhorn only, a genuine gap).
 Leads/deals tied to booked meetings unaffected (65 / 13) since he wasn't matched to a lead
 anyway.
+
+## Explaining the "75 booked, 65 leads" gap in the UI (2026-08-04)
+
+After all the corrections above, "Meetings booked" (75) and "Leads" (65) still don't match, and
+that's not a bug — investigated and found three distinct, legitimate reasons:
+
+- **1 duplicate conversation**: Martin Preis has two separate outreach conversation records
+  (Christian Lutz's and Lara Ebert's), both tagged `meeting_booked`, both sharing the same
+  LinkedIn URL as their match key. Both correctly resolve to the same single HubSpot lead
+  (owned by Maximilian Venhofen), so he's counted twice in "booked" but once in "leads." Same
+  kind of cross-owner-duplicate-profile issue as Jennifer Bregenhorn, just not previously
+  flagged for him specifically.
+- **8 excluded from lead matching**: the IETA conference meetings + Hartmut Fach, per the
+  corrections above.
+- **1 genuinely unmatched**: Jennifer Bregenhorn.
+
+`75 − 1 (duplicate) − 8 (excluded) − 1 (unmatched) = 65`.
+
+Rather than leaving this as tribal knowledge, added `meetingsBookedBreakdown()` in
+`src/lib/hubspot.ts` — computes this breakdown generically from live data (distinct booked
+conversation keys, partitioned into excluded/matched/unmatched, plus the duplicate-key count) so
+it stays correct as data changes, not hardcoded to today's specific people/numbers. Surfaced in
+`PipelinePage.tsx` as a small info-icon popover (`BookedVsLeadsInfo`) next to the "LEADS · N"
+label, using the existing `Popover`/`PopoverTrigger` pattern already used elsewhere in this page
+(e.g. `SentimentDetail.tsx`'s reasons filter) — only rendered when there's actually something to
+explain (duplicates or exclusions present), so it doesn't clutter the common case.
